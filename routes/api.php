@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use   App\Http\Controllers\ApiController;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\AutoEcoleController;
 use App\Models\User;
 
 /*
@@ -27,3 +28,5 @@ Route::get('/user/show/{id}',[ApiController::class,'show']);
 Route::post('/user/store',[ApiController::class,'store']);
 Route::put('/user/update/{id}',[ApiController::class,'update']);
 Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
+Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
+Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 
-class ApiController extends Controller { 
+class ApiController extends Controller {
   public function index(){
     $user= User::get();
   return response()->json($user, 200);
