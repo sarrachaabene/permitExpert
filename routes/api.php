@@ -5,6 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AutoEcoleController;
 use App\Models\User;
+use App\Http\Controllers\ExamenController;
+
+use App\Models\Examen;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +35,8 @@ Route::put('/user/update/{id}',[ApiController::class,'update']);
 Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
 Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
 Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
+Route::get('/Examen/index',[ExamenController::class,'index']);
+Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
+Route::post('/Examen/store',[ExamenController::class,'store']);
+Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
+Route::delete('/Examen/delete/{id}',[ExamenController::class,'delete']);
