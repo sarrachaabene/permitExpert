@@ -16,7 +16,8 @@ class ApiController extends Controller {
     {
       $user= User::create($request->all());
       if($user)
-      {
+      {  $user->auto_ecole_id = $autoEcole->id; // Assign auto_ecole_id to the new user
+        $user->save();
         return response()->json($user, 200);
       }
       return response()->json("user not created", 400);
