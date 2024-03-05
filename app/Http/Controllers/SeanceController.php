@@ -50,24 +50,16 @@ class SeanceController extends Controller
 
          
          public function delete($id) {
-          // Find the user by ID
           $seance = Seance::find($id);
-      
-          // Check if the user exists
-          if (!$seance) {
-              $msg = "User not found";
+                if (!$seance) {
+              $msg = "seance not found";
               return response()->json($msg, 404);
           }
       
-          // Delete the user
-          $seance->delete();
-      
-          // Check if the deletion was successful
-          if ($seance->trashed()) {
-              return response()->json("User deleted successfully", 200);
+          if ($seance->delete()) {
+              return response()->json("seance deleted successfully", 200);
           } else {
-              return response()->json("Failed to delete user", 500);
+              return response()->json("seance to delete permis", 500);
           }
-      }
-
+}
 }

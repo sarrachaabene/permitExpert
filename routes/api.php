@@ -7,7 +7,8 @@ use App\Http\Controllers\AutoEcoleController;
 use App\Http\Controllers\SeanceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
-
+use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\PermisController;
 
 use App\Http\Controllers;
 
@@ -66,5 +67,17 @@ Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
 Route::get('/message/index',[MessageController::class,'index']);
 Route::get('/messgae/show/{id}',[MessageController::class,'show']);
 Route::post('/messsage/store',[MessageController::class,'store']);
+
+
+Route::get('/paiement/index',[PaiementController::class,'index']);
+Route::get('/paiement/show/{id}',[PaiementController::class,'show']);
+Route::post('/paiement/store',[PaiementController::class,'store']);
+
+
+Route::get('/permis/index',[PermisController::class,'index']);
+Route::get('/permis/show/{id}',[PermisController::class,'show']);
+Route::post('/permis/store',[PermisController::class,'store']);
+Route::put('/permis/update/{id}',[PermisController::class,'update']);
+Route::delete('/permis/delete/{id}',[PermisController::class,'delete']);
 
 
