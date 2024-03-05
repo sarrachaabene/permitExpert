@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class NotificationController extends Controller
 {
@@ -19,8 +18,8 @@ class NotificationController extends Controller
 
      public function show($id){
       $notification = Notification::find($id);
-      if($examen){
-    return response()->json($examen, 200);
+      if($notification){
+    return response()->json($notification, 200);
 
       }else{
         $msg="votre id n'est pas trouve";

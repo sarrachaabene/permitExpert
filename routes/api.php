@@ -6,6 +6,8 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AutoEcoleController;
 use App\Http\Controllers\SeanceController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
+
 
 use App\Http\Controllers;
 
