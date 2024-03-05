@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Http\Controllers\ExamenController;
 
 use App\Models\Examen;
+use App\Models\Notification;
 
 
 
@@ -40,3 +41,5 @@ Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
 Route::post('/Examen/store',[ExamenController::class,'store']);
 Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
 Route::delete('/Examen/delete/{id}',[ExamenController::class,'delete']);
+Route::get('/Notification/index',[NotificationController::class,'index']);
+Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
