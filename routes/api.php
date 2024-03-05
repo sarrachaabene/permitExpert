@@ -4,12 +4,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AutoEcoleController;
+use App\Http\Controllers\SeanceController;
+use App\Http\Controllers\MessageController;
+
+use App\Http\Controllers;
+
 use App\Models\User;
+use App\Models\AutoEcole;
+use App\Models\Seance;
+use App\Models\Message;
+
 use App\Http\Controllers\ExamenController;
 
 use App\Models\Examen;
 use App\Models\Notification;
-
 
 
 /*
@@ -36,6 +44,13 @@ Route::put('/user/update/{id}',[ApiController::class,'update']);
 Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
 Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
 Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
+
+Route::get('/seance/index',[SeanceController::class,'index']);
+Route::get('/seance/show/{id}',[SeanceController::class,'show']);
+Route::post('/seance/store',[SeanceController::class,'store']);
+Route::put('/seance/update/{id}',[SeanceController::class,'update']);
+Route::delete('/seance/delete/{id}',[SeanceController::class,'delete']);
+
 Route::get('/Examen/index',[ExamenController::class,'index']);
 Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
 Route::post('/Examen/store',[ExamenController::class,'store']);
@@ -43,3 +58,11 @@ Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
 Route::delete('/Examen/delete/{id}',[ExamenController::class,'delete']);
 Route::get('/Notification/index',[NotificationController::class,'index']);
 Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
+
+
+
+Route::get('/message/index',[MessageController::class,'index']);
+Route::get('/messgae/show/{id}',[MessageController::class,'show']);
+Route::post('/messsage/store',[MessageController::class,'store']);
+
+

@@ -11,21 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::table('examens', function (Blueprint $table) {
-      
-        $table->datetime('heureD')->change();// Utilisez datetime au lieu de date
-        $table->datetime('heureF')->change();
-      
-    });
+        Schema::table('examens', function (Blueprint $table) {
+            $table->time('heureD')->nullable()->change();
+            $table->time('heureF')->nullable()->change();
+        });
     }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    {
-         $table->dropColumn('heureD')->change();;
-         $table->dropColumn('heureF')->change();;
-
-    }
+{
+    Schema::table('examens', function (Blueprint $table) {
+        $table->time('heureD')->nullable(false)->change();
+        $table->time('heureF')->nullable(false)->change();
+    });
+}
 };

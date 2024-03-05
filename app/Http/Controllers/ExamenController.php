@@ -17,7 +17,6 @@ class ExamenController extends Controller
       $examen= Examen::create($request->all()); 
       if($examen)
       {
-      
         return response()->json($examen, 200);
       }
       return response()->json("exam not created", 400);

@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 use App\Models\User;
+use App\Models\AutoEcole;
+
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

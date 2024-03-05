@@ -8,6 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\User;
+use App\Models\Message;
+use App\Models\AutoEcole;
+
 
 
 class User extends Authenticatable
@@ -51,6 +54,21 @@ class User extends Authenticatable
     public function autoEcole()
     {
         return $this->belongsTo(AutoEcole::class);
+    }
+
+    public function messagesSent()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function messagesReceived()
+    {
+        return $this->hasMany(Message::class, 'recipient_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasManyThrough(Notification::class, Message::class, 'recipient_id', 'message_id','');
     }
 
 }

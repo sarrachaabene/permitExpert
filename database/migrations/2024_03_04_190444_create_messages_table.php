@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->datetime('dateN');
-            $table->string('description');
+            $table->time('dateM')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -23,7 +23,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('notifications');
+    {    
+        Schema::dropIfExists('messages');
     }
 };

@@ -18,8 +18,10 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
-      $table->dropColumn('type')->change();;
+{
+    Schema::table('examens', function (Blueprint $table) {
+        $table->string('type')->nullable('false')->change();
+    });
+}
 
-    }
 };

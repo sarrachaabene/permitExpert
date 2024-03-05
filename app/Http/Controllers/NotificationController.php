@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class NotificationController extends Controller
 {

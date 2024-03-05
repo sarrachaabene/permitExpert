@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\AutoEcole;
+
 
 
 class ApiController extends Controller {
@@ -18,8 +20,10 @@ class ApiController extends Controller {
       $autoecole = AutoEcole::find($request->auto_ecole_id);
 
       if($user)
-      {
-      
+
+      {  $user->auto_ecole_id = $autoEcole->id; // Assign auto_ecole_id to the new user
+        $user->save();
+
         return response()->json($user, 200);
       }
       return response()->json("user not created", 400);
