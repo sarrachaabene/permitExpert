@@ -27,9 +27,11 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
           $table->dropColumn('role');
+
           $table->dropColumn('cin');
             $table->dropColumn('prenom');
             $table->dropColumn('numTel');
+
           $table->dropColumn('dateNaissance');
 
         });

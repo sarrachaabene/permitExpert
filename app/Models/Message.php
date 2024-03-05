@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Seance extends Model
+class Message extends Model
 {
     use HasFactory;
-    protected $fillable = [
-      'type',
-      'heureD',
-      'heureF',
-      'dateS',
-];
+    protected $fillable=[
+      'dateM',
+      'description',
+    ];
 }

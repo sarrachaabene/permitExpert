@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('seances', function (Blueprint $table) {
-          $table->enum('typee',['code','circuit','parc'])->nullable('false')->change();
-
-        ////  $table->time('heureDebut')->nullable()->change();
-    
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->time('dateM')->nullable();
+            $table->string('description')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -23,10 +23,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::table('seances', function (Blueprint $table) {
-         $table->dropColumn('typee')->change();
-        
-        });
+    {    
+        Schema::dropIfExists('messages');
     }
 };

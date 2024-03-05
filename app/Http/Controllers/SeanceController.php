@@ -12,6 +12,7 @@ class SeanceController extends Controller
       $seance=Seance::get();
       return response()->json($seance,200);
     }
+
     public function store(Request $request)
     {
       $seance= Seance::create($request->all());
@@ -59,7 +60,7 @@ class SeanceController extends Controller
           }
       
           // Delete the user
-          $user->delete();
+          $seance->delete();
       
           // Check if the deletion was successful
           if ($seance->trashed()) {

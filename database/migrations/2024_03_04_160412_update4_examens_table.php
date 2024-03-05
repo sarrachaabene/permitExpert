@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seances', function (Blueprint $table) {
-            $table->id();
-            $table->string('typeSeance');
-            $table->date('heureDebut');
-            $table->date('heureFin');
-            $table->date('dateSeance');
-            $table->timestamps();
-        });
+      Schema::table('examens', function (Blueprint $table) {
+        $table->softDeletes();
+    });
     }
 
     /**
@@ -26,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seances');
+        //
     }
 };

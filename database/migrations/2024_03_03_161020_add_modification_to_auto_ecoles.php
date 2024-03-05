@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void { 
+    public function up(): void {
         Schema::table('auto_ecoles', function (Blueprint $table) {
           $table->foreignId('user_id')->nullable()->unique()->constrained();
 
@@ -19,7 +19,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void { 
+    public function down(): void {
     Schema::table('auto_ecoles', function (Blueprint $table) {
         // Drop the foreign key constraint
         $table->dropForeign(['user_id']);

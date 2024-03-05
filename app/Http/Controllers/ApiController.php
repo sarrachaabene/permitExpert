@@ -15,9 +15,16 @@ class ApiController extends Controller {
     public function store(Request $request)
     {
       $user= User::create($request->all());
+      $autoecole = AutoEcole::find($request->auto_ecole_id);
+
       if($user)
+<<<<<<< HEAD
       {  $user->auto_ecole_id = $autoEcole->id; // Assign auto_ecole_id to the new user
         $user->save();
+=======
+      {
+      
+>>>>>>> 100da7655fd7b4e532c50dd1528777f52e8b4fdf
         return response()->json($user, 200);
       }
       return response()->json("user not created", 400);
