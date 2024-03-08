@@ -3,16 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Seance;
 
 class SeanceController extends Controller
 {
-    public function index()
-    {
-      $seance=Seance::get();
-      return response()->json($seance,200);
-    }
-
     public function store(Request $request)
     {
       $seance= Seance::create($request->all());
