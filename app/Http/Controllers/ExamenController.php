@@ -12,17 +12,26 @@ class ExamenController extends Controller
   return response()->json($examen, 200);
   }
 
-    public function store(Request $request)
-    {
-      $examen= Examen::create($request->all()); 
-      if($examen)
-      {
-        return response()->json($examen, 200);
+  public function store(Request $request)
+  {
+      // Vérifier si l'utilisateur est authentifié
+      if ($request->user() && $request->user()->can('create Examen')) {
+          // L'utilisateur est authentifié et a la permission pour créer un examen
+  
+          // Créer l'examen
+          $examen = Examen::create($request->all());
+  
+          if ($examen) {
+              return response()->json($examen, 200);
+          } else {
+              return response()->json("Exam not created", 400);
+          }
+      } else {
+          // L'utilisateur n'est pas authentifié ou n'a pas la permission pour créer un examen
+          return response()->json("Unauthorized", 403);
       }
-      return response()->json("exam not created", 400);
-     }
-
-
+  }
+  
 
      public function show($id){
       $examen = Examen::find($id);

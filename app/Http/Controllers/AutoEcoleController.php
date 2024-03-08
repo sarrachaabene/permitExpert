@@ -26,11 +26,9 @@ class AutoEcoleController extends Controller
               'adresse' => $request->adresse,
               'user_id' => $request->user_id // Assigner l'ID de l'utilisateur à l'auto-école
           ]);
-  
           // Assigner l'ID de l'auto-école à l'utilisateur
           $user->auto_ecole_id = $autoEcole->id;
           $user->save();
-  
           // Retourner la nouvelle auto-école en réponse
           return response()->json($autoEcole, 200);
       } else {
@@ -38,14 +36,7 @@ class AutoEcoleController extends Controller
           return response()->json("User is not an admin", 400);
       }
   }
-  
-
-
-     public function show($id){
-
-
-    
-     }
+  public function show($id){}
       public function update(Request $request,$id){
     
         }

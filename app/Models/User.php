@@ -10,12 +10,16 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\User;
 use App\Models\Message;
 use App\Models\AutoEcole;
+use Spatie\Permission\Traits\HasRoles;
+
 
 
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use HasRoles;
+
      /**
      * The attributes that are mass assignable.
      *
