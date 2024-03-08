@@ -10,6 +10,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\PermisController;
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers;
 
 use App\Models\User;
@@ -54,11 +56,14 @@ Route::post('/seance/store',[SeanceController::class,'store']);
 Route::put('/seance/update/{id}',[SeanceController::class,'update']);
 Route::delete('/seance/delete/{id}',[SeanceController::class,'delete']);
 
+
 Route::get('/Examen/index',[ExamenController::class,'index']);
 Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
-Route::post('/Examen/store',[ExamenController::class,'store']);
+
+Route::post('/Examen/store',[ExamenController::class,'store']);  
 Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
 Route::delete('/Examen/delete/{id}',[ExamenController::class,'delete']);
+
 Route::get('/Notification/index',[NotificationController::class,'index']);
 Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
 
@@ -81,3 +86,8 @@ Route::put('/permis/update/{id}',[PermisController::class,'update']);
 Route::delete('/permis/delete/{id}',[PermisController::class,'delete']);
 
 
+
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/roles', [AuthController::class, 'getRoles']);
