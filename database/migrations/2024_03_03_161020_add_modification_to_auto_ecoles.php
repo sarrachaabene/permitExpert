@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void {
         Schema::table('auto_ecoles', function (Blueprint $table) {
           $table->foreignId('user_id')->nullable()->unique()->constrained();
+          $table->foreignId('user_id')->nullable()->unique()->constrained();
 
         });
     }
