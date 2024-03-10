@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('seances', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['code', 'circuit', 'parc']);
-              $table->time('heureD')->nullable();
-            $table->time('heureF')->nullable();  
-            $table->date('dateS')->nullable();           
-             $table->timestamps();
+            $table->time('heureD')->nullable();
+          $table->time('heureF')->nullable();  
+          $table->date('dateS')->nullable(); 
+            $table->timestamps();
         });
     }
 

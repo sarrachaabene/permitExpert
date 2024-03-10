@@ -74,5 +74,13 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Notification::class, Message::class, 'recipient_id', 'message_id','');
     }
+    public function seancesEnseignees()
+    {
+        return $this->hasMany(Seance::class, 'moniteur_id');
+    }
 
+    public function seancesSuivies()
+    {
+        return $this->hasMany(Seance::class, 'candidat_id');
+    }
 }

@@ -3,19 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Seance;
+use App\Models\User;
 
 class SeanceController extends Controller
 {
-    public function store(Request $request)
-    {
-      $seance= Seance::create($request->all());
-      if($seance)
-      { 
-        $seance->save();
-        return response()->json($seance, 200);
+
+public function store(Request $request)
+  {
+      // Trouver l'utilisateur par son ID
+      $user = User::find($request->user_id);
+      // Vérifier si l'utilisateur est un admin
+      if ($user && $user->role === "candidat") {
+          // Créer une nouvelle auto-école avec les données fournies dans la requête
+          $seance = Seance::create([
+              'type' => $request->type,
+              'heureD' => $request->heureD,
+              'heureF'=> $request->heureF,
+              'dateS'=> $request->dateS,
+                ]);
+          // Assigner l'ID de l'auto-école à l'utilisateur
+          $user->seance_id = $seance->id;
+          $user->save();
+          // Retourner la nouvelle auto-école en réponse
+          return response()->json($seance, 200);
+      } else {
+          // Retourner une réponse indiquant que l'utilisateur n'est pas autorisé à créer une auto-école
+          return response()->json("User is not an candidat", 400);
       }
-      return response()->json("seance not created", 400);
-     }
+  }
 
      public function show($id){
       $seance = Seance::find($id);

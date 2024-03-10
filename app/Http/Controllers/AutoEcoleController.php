@@ -24,11 +24,13 @@ class AutoEcoleController extends Controller
           $autoEcole = AutoEcole::create([
               'nom' => $request->nom,
               'adresse' => $request->adresse,
-              'user_id' => $request->user_id // Assigner l'ID de l'utilisateur à l'auto-école
-          ]);
+              'description'=> $request->description
+            ]);
+  
           // Assigner l'ID de l'auto-école à l'utilisateur
           $user->auto_ecole_id = $autoEcole->id;
           $user->save();
+  
           // Retourner la nouvelle auto-école en réponse
           return response()->json($autoEcole, 200);
       } else {
@@ -36,18 +38,79 @@ class AutoEcoleController extends Controller
           return response()->json("User is not an admin", 400);
       }
   }
-  public function show($id){}
-      public function update(Request $request,$id){
-    
-        }
-      public function showAutoEcoleByUserId($id){
-        $user = User::find($id);
-        return response()->json([
-          'autoEcole'=>$user->autoEcole,
-          'admin'=> $user
-        ], 200);
-      }
-public function delete($id) {
   
+
+
+     public function show($id){
+      $autoEcole = AutoEcole::find($id);
+      if($autoEcole){
+    return response()->json($autoEcole, 200);
+  
+      }else{
+        $msg="votre id n'est pas trouve";
+            return response()->json($msg, 200);
+  
+  
+  
+      } 
+
+    
+     } 
+    public function update(Request $request,$id)
+    {
+      $autoEcole= AutoEcole::find($id);
+      if($autoEcole){
+        $autoEcole->update($request->all());
+        return response()->json($autoEcole, 200);
+
+      }else {
+        $msg = "User not found";
+        return response()->json($msg, 404);
+      }
+    }
+    public function showAutoEcoleByUserId($id)
+    {
+      $user = User::find($id);
+      if (!$user) {
+          $msg = "User not found";
+          return response()->json($msg, 404);
+      }
+  
+      // Vérifier si l'utilisateur a une auto-école associée
+      if ($user->autoEcole) {
+          return response()->json([
+              'autoEcole' => $user->autoEcole,
+              'admin' => $user
+          ], 200);
+      } else {
+          // Si l'utilisateur n'a pas d'auto-école associée
+          return response()->json("User has no associated autoEcole", 404);
+      }
+  }
+
+public function delete($userId)
+{
+    $user = User::find($userId);
+    $autoEcole = $user->autoEcole;
+
+    if (!$autoEcole) {
+        $msg = "autoEcole not found";
+        return response()->json($msg, 404);
+    }
+
+    // Supprimer l'auto-école elle-même
+    if ($autoEcole->delete()) {
+        // Supprimer l'utilisateur associé à cette auto-école
+        if ($user->delete()) {
+            return response()->json("autoEcole and associated user deleted successfully", 200);
+        } else {
+            return response()->json("Failed to delete associated user", 500);
+        }
+    } else {
+        return response()->json("impossible to delete autoEcole", 500);
+    }
 }
+
+  
+  
 }

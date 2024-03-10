@@ -13,7 +13,7 @@ class Examen extends Model
     use SoftDeletes;
 
     protected $fillable = [
-      'typeE',
+      'type',
       'heureD',
       'heureF',
       'dateE',
