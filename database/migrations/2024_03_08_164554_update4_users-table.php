@@ -20,8 +20,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        
+    { 
       Schema::table('users', function (Blueprint $table) {
         // Supprimer la colonne seance_id et la contrainte de clé étrangère associée
         $table->dropForeign(['seance_id']);

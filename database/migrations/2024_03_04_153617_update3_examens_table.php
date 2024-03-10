@@ -13,7 +13,7 @@ return new class extends Migration
     {
       Schema::table('examens', function (Blueprint $table) {
       $table->enum('type', ['code', 'circuit', 'parc'])->change();
-      $table->enum('type', ['code', 'circuit', 'parc'])->change();
+    
 
     });
     }

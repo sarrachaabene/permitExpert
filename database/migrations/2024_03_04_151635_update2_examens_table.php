@@ -10,7 +10,7 @@ return new class extends Migration
     {
       Schema::table('examens', function (Blueprint $table) {
         $table->renameColumn('typeE', 'type');
-        $table->renameColumn('typeE', 'type');
+      
 
 
       });

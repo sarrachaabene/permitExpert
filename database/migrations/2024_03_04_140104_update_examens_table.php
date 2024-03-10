@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::table('examens', function (Blueprint $table) {
             $table->time('heureD')->nullable()->change();
             $table->time('heureF')->nullable()->change();
-            $table->time('heureF')->nullable()->change();
 
         });
     }
