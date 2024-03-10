@@ -13,8 +13,6 @@ class AddColumnToAutoEcoles extends Migration
     {
         Schema::table('auto_ecoles', function (Blueprint $table) {
             $table->string('description')->nullable();
-            $table->string('description')->nullable();
-
         });
     }
 

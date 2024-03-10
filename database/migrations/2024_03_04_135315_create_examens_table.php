@@ -17,6 +17,8 @@ return new class extends Migration
             $table->date('heureD');
             $table->date('heureF');
             $table->date('dateE');
+            $table->date('dateE');
+
             $table->timestamps();
         });
     }
