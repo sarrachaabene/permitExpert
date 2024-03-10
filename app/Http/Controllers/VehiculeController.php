@@ -73,4 +73,29 @@ public function delete($id) {
     }
 }
 
+
+
+public function deletee($id) {
+  // Find the user by ID
+  $vehicule = Vehicule::find($id);
+
+  // Check if the user exists
+  if (!$vehicule) {
+      $msg = "Vehicule not found";
+      return response()->json($msg, 404);
+  }
+
+  // Delete the user
+  $vehicule->delete();
+
+  // Check if the deletion was successful
+  if ($vehicule->trashed()) {
+      return response()->json("vehicule deleted successfully", 200);
+  } else {
+      return response()->json("Failed to delete vehicule", 500);
+  }
+}
+
+
+
 }
