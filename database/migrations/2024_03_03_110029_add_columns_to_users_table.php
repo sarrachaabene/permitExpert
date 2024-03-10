@@ -17,6 +17,8 @@ return new class extends Migration
           $table->string('prenom');
           $table->string('numTel');
           $table->timestamp('dateNaissance');
+        
+
         });
     }
 
