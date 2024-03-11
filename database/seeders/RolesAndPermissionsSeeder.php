@@ -16,9 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-      app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-
-        
+      app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions(); 
         // Créer les permissions
         $createExamPermission = Permission::firstOrCreate(['name' => 'create Examen']);
         $editExamPermission = Permission::firstOrCreate(['name' => 'edit Examen']);
@@ -30,9 +28,11 @@ class RolesAndPermissionsSeeder extends Seeder
         $secretaireRole = Role::firstOrCreate(['name' => 'secretaire']);
         $moniteurRole = Role::firstOrCreate(['name' => 'moniteur']);
         $candidatRole = Role::firstOrCreate(['name' => 'candidat']);
+        $visiteurtRole = Role::firstOrCreate(['name' => 'visiteur']);
+
         // Associer les permissions aux rôles
         $adminRole->givePermissionTo($createExamPermission, $editExamPermission, $deleteExamPermission);
 
-        // Associer les rôles aux utilisateurs dans le seeder UserSeeder
+     // Associer les rôles aux utilisateurs dans le seeder UserSeeder
     }
 }

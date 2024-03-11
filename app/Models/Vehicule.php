@@ -16,4 +16,8 @@ class Vehicule extends Model
     protected $fillable = [
       "immatricule" ,"kilometrage","marque","typeV"
 ];
+public function transaction(): BelongsTo
+{
+    return $this->belongsTo(Transaction::class);
+}
 }

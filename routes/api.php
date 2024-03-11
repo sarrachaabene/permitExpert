@@ -7,22 +7,21 @@ use App\Http\Controllers\AutoEcoleController;
 use App\Http\Controllers\SeanceController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\PermisController;
-
+use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ResultatController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers;
-
 use App\Models\User;
 use App\Models\AutoEcole;
 use App\Models\Seance;
 use App\Models\Message;
-
 use App\Http\Controllers\ExamenController;
-
 use App\Models\Examen;
 use App\Models\Notification;
+use App\Models\Resultat;
 
 
 /*
@@ -74,9 +73,9 @@ Route::get('/messgae/show/{id}',[MessageController::class,'show']);
 Route::post('/messsage/store',[MessageController::class,'store']);
 
 
-Route::get('/paiement/index',[PaiementController::class,'index']);
-Route::get('/paiement/show/{id}',[PaiementController::class,'show']);
-Route::post('/paiement/store',[PaiementController::class,'store']);
+Route::get('/transaction/index',[TransactionController::class,'index']);
+Route::get('/transaction/show/{id}',[TransactionController::class,'show']);
+Route::post('/transaction/store',[TransactionController::class,'store']);
 
 
 Route::get('/permis/index',[PermisController::class,'index']);
@@ -86,8 +85,16 @@ Route::put('/permis/update/{id}',[PermisController::class,'update']);
 Route::delete('/permis/delete/{id}',[PermisController::class,'delete']);
 
 
+Route::get('/vehicule/index',[VehiculeController::class,'index']);
+Route::get('/vehicule/show/{id}',[VehiculeController::class,'show']);
+Route::post('/vehicule/store',[vehiculeController::class,'store']);
+Route::put('/vehicule/update/{id}',[vehiculeController::class,'update']);
+Route::delete('/vehicule/delete/{id}',[vehiculeController::class,'delete']);
 
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/roles', [AuthController::class, 'getRoles']);
+
+Route::get('/resultat/index',[ResultatController::class,'index']);
+Route::get('/resultat/show/{id}',[ResultatController::class,'show']);
+Route::post('/resultat/store',[ResultatController::class,'store']);
+Route::put('/resultat/update/{id}',[ResultatController::class,'update']);
+Route::delete('/resultat/delete/{id}',[ResultatController::class,'delete']);

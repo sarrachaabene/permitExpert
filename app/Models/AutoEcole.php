@@ -19,5 +19,8 @@ public function user()
     return $this->hasOne(User::class);
 }
 
-
+public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

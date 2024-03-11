@@ -16,6 +16,7 @@ class VehiculeController extends Controller
 
     public function store(Request $request)
     {
+      
       $vehicule= Vehicule::create($request->all()); 
       if($vehicule)
       {

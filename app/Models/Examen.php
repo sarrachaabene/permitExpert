@@ -18,4 +18,8 @@ class Examen extends Model
       'heureF',
       'dateE',
 ];
+public function resultat()
+{
+    return $this->hasOne(Resultat::class);
+}
 }

@@ -4,25 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Resultat;
+use App\Models\Examen;
+
 
 class ResultatController extends Controller
 {
   public function index(){
     $resultat= Resultat::get();
   return response()->json($resultat, 200);
-  }
-
-    public function store(Request $request)
-    {
-      $resultat= Resultat::create($request->all());
-      if($resultat)
-      {
-        return response()->json($resultat, 200);
-      }
-      return response()->json("vehicule not created", 400);
+  } 
+     public function store(Request $request)
+     { 
+        $examen=Examen::find($request->examen_id);
+         if ($examen){
+           $resultat = Resultat::create([
+             'type_resultat' => $request->type_resultat,
+          
+           ]);
+           $examen->resultat_id = $resultat->id;
+           $examen->save();
+          
+           return response()->json($resultat, 200);
+         }else {
+           return response()->json("examen not created", 400);
+       }
      }
-
-
 
      public function show($id){
       $resultat = Resultat::find($id);

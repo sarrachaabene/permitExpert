@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paiements', function (Blueprint $table) {
-            $table->id();
-            $table->date('dateP')->nullable();
-            $table->string('typeP')->nullable();
-            $table->integer('montantP')->nullable();
-            $table->timestamps();
-        });
+      Schema::table('auto_ecoles', function (Blueprint $table) {
+        // Supprimer la contrainte de clé étrangère
+        $table->dropForeign(['user_id']);
+        // Supprimer la colonne user_id
+        $table->dropColumn('user_id');
+    });
     }
 
     /**
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paiements');
+        //
     }
 };

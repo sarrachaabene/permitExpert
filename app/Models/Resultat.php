@@ -12,6 +12,10 @@ class Resultat extends Model
     use SoftDeletes;
 
     protected $fillable = [
-      "type_resultat" ,"kilometrage","user_id"
+      "type_resultat" 
 ];
+public function examen()
+{
+    return $this->belongsTo(Examen::class);
+}
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Examen;
+use App\Models\User;
+use App\Models\Vehicule;
+
 
 class ExamenController extends Controller
 {
@@ -14,24 +17,24 @@ class ExamenController extends Controller
 
   public function store(Request $request)
   {
-      // Vérifier si l'utilisateur est authentifié
-      if ($request->user() && $request->user()->can('create Examen')) {
-          // L'utilisateur est authentifié et a la permission pour créer un examen
-  
-          // Créer l'examen
-          $examen = Examen::create($request->all());
-  
-          if ($examen) {
-              return response()->json($examen, 200);
-          } else {
-              return response()->json("Exam not created", 400);
-          }
-      } else {
-          // L'utilisateur n'est pas authentifié ou n'a pas la permission pour créer un examen
-          return response()->json("Unauthorized", 403);
-      }
+      $user = User::find($request->user_id);
+     $vehicule=Vehicule::find($request->vehicule_id);
+      if ($user && $user->role=='candidat'&& $vehicule ){
+        $examen = Examen::create([
+          'type' => $request->type,
+          'heureD' => $request->heureD,
+          'heureF'=> $request->heureF,
+          'dateE'=> $request->dateE,
+        ]);
+        $user->examen_id = $examen->id;
+        $user->save();
+        $vehicule->examen_id = $examen->id;
+        $vehicule->save();
+        return response()->json($examen, 200);
+      }else {
+        return response()->json("examen not created", 400);
+    }
   }
-  
 
      public function show($id){
       $examen = Examen::find($id);
