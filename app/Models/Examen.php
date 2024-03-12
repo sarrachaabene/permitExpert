@@ -22,4 +22,12 @@ public function resultat()
 {
     return $this->hasOne(Resultat::class);
 }
+public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function vehicule()
+    {
+        return $this->belongsTo(Vehicule::class);
+    }
 }

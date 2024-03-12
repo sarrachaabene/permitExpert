@@ -18,4 +18,9 @@ public function examen()
 {
     return $this->belongsTo(Examen::class);
 }
+
+public function permis()
+{
+    return $this->belongsTo(Permis::class);
+}
 }

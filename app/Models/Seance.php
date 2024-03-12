@@ -14,14 +14,13 @@ class Seance extends Model
       'heureF',
       'dateS',
 ];
+  public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function vehicule()
+    {
+        return $this->belongsTo(Vehicule::class);
+    }
 
-public function moniteur()
-{
-    return $this->belongsTo(User::class, 'moniteur_id');
-}
-
-public function candidat()
-{
-    return $this->belongsTo(User::class, 'candidat_id');
-}
 }

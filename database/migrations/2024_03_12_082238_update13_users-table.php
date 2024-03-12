@@ -12,19 +12,20 @@ return new class extends Migration
     public function up(): void
     {
       Schema::table('users', function (Blueprint $table) {
-        $table->foreignId('seance_id')->nullable()->constrained('seances')->onDelete('set null');
-    });
+
+        $table->foreignId('notification_id')->nullable()->constrained();}); 
     }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    { 
+    {
       Schema::table('users', function (Blueprint $table) {
-        // Supprimer la colonne seance_id et la contrainte de clé étrangère associée
-        $table->dropForeign(['seance_id']);
-        $table->dropColumn('seance_id');
+        // Drop the foreign key constraint
+        $table->dropForeign(['notification_id']);
+        // Drop the auto_ecole_id column
+        $table->dropColumn('notification_id');
     });
     }
 };

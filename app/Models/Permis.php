@@ -15,4 +15,9 @@ class Permis extends Model
     protected $fillable = [
       'categorie',
 ];
+
+public function resultat()
+{
+    return $this->hasOne(Resultat::class);
+}
 }

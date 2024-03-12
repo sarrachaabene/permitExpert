@@ -23,4 +23,9 @@ class DemandeInscription extends Model
       'dateNaissance',
       
 ];
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
