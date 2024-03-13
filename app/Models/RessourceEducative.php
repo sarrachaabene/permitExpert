@@ -14,4 +14,9 @@ class RessourceEducative extends Model
       'typeR',
       'dateD',
 ];
+
+public function users()
+{
+    return $this->belongsToMany(User::class);
+}
 }

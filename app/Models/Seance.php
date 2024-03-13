@@ -13,6 +13,7 @@ class Seance extends Model
       'heureD',
       'heureF',
       'dateS',
+      'status',
 ];
   public function user()
     {

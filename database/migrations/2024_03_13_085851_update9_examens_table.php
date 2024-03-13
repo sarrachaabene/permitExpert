@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::table('users', function (Blueprint $table) {
-
-        $table->foreignId('notification_id')->nullable()->constrained();}); 
+      Schema::table('examens', function (Blueprint $table) {
+        $table->foreignId('vehicule_id')->nullable()->constrained();
+      });
     }
 
     /**
@@ -21,11 +21,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-      Schema::table('users', function (Blueprint $table) {
+      Schema::table('examens', function (Blueprint $table) {
         // Drop the foreign key constraint
-        $table->dropForeign(['notification_id']);
+        $table->dropForeign(['vehicule_id']);
         // Drop the auto_ecole_id column
-        $table->dropColumn('notification_id');
+        $table->dropColumn('vehicule_id');
     });
     }
 };

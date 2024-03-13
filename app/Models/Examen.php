@@ -17,6 +17,8 @@ class Examen extends Model
       'heureD',
       'heureF',
       'dateE',
+      'user_id',
+      'vehicule_id',
 ];
 public function resultat()
 {

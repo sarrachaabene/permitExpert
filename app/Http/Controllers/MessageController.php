@@ -18,18 +18,7 @@ class MessageController extends Controller
         return response()->json($message, 200);
     }
 
-  /*  public function store(Request $request)
-    {
-        $message = Message::create($request->all());
-        // Créer une nouvelle notification associée au message créé
-        Notification::create([
-          'message_id' => $message->id,
-          'message_description' =>$message->description,
-          'sender_msg' =>$message->sender_id,
-          'receptient_msg'=>$message->recipient_id
-        ]);
-        return response()->json($message, 200);
-    }*/
+
 
     public function store(Request $request)
     {   $user = User::find($request->sender_id);

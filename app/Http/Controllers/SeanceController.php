@@ -73,5 +73,100 @@ public function store(Request $request)
           } else {
               return response()->json("seance to delete permis", 500);
           }
-}
-}
+           }
+          
+           public function AccepterPourCandidat($id) {
+            $seance = Seance::find($id);
+        
+            if ($seance) {
+                $seance->candidat_accepte = true;
+                $seance->save();
+                return response()->json("Attribut candidat_accepte mis à jour avec succès pour la séance", 200);
+            } else {
+                return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_accepte", 404);
+            }
+        }
+        
+        public function RefuserPourCandidat($id) {
+          $seance = Seance::find($id);
+      
+          if ($seance) {
+              $seance->candidat_accepte = false;
+              $seance->save();
+              return response()->json("Attribut candidat_accepte mis à jour avec succès pour la séance", 200);
+          } else {
+              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_accepte", 404);
+          }
+      }
+        
+        public function AccepterPourMoniteur($id) {
+          $seance = Seance::find($id);
+      
+          if ($seance) {
+              $seance->moniteur_accepte = true;
+              $seance->save();
+              return response()->json("Attribut moniteur_accepte mis à jour avec succès pour la séance", 200);
+          } else {
+              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_accepte", 404);
+          }
+      }
+        
+        public function RefuserPourMoniteur($id) {
+          $seance = Seance::find($id);
+      
+          if ($seance) {
+              $seance->moniteur_accepte = false;
+              $seance->save();
+              return response()->json("Attribut moniteur_accepte mis à jour avec succès pour la séance", 200);
+          } else {
+              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_accepte", 404);
+          }
+      }
+        
+      /*  public function updateSeanceStatus($id)
+        {
+            $candidatAccepte = $this->AccepterPourCandidat($id);
+            $moniteurAccepte = $this->AccepterPourMoniteur($id);
+            $candidatRefuse = $this->RefuserPourCandidat($id);
+            $moniteurRefuse = $this->RefuserPourMoniteur($id);
+        
+            $seance = Seance::find($id);
+        
+            if ($candidatAccepte && $moniteurAccepte) {
+                $seance->status = 'confirmee';
+            } elseif ($candidatRefuse && $moniteurAccepte) {
+                $seance->status = 'refusee';
+            } elseif ($candidatAccepte && $moniteurRefuse) {
+                $seance->status = 'refusee';
+            } else {
+                $seance->status = 'en attente';
+            }
+        
+            $seance->save();
+        
+            return response()->json("Statut de la séance mis à jour avec succès", 200);
+        }*/
+
+        public function updateSeanceStatus($id)
+        {
+          $seance = Seance::find($id);
+          if($seance->candidat_accepte=='1'&& $seance->moniteur_accepte=='0'){
+            $seance->status = 'refusee';
+            $seance->save();
+            return response()->json("Statut de la séance mis à jour avec succès", 200);
+
+          }elseif($seance->candidat_accepte=='0'&& $seance->moniteur_accepte=='0'){
+            $seance->status = 'refusee';
+            $seance->save();
+            return response()->json("Statut de la séance mis à jour avec succès", 200);
+          }elseif($seance->candidat_accepte=='1'&& $seance->moniteur_accepte=='1'){
+            $seance->status = 'confirmee';
+            $seance->save();
+            return response()->json("Statut de la séance mis à jour avec succès", 200);
+          }else{
+            $seance->status = 'refusee';
+            $seance->save();
+            return response()->json("Statut de la séance mis à jour avec succès", 200);
+          }
+        }
+      }

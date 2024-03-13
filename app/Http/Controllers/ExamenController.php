@@ -25,11 +25,9 @@ class ExamenController extends Controller
           'heureD' => $request->heureD,
           'heureF'=> $request->heureF,
           'dateE'=> $request->dateE,
+          'user_id'=> $request->user_id,
+          'vehicule_id'=> $request->vehicule_id,
         ]);
-        $user->examen_id = $examen->id;
-        $user->save();
-        $vehicule->examen_id = $examen->id;
-        $vehicule->save();
         return response()->json($examen, 200);
       }else {
         return response()->json("examen not created", 400);
@@ -83,4 +81,20 @@ public function delete($id) {
     }
 }
 
+public function AccepterExamen($id) {
+  $examen = Examen::find($id);
+  $examen->status = 'confirmee';
+  $examen->save();
+  return('examen accepter');
+
+ }
+
+
+ public function RefuserExamen($id) {
+  $examen = Examen::find($id);
+  $examen->status = 'refusee';
+  $examen->save();
+  return('examen refusee');
+
+ }
 }

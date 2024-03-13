@@ -54,14 +54,21 @@ Route::get('/seance/show/{id}',[SeanceController::class,'show']);
 Route::post('/seance/store',[SeanceController::class,'store']);
 Route::put('/seance/update/{id}',[SeanceController::class,'update']);
 Route::delete('/seance/delete/{id}',[SeanceController::class,'delete']);
+Route::post('/seance/AccepterPourCandidat/{id}',[SeanceController::class,'AccepterPourCandidat']);
+Route::post('/seance/RefuserPourCandidat/{id}',[SeanceController::class,'RefuserPourCandidat']);
+Route::post('/seance/AccepterPourMoniteur/{id}',[SeanceController::class,'AccepterPourMoniteur']);
+Route::post('/seance/RefuserPourMoniteur/{id}',[SeanceController::class,'RefuserPourMoniteur']);
+Route::post('/seance/updateSeanceStatus/{id}',[SeanceController::class,'updateSeanceStatus']);
 
 
 Route::get('/Examen/index',[ExamenController::class,'index']);
 Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
 
-Route::post('/Examen/store',[ExamenController::class,'store']);  
+Route::post('/Examen/store',[ExamenController::class,'store']);
 Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
 Route::delete('/Examen/delete/{id}',[ExamenController::class,'delete']);
+Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
+Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
 
 Route::get('/Notification/index',[NotificationController::class,'index']);
 Route::get('/Notification/show/{id}',[NotificationController::class,'show']);

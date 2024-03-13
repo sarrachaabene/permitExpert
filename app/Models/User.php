@@ -91,4 +91,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Examen::class);
     }
+    public function resources()
+    {
+        return $this->belongsToMany(Resource::class);
+    }
 }
