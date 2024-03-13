@@ -17,7 +17,7 @@ class TransactionController extends Controller
   public function store(Request $request)
   {
       $user = User::find($request->user_id);
-      $autoecole = AutoEcole::find($request->autoecole_id);
+      $autoecole = AutoEcole::find($request->auto_ecole_id);
       $vehicule=Vehicule::find($request->vehicule_id);
   if ($user ){
         $transaction = Transaction::create([
@@ -25,19 +25,20 @@ class TransactionController extends Controller
           'montantT' => $request->montantT,
           'dateT'=> $request->dateT,
           'description'=> $request->description,
+          'user_id'=> $request->user_id,
         ]);
-        $user->transaction_id = $transaction->id;
-        $user->save();
+        $transaction->save();
       }elseif ($autoecole)
       {
         $transaction = Transaction::create([
           'typeT' => $request->typeT,
           'montantT' => $request->montantT,
           'dateT'=> $request->dateT,
+          'auto_ecole_id'=> $request->auto_ecole_id,
           'description'=> $request->description,
         ]);
-        $autoecole->transaction_id = $transaction->id;
-        $autoecole->save();
+        return response()->json($transaction, 200);
+        $transaction->save();
       }
       elseif ($vehicule)
       {
@@ -46,9 +47,10 @@ class TransactionController extends Controller
           'montantT' => $request->montantT,
           'dateT'=> $request->dateT,
           'description'=> $request->description,
+          'vehicule_id'=> $request->vehicule_id,
+
         ]);
-        $vehicule->transaction_id = $transaction->id;
-        $vehicule->save();
+        $transaction->save();
       }
         return response()->json($transaction, 200);
   }
@@ -62,7 +64,6 @@ class TransactionController extends Controller
     if($user&&$vehicule){
       // Créer un nouvel objet Paiement avec les données de la requête
     $transaction = Transaction::create($request->all());
-      
       // Retourner l'objet Paiement créé avec le code de statut 200
       return response()->json($transaction, 200);
   }
@@ -93,9 +94,4 @@ class TransactionController extends Controller
          return response()->json($msg, 404);
      }
        }
-
-       
-
-       
-      
 }

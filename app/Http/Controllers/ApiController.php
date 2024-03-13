@@ -18,7 +18,7 @@ class ApiController extends Controller {
     {
       $user= User::create($request->all());
       $autoecole = AutoEcole::find($request->auto_ecole_id);
-
+      return($user) ;
       if($user->role='admin')
 
       {  $user->auto_ecole_id = $autoecole->id; // Assign auto_ecole_id to the new user
