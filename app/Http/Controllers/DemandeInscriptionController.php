@@ -42,17 +42,61 @@ class DemandeInscriptionController extends Controller
             //refuser fait rien juste les donneé reste 
         }
 
-public function Accepter($id) {
-  $demandeInscription = Seance::find($id);
-        if (!$demandeInscription) {
-      $msg = "demandeInscription not found";
-      return response()->json($msg, 404);
+
+  public function accepterDemande($idDemande) {
+    // find and accept demande
+    //  changes status to true ;
+    // send email to inform
+  }
+  public function refuseDemande($idDemande) {
+    // find and refuse demande
+    //  changes status to false ;
+    // send email to inform
   }
 
-  if ($demandeInscription->delete()) {
-      return response()->json("demandeInscription accepted successfully", 200);
-  } else {
-      return response()->json("tu ne peut pas  accepter demandeInscription", 500);
+
+  public function accepteDemande($idDemande)
+  {
+/*  // Trouver la demande d'inscription par son ID
+    $demande = DemandeInscription::find($idDemande);
+    // Vérifier si la demande existe
+    if (!$demande) {
+        return response()->json("Demande not found", 404);
+    }
+
+    // Mettre à jour le statut de la demande à true
+    $demande->status = true;
+    $demande->save();
+
+    // Créer un nouvel utilisateur admin
+    $admin = User::create([
+        'nom' => $demande->nomA,
+        'prenom' => $demande->prenomA,
+        'email' => $demande->emailA,
+        'password' => bcrypt($demande->passwordA), // Assurez-vous de hasher le mot de passe
+        // Ajoutez d'autres champs d'utilisateur si nécessaire
+    ]);
+    // Créer une nouvelle auto-école associée à l'admin
+    $autoEcole = AutoEcole::create([
+        'nom' => $demande->nomEcole,
+        'adresse' => $demande->adresseEcole,
+        'description' => $demande->descriptionEcole,
+        // Ajoutez d'autres champs d'auto-école si nécessaire
+    ]);
+
+    // Associer l'auto-école créée à l'admin
+    $admin->autoEcole()->associate($autoEcole);
+    $admin->save();
+
+    return response()->json("Demande accepted successfully", 200);
+*/
   }
-}
+
+  public function register($request)
+  {/*
+    
+
+
+*/
+  }
 }

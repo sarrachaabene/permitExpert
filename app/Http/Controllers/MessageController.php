@@ -21,7 +21,7 @@ class MessageController extends Controller
 
 
     public function store(Request $request)
-    {   $user = User::find($request->sender_id);
+    {  // $user = User::find($request->sender_id);
 
         $message = Message::create($request->all());
         // Créer une nouvelle notification associée au message créé
@@ -31,8 +31,8 @@ class MessageController extends Controller
           'sender_msg' =>$message->sender_id,
           'receptient_msg'=>$message->recipient_id
         ]);
-        $user->notification_id = $notification->id;
-        $user->save();
+      /*  $user->notification_id = $notification->id;
+        $user->save();*/
         return response()->json($message, 200);
     }
 

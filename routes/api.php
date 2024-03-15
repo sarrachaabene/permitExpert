@@ -12,6 +12,7 @@ use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ResultatController;
+use App\Http\Controllers\DemandeInscriptionController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers;
 use App\Models\User;
@@ -105,3 +106,10 @@ Route::get('/resultat/show/{id}',[ResultatController::class,'show']);
 Route::post('/resultat/store',[ResultatController::class,'store']);
 Route::put('/resultat/update/{id}',[ResultatController::class,'update']);
 Route::delete('/resultat/delete/{id}',[ResultatController::class,'delete']);
+
+
+Route::get('/demandeInscript/index',[DemandeInscriptionController::class,'index']);
+Route::get('/demandeInscript/show/{id}',[DemandeInscriptionController::class,'show']);
+Route::post('/demandeInscript/store',[DemandeInscriptionController::class,'store']);
+Route::put('/demandeInscript/update/{id}',[DemandeInscriptionController::class,'update']);
+Route::delete('/demandeInscript/delete/{id}',[DemandeInscriptionController::class,'delete']);
