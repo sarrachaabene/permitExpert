@@ -12,7 +12,11 @@ class NotificationController extends Controller
   return response()->json($notification, 200);
   }
 
-    
+  public function ShowNotificationsByReceptientId($ReceptientId)
+  {
+      $notification = Notification::where('receptient_msg', $ReceptientId)->get();
+      return response()->json($notification, 200);
+  }
 
 
 

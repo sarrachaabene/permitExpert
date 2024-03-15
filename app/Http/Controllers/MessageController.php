@@ -31,7 +31,7 @@ class MessageController extends Controller
           'sender_msg' =>$message->sender_id,
           'receptient_msg'=>$message->recipient_id
         ]);
-      /*  $user->notification_id = $notification->id;
+      /* $user->notification_id = $notification->id;
         $user->save();*/
         return response()->json($message, 200);
     }

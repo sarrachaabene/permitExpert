@@ -82,7 +82,21 @@ class TransactionController extends Controller
 
     }   }
 
-
+    public function ShowTransactionByuserId($userId)
+    {
+        $transaction = Transaction::where('user_id', $userId)->get();
+        return response()->json($transaction, 200);
+    }
+    public function ShowTransactionByvehiculeId($vehiculeId)
+    {
+        $transaction = Transaction::where('vehicule_id', $vehiculeId)->get();
+        return response()->json($transaction, 200);
+    }
+    public function ShowTransactionByautoecoleId($ecoleId)
+    {
+        $transaction = Transaction::where('auto_ecole_id', $ecoleId)->get();
+        return response()->json($transaction, 200);
+    }
     public function update(Request $request,$id){
       $transaction= Transaction::find($id);
        if($transaction){

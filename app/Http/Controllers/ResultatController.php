@@ -12,9 +12,9 @@ class ResultatController extends Controller
   public function index(){
     $resultat= Resultat::get();
   return response()->json($resultat, 200);
-  } 
+  }
      public function store(Request $request)
-     { 
+     {
         $examen=Examen::find($request->examen_id);
          if ($examen){
            $resultat = Resultat::create([

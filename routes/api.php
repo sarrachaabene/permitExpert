@@ -52,6 +52,10 @@ Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'
 
 Route::get('/seance/index',[SeanceController::class,'index']);
 Route::get('/seance/show/{id}',[SeanceController::class,'show']);
+Route::get('/seance/ShowSenaceBycandidatId/{id}',[SeanceController::class,'ShowSenaceBycandidatId']);
+Route::get('/seance/ShowSenaceByvehiculeId/{id}',[SeanceController::class,'ShowSenaceByvehiculeId']);
+Route::get('/seance/ShowSenaceBymoniteurId/{id}',[SeanceController::class,'ShowSenaceBymoniteurId']);
+
 Route::post('/seance/store',[SeanceController::class,'store']);
 Route::put('/seance/update/{id}',[SeanceController::class,'update']);
 Route::delete('/seance/delete/{id}',[SeanceController::class,'delete']);
@@ -64,6 +68,8 @@ Route::post('/seance/updateSeanceStatus/{id}',[SeanceController::class,'updateSe
 
 Route::get('/Examen/index',[ExamenController::class,'index']);
 Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
+Route::get('/Examen/ShowExamensBycandidatId/{id}',[ExamenController::class,'ShowExamensBycandidatId']);
+Route::get('/Examen/ShowExamensByvehiculeId/{id}',[ExamenController::class,'ShowExamensByvehiculeId']);
 
 Route::post('/Examen/store',[ExamenController::class,'store']);
 Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
@@ -73,7 +79,7 @@ Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen
 
 Route::get('/Notification/index',[NotificationController::class,'index']);
 Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
-
+Route::get('/Notification/ShowNotificationsByReceptientId/{id}',[NotificationController::class,'ShowNotificationsByReceptientId']);
 
 
 Route::get('/message/index',[MessageController::class,'index']);
@@ -84,6 +90,9 @@ Route::post('/messsage/store',[MessageController::class,'store']);
 Route::get('/transaction/index',[TransactionController::class,'index']);
 Route::get('/transaction/show/{id}',[TransactionController::class,'show']);
 Route::post('/transaction/store',[TransactionController::class,'store']);
+Route::get('/transaction/ShowTransactionByuserId/{id}',[TransactionController::class,'ShowTransactionByuserId']);
+Route::get('/transaction/ShowTransactionByautoecoleId/{id}',[TransactionController::class,'ShowTransactionByautoecoleId']);
+Route::get('/transaction/ShowTransactionByvehiculeId/{id}',[TransactionController::class,'ShowTransactionByvehiculeId']);
 
 
 Route::get('/permis/index',[PermisController::class,'index']);

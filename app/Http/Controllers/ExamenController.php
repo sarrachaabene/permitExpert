@@ -46,6 +46,16 @@ class ExamenController extends Controller
 
 
       }   }
+      public function ShowExamensBycandidatId($candidatId)
+      {
+          $examen = Examen::where('user_id', $candidatId)->get();
+          return response()->json($examen, 200);
+      }
+      public function ShowExamensByvehiculeId($vehiculeId)
+      {
+          $examen = Examen::where('vehicule_id', $vehiculeId)->get();
+          return response()->json($examen, 200);
+      }
       public function update(Request $request,$id){
        $examen= Examen::find($id);
         if($examen){

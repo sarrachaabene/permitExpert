@@ -14,22 +14,19 @@ class SeanceController extends Controller
 public function store(Request $request)
   {
       // Trouver l'utilisateur par son ID
-      $user = User::find($request->user_id);
-      $user1 = User::find($request->user_id1);
+      $moniteur = User::find($request->moniteur_id);
+      $candidat = User::find($request->candidat_id);
       $vehicule=Vehicule::find($request->vehicule_id);
-      if (($user && $user->role === "candidat")&&($user1 && $user1->role === "moniteur")) {
+      if (($candidat && $candidat->role === "candidat")&&($moniteur && $moniteur->role === "moniteur")) {
           $seance = Seance::create([
               'type' => $request->type,
               'heureD' => $request->heureD,
               'heureF'=> $request->heureF,
               'dateS'=> $request->dateS,
-                ]);
-          $user->seance_id = $seance->id;
-          $user->save();
-          $user1->seance_id = $seance->id;
-          $user1->save();
-          $vehicule->seance_id = $seance->id;
-          $vehicule->save();
+              'moniteur_id'=> $request->moniteur_id,
+              'candidat_id'=> $request->candidat_id,
+              'vehicule_id'=> $request->vehicule_id,
+                ]); 
           return response()->json($seance, 200);
       } else {
           return response()->json("User is not an candidat", 400);
@@ -48,6 +45,23 @@ public function store(Request $request)
 
 
       }   }
+
+
+      public function ShowSenaceBycandidatId($candidatId)
+      {
+          $seance = Seance::where('candidat_id', $candidatId)->get();
+          return response()->json($seance, 200);
+      }
+      public function ShowSenaceByvehiculeId($vehiculeId)
+      {
+          $seance = Seance::where('vehicule_id', $vehiculeId)->get();
+          return response()->json($seance, 200);
+      }
+      public function ShowSenaceBymoniteurId($moniteurId)
+      {
+          $seance = Seance::where('moniteur_id', $moniteurId)->get();
+          return response()->json($seance, 200);
+      }
       public function update(Request $request,$id){
         $seance= Seance::find($id);
          if($seance){
@@ -79,11 +93,11 @@ public function store(Request $request)
             $seance = Seance::find($id);
         
             if ($seance) {
-                $seance->candidat_accepte = true;
+                $seance->candidat_status = true;
                 $seance->save();
-                return response()->json("Attribut candidat_accepte mis à jour avec succès pour la séance", 200);
+                return response()->json("Attribut candidat_status mis à jour avec succès pour la séance", 200);
             } else {
-                return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_accepte", 404);
+                return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status", 404);
             }
         }
         
@@ -91,9 +105,9 @@ public function store(Request $request)
           $seance = Seance::find($id);
       
           if ($seance) {
-              $seance->candidat_accepte = false;
+              $seance->candidat_status = false;
               $seance->save();
-              return response()->json("Attribut candidat_accepte mis à jour avec succès pour la séance", 200);
+              return response()->json("Attribut candidat_status mis à jour avec succès pour la séance", 200);
           } else {
               return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_accepte", 404);
           }
@@ -103,11 +117,11 @@ public function store(Request $request)
           $seance = Seance::find($id);
       
           if ($seance) {
-              $seance->moniteur_accepte = true;
+              $seance->moniteur_status= true;
               $seance->save();
-              return response()->json("Attribut moniteur_accepte mis à jour avec succès pour la séance", 200);
+              return response()->json("Attribut moniteur_statusmis à jour avec succès pour la séance", 200);
           } else {
-              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_accepte", 404);
+              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_status", 404);
           }
       }
         
@@ -115,51 +129,27 @@ public function store(Request $request)
           $seance = Seance::find($id);
       
           if ($seance) {
-              $seance->moniteur_accepte = false;
+              $seance->moniteur_status = false;
               $seance->save();
-              return response()->json("Attribut moniteur_accepte mis à jour avec succès pour la séance", 200);
+              return response()->json("Attribut moniteur_status mis à jour avec succès pour la séance", 200);
           } else {
               return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_accepte", 404);
           }
       }
-        
-      /*  public function updateSeanceStatus($id)
-        {
-            $candidatAccepte = $this->AccepterPourCandidat($id);
-            $moniteurAccepte = $this->AccepterPourMoniteur($id);
-            $candidatRefuse = $this->RefuserPourCandidat($id);
-            $moniteurRefuse = $this->RefuserPourMoniteur($id);
-        
-            $seance = Seance::find($id);
-        
-            if ($candidatAccepte && $moniteurAccepte) {
-                $seance->status = 'confirmee';
-            } elseif ($candidatRefuse && $moniteurAccepte) {
-                $seance->status = 'refusee';
-            } elseif ($candidatAccepte && $moniteurRefuse) {
-                $seance->status = 'refusee';
-            } else {
-                $seance->status = 'en attente';
-            }
-        
-            $seance->save();
-        
-            return response()->json("Statut de la séance mis à jour avec succès", 200);
-        }*/
 
         public function updateSeanceStatus($id)
         {
           $seance = Seance::find($id);
-          if($seance->candidat_accepte=='1'&& $seance->moniteur_accepte=='0'){
+          if($seance->candidat_status=='1'&& $seance->moniteur_status=='0'){
             $seance->status = 'refusee';
             $seance->save();
             return response()->json("Statut de la séance mis à jour avec succès", 200);
 
-          }elseif($seance->candidat_accepte=='0'&& $seance->moniteur_accepte=='0'){
+          }elseif($seance->candidat_status=='0'&& $seance->moniteur_status=='0'){
             $seance->status = 'refusee';
             $seance->save();
             return response()->json("Statut de la séance mis à jour avec succès", 200);
-          }elseif($seance->candidat_accepte=='1'&& $seance->moniteur_accepte=='1'){
+          }elseif($seance->candidat_status=='1'&& $seance->moniteur_status=='1'){
             $seance->status = 'confirmee';
             $seance->save();
             return response()->json("Statut de la séance mis à jour avec succès", 200);

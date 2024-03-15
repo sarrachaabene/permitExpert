@@ -14,6 +14,12 @@ class Seance extends Model
       'heureF',
       'dateS',
       'status',
+      'vehicule_id',
+      'candidat_id',
+      'moniteur_id',
+      'candidat_status',
+      'moniteur_status',
+
 ];
   public function user()
     {

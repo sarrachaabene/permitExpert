@@ -16,12 +16,11 @@ class DemandeInscription extends Model
       'nomA',
       'prenomA',
       'emailA',
-      'passwordA',
       'cin',
       'numTel',
       'imageA',
       'dateNaissance',
-      
+      'status',
 ];
 
 public function user()

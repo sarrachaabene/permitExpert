@@ -89,7 +89,7 @@ class DemandeInscriptionController extends Controller
   {
     $demandeInscription= DemandeInscription::create($request->all());
     if($demandeInscription)
-    { 
+    {
       $demandeInscription->save();
       return response()->json($demandeInscription, 200);
     }
@@ -97,7 +97,39 @@ class DemandeInscriptionController extends Controller
    }
 
 
-
+public function accepteDemande($idDemande){
+  // Trouver la demande d'inscription par son ID
+  $demande = DemandeInscription::find($idDemande);
+  // Vérifier si la demande existe
+  if (!$demande) {
+      return response()->json("Demande not found", 404);
+  }
+  // Mettre à jour le statut de la demande à true
+  $demande->status = true;
+  $demande->save();
+  // Créer un nouvel utilisateur admin
+  $admin = User::create([
+      'name' => $demande->nomA,
+      'prenom' => $demande->prenomA,
+      'email' => $demande->emailA,
+      'cin' => $demande->cin,
+      'numTel'=>$demande->numTel,
+      'dateNaissance'=>$demande->dateNaissance,
+      'user_image' =>$demande->imageA,
+  ]);
+  // Créer une nouvelle auto-école associée à l'admin
+  $autoEcole = AutoEcole::create([
+      'nom' => $demande->nomEcole,
+      'adresse' => $demande->adresseEcole,
+      'description' => $demande->descriptionEcole,
+      'autoecole_image' => $demande->imageEcole, 
+      // Ajoutez d'autres champs d'auto-école si nécessaire
+  ]);
+  // Associer l'auto-école créée à l'admin
+  $admin->autoEcole()->associate($autoEcole);
+  $admin->save();
+  return response()->json("Demande accepted successfully", 200);
+}
        
        public function Refuser($id) {
       /*  $seance = Seance::find($id);
