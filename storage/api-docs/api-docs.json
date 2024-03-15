@@ -1,0 +1,90 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "APIs For Thrift Store",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/demandeInscript/index": {
+            "get": {
+                "tags": [
+                    "Demande Inscriptions"
+                ],
+                "summary": "Get list of Demande Inscriptions",
+                "description": "Returns list of Demande Inscriptions",
+                "operationId": "getDemandeInscriptionsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DemandeInscription"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DemandeInscription": {
+                "title": "Demande Inscription",
+                "description": "Demande Inscription model",
+                "properties": {
+                    "nomEcole": {
+                        "type": "string"
+                    },
+                    "adresseEcole": {
+                        "type": "string"
+                    },
+                    "descriptionEcole": {
+                        "type": "string"
+                    },
+                    "imageEcole": {
+                        "type": "string"
+                    },
+                    "nomA": {
+                        "type": "string"
+                    },
+                    "prenomA": {
+                        "type": "string"
+                    },
+                    "emailA": {
+                        "type": "string"
+                    },
+                    "passwordA": {
+                        "type": "string"
+                    },
+                    "cin": {
+                        "type": "string"
+                    },
+                    "numTel": {
+                        "type": "string"
+                    },
+                    "imageA": {
+                        "type": "string"
+                    },
+                    "dateNaissance": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

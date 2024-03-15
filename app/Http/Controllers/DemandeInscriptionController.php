@@ -5,9 +5,80 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DemandeInscription;
 
-
+/**
+ * @OA\Schema(
+ *     schema="DemandeInscription",
+ *     title="Demande Inscription",
+ *     description="Demande Inscription model",
+ *     @OA\Property(
+ *         property="nomEcole",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="adresseEcole",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="descriptionEcole",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="imageEcole",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="nomA",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="prenomA",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="emailA",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="passwordA",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="cin",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="numTel",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="imageA",
+ *         type="string"
+ *     ),
+ *     @OA\Property(
+ *         property="dateNaissance",
+ *         type="string"
+ *     ),
+ * )
+ */
 class DemandeInscriptionController extends Controller
 {
+     /**
+     * @OA\Get(
+     *      path="/api/demandeInscript/index",
+     *      operationId="getDemandeInscriptionsList",
+     *      tags={"Demande Inscriptions"},
+     *      summary="Get list of Demande Inscriptions",
+     *      description="Returns list of Demande Inscriptions",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/DemandeInscription")
+     *          ),
+     *      ),
+     * )
+     */
   public function index()
   {
     $demandeInscription=DemandeInscription::get();
