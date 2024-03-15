@@ -52,9 +52,9 @@ Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'
 
 Route::get('/seance/index',[SeanceController::class,'index']);
 Route::get('/seance/show/{id}',[SeanceController::class,'show']);
-Route::get('/seance/ShowSenaceBycandidatId/{id}',[SeanceController::class,'ShowSenaceBycandidatId']);
-Route::get('/seance/ShowSenaceByvehiculeId/{id}',[SeanceController::class,'ShowSenaceByvehiculeId']);
-Route::get('/seance/ShowSenaceBymoniteurId/{id}',[SeanceController::class,'ShowSenaceBymoniteurId']);
+Route::get('/seance/ShowSeanceBycandidatId/{id}',[SeanceController::class,'ShowSeanceBycandidatId']);
+Route::get('/seance/ShowSeanceByvehiculeId/{id}',[SeanceController::class,'ShowSeanceByvehiculeId']);
+Route::get('/seance/ShowSeanceBymoniteurId/{id}',[SeanceController::class,'ShowSeanceBymoniteurId']);
 
 Route::post('/seance/store',[SeanceController::class,'store']);
 Route::put('/seance/update/{id}',[SeanceController::class,'update']);
