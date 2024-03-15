@@ -29,6 +29,846 @@
                     }
                 }
             }
+        },
+        "/api/Examen/index": {
+            "get": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Get list of Exams",
+                "description": "Returns list of Exams",
+                "operationId": "getExamenList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Examen"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/store": {
+            "post": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Store a new exam",
+                "description": "Stores a new exam in the database",
+                "operationId": "storeExamen",
+                "requestBody": {
+                    "description": "Exam data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Examen"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Examen"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam not created"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/show/{id}": {
+            "get": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Show details of a specific exam",
+                "description": "Retrieves details of a specific exam by its ID",
+                "operationId": "showExamen",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the exam to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Examen"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/ShowExamensBycandidatId/{id}": {
+            "get": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Show exams by candidat ID",
+                "description": "Retrieves exams associated with a specific candidat by their ID",
+                "operationId": "showExamensByCandidatId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the candidat",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Examen"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "No exams found for the candidat"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/ShowExamensByvehiculeId/{id}": {
+            "get": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Show exams by vehicule ID",
+                "description": "Retrieves exams associated with a specific vehicule by their ID",
+                "operationId": "showExamensByVehiculeId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the vehicule",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Examen"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "No exams found for the vehicule"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/update/{id}": {
+            "put": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Update an existing exam",
+                "description": "Updates an existing exam in the database",
+                "operationId": "updateExamen",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the exam to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Exam data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Examen"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Examen"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Delete an exam",
+                "description": "Deletes an exam by its ID",
+                "operationId": "deleteExamen",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the exam to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam not found"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Failed to delete Exam"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/AccepterExamen/{id}": {
+            "post": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Accept an exam",
+                "description": "Accepts an exam by updating its status to 'confirmee'",
+                "operationId": "acceptExamen",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the exam to accept",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam accepted"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Examen/RefuserExamen/{id}": {
+            "post": {
+                "tags": [
+                    "Examens"
+                ],
+                "summary": "Refuse an exam",
+                "description": "Refuses an exam by updating its status to 'refusee'",
+                "operationId": "refuseExamen",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the exam to refuse",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam refused"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Exam not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/index": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get list of Transactions",
+                "description": "Returns list of Transactions",
+                "operationId": "getTransactionList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/show/{id}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get a Transaction by ID",
+                "description": "Returns a Transaction by its ID",
+                "operationId": "getTransactionById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Transaction to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Transaction not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/ShowTransactionByuserId/{userId}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transactions by User ID",
+                "description": "Returns transactions associated with a specific User by their ID",
+                "operationId": "getTransactionByUserId",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the User",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "No transactions found for the User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/ShowTransactionByvehiculeId/{vehiculeId}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transactions by Vehicule ID",
+                "description": "Returns transactions associated with a specific Vehicule by its ID",
+                "operationId": "getTransactionByVehiculeId",
+                "parameters": [
+                    {
+                        "name": "vehiculeId",
+                        "in": "path",
+                        "description": "ID of the Vehicule",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "No transactions found for the Vehicule"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/ShowTransactionByautoecoleId/{ecoleId}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transactions by Auto-Ecole ID",
+                "description": "Returns transactions associated with a specific Auto-Ecole by its ID",
+                "operationId": "getTransactionByAutoEcoleId",
+                "parameters": [
+                    {
+                        "name": "ecoleId",
+                        "in": "path",
+                        "description": "ID of the Auto-Ecole",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "No transactions found for the Auto-Ecole"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/update/{id}": {
+            "put": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Update a Transaction",
+                "description": "Updates an existing Transaction",
+                "operationId": "updateTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Transaction to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Transaction"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Transaction"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Transaction not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/vehicule/index": {
+            "get": {
+                "tags": [
+                    "Vehicules"
+                ],
+                "summary": "Get list of vehicles",
+                "description": "Returns list of vehicles",
+                "operationId": "getVehiculeList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Vehicule"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/vehicule/store": {
+            "post": {
+                "tags": [
+                    "Vehicules"
+                ],
+                "summary": "Store a new vehicle",
+                "description": "Stores a new vehicle in the database",
+                "operationId": "storeVehicule",
+                "requestBody": {
+                    "description": "Vehicle data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Vehicule"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicule"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Vehicle not created"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/vehicule/show/{id}": {
+            "get": {
+                "tags": [
+                    "Vehicules"
+                ],
+                "summary": "Show details of a specific vehicle",
+                "description": "Retrieves details of a specific vehicle by its ID",
+                "operationId": "showVehicule",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the vehicle to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicule"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Vehicle not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/vehicule/update/{id}": {
+            "put": {
+                "tags": [
+                    "Vehicules"
+                ],
+                "summary": "Update an existing vehicle",
+                "description": "Updates an existing vehicle in the database",
+                "operationId": "updateVehicule",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the vehicle to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Vehicle data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Vehicule"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vehicule"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Vehicle not found"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -71,6 +911,83 @@
                         "type": "string"
                     },
                     "dateNaissance": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Examen": {
+                "title": "Examen",
+                "description": "Examen model",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "heureD": {
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "heureF": {
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "dateE": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "vehicule_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Transaction": {
+                "title": "Transaction",
+                "description": "Transaction model",
+                "properties": {
+                    "dateT": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "typeT": {
+                        "type": "string"
+                    },
+                    "montantT": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "auto_ecole_id": {
+                        "type": "integer"
+                    },
+                    "vehicule_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Vehicule": {
+                "title": "Vehicule",
+                "description": "Vehicule model",
+                "properties": {
+                    "immatricule": {
+                        "type": "string"
+                    },
+                    "kilometrage": {
+                        "type": "integer"
+                    },
+                    "marque": {
+                        "type": "string"
+                    },
+                    "typeV": {
                         "type": "string"
                     }
                 },
