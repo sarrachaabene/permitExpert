@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ResultatController;
 use App\Http\Controllers\DemandeInscriptionController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\RessourceEducativeController;
 use App\Http\Controllers;
 use App\Models\User;
 use App\Models\AutoEcole;
@@ -22,7 +23,7 @@ use App\Models\Message;
 use App\Http\Controllers\ExamenController;
 use App\Models\Examen;
 use App\Models\Notification;
-use App\Models\Resultat;
+
 
 
 /*
@@ -49,6 +50,11 @@ Route::put('/user/update/{id}',[ApiController::class,'update']);
 Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
 Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
 Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
+Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
+Route::get('/autoEcole/show/{id}',[AutoEcoleController::class,'show']);
+Route::put('/autoEcole/update/{id}',[AutoEcoleController::class,'update']);
+Route::delete('/autoEcole/delete/{id}',[AutoEcoleController::class,'delete']);
+
 
 Route::get('/seance/index',[SeanceController::class,'index']);
 Route::get('/seance/show/{id}',[SeanceController::class,'show']);
@@ -97,11 +103,11 @@ Route::get('/transaction/ShowTransactionByautoecoleId/{id}',[TransactionControll
 Route::get('/transaction/ShowTransactionByvehiculeId/{id}',[TransactionController::class,'ShowTransactionByvehiculeId']);
 
 
-Route::get('/permis/index',[PermisController::class,'index']);
-Route::get('/permis/show/{id}',[PermisController::class,'show']);
-Route::post('/permis/store',[PermisController::class,'store']);
-Route::put('/permis/update/{id}',[PermisController::class,'update']);
-Route::delete('/permis/delete/{id}',[PermisController::class,'delete']);
+Route::get('/ressourceeducative/index',[RessourceEducativeController::class,'index']);
+Route::get('/ressourceeducative/show/{id}',[RessourceEducativeController::class,'show']);
+Route::post('/ressourceeducative/store',[RessourceEducativeController::class,'store']);
+Route::put('/ressourceeducative/update/{id}',[RessourceEducativeController::class,'update']);
+Route::delete('/ressourceeducative/delete/{id}',[RessourceEducativeController::class,'delete']);
 
 
 Route::get('/vehicule/index',[VehiculeController::class,'index']);
@@ -109,14 +115,6 @@ Route::get('/vehicule/show/{id}',[VehiculeController::class,'show']);
 Route::post('/vehicule/store',[vehiculeController::class,'store']);
 Route::put('/vehicule/update/{id}',[vehiculeController::class,'update']);
 Route::delete('/vehicule/delete/{id}',[vehiculeController::class,'delete']);
-
-
-
-Route::get('/resultat/index',[ResultatController::class,'index']);
-Route::get('/resultat/show/{id}',[ResultatController::class,'show']);
-Route::post('/resultat/store',[ResultatController::class,'store']);
-Route::put('/resultat/update/{id}',[ResultatController::class,'update']);
-Route::delete('/resultat/delete/{id}',[ResultatController::class,'delete']);
 
 
 Route::get('/demandeInscript/index',[DemandeInscriptionController::class,'index']);

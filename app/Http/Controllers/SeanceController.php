@@ -370,7 +370,39 @@ public function store(Request $request)
               return response()->json("seance to delete permis", 500);
           }
            }
-          
+           
+          /**
+ * @OA\Post(
+ *      path="/api/seance/AccepterPourCandidat/{id}",
+ *      operationId="accepterPourCandidat",
+ *      tags={"Seances"},
+ *      summary="Accepter une séance pour le candidat",
+ *      description="Accepter une séance pour le candidat en mettant à jour l'attribut candidat_status",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID de la séance à accepter",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Attribut candidat_status mis à jour avec succès pour la séance",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Attribut candidat_status mis à jour avec succès pour la séance"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status"
+ *      )
+ * )
+ */
+
            public function AccepterPourCandidat($id) {
             $seance = Seance::find($id);
         
@@ -382,7 +414,38 @@ public function store(Request $request)
                 return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status", 404);
             }
         }
-        
+        /**
+ * @OA\Post(
+ *      path="/api/seance/RefuserPourCandidat/{id}",
+ *      operationId="refuserPourCandidat",
+ *      tags={"Seances"},
+ *      summary="Refuser une séance pour le candidat",
+ *      description="Refuser une séance pour le candidat en mettant à jour l'attribut candidat_status à false",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID de la séance à refuser",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Attribut candidat_status mis à jour avec succès pour la séance",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Attribut candidat_status mis à jour avec succès pour la séance"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status"
+ *      )
+ * )
+ */
+
         public function RefuserPourCandidat($id) {
           $seance = Seance::find($id);
       
@@ -395,6 +458,38 @@ public function store(Request $request)
           }
       }
         
+      /**
+ * @OA\Post(
+ *      path="/api/seance/AccepterPourMoniteur/{id}",
+ *      operationId="accepterPourMoniteur",
+ *      tags={"Seances"},
+ *      summary="Accepter une séance pour le moniteur",
+ *      description="Accepter une séance pour le moniteur en mettant à jour l'attribut moniteur_status à true",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID de la séance à accepter pour le moniteur",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Attribut moniteur_status mis à jour avec succès pour la séance",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Attribut moniteur_status mis à jour avec succès pour la séance"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_status"
+ *      )
+ * )
+ */
+
         public function AccepterPourMoniteur($id) {
           $seance = Seance::find($id);
       
@@ -407,6 +502,38 @@ public function store(Request $request)
           }
       }
         
+      /**
+ * @OA\Post(
+ *      path="/api/seance/RefuserPourMoniteur/{id}",
+ *      operationId="refuserPourMoniteur",
+ *      tags={"Seances"},
+ *      summary="Refuser une séance pour le moniteur",
+ *      description="Refuser une séance pour le moniteur en mettant à jour l'attribut moniteur_status à false",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID de la séance à refuser pour le moniteur",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Attribut moniteur_status mis à jour avec succès pour la séance",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Attribut moniteur_status mis à jour avec succès pour la séance"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_status"
+ *      )
+ * )
+ */
+
         public function RefuserPourMoniteur($id) {
           $seance = Seance::find($id);
       
@@ -418,6 +545,38 @@ public function store(Request $request)
               return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_accepte", 404);
           }
       }
+
+      /**
+ * @OA\Post(
+ *      path="/api/seance/updateSeanceStatus/{id}",
+ *      operationId="updateSeanceStatus",
+ *      tags={"Seances"},
+ *      summary="Mettre à jour le statut d'une séance",
+ *      description="Mettre à jour le statut d'une séance en fonction des attributs candidat_status et moniteur_status",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID de la séance à mettre à jour",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer",
+ *              format="int64"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Statut de la séance mis à jour avec succès",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Statut de la séance mis à jour avec succès"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Séance non trouvée. Impossible de mettre à jour le statut de la séance"
+ *      )
+ * )
+ */
 
         public function updateSeanceStatus($id)
         {

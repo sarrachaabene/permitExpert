@@ -12,7 +12,7 @@ class AutoEcole extends Model
 {
     use HasFactory;
     protected $fillable = [
-      "nom" ,"adresse"
+      "nom" ,"adresse","autoecole_image",
 ];
 public function user()
 {
