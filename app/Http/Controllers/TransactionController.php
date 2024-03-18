@@ -320,17 +320,59 @@ class TransactionController extends Controller
          return response()->json($msg, 404);
      }
        }
+       /**
+ * @OA\Delete(
+ *      path="/api/transaction/delete/{id}",
+ *      operationId="deleteTransaction",
+ *      tags={"Transactions"},
+ *      summary="Delete a Transaction",
+ *      description="Deletes a Transaction by its ID",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID of the Transaction to delete",
+ *          required=true,
+ *          @OA\Schema(
+ *              type="integer"
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Transaction deleted successfully"
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Not Found",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Transaction not found"
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Internal Server Error",
+ *          @OA\JsonContent(
+ *              type="string",
+ *              example="Failed to delete Transaction"
+ *          ),
+ *      ),
+ * )
+ */
        public function delete($id) {
-    // Find the user by ID
+    // Find the transaction by ID
     $transaction = Transaction::find($id);
 
-    // Check if the user exists
+    // Check if the transaction exists
     if (!$transaction) {
         $msg = "transaction not found";
         return response()->json($msg, 404);
     }
 
-    // Delete the user
+    // Delete the transaction
     $transaction->delete();
 
     // Check if the deletion was successful

@@ -89,14 +89,14 @@ Route::get('/Notification/ShowNotificationsByReceptientId/{id}',[NotificationCon
 
 
 Route::get('/message/index',[MessageController::class,'index']);
-Route::get('/messgae/show/{id}',[MessageController::class,'show']);
-Route::post('/messsage/store',[MessageController::class,'store']);
+Route::get('/message/show/{id}',[MessageController::class,'show']);
+Route::post('/message/store',[MessageController::class,'store']);
 
 
 Route::get('/transaction/index',[TransactionController::class,'index']);
 Route::get('/transaction/show/{id}',[TransactionController::class,'show']);
 Route::post('/transaction/store',[TransactionController::class,'store']);
-Route::delete('/transaction/delete',[TransactionController::class,'delete']);
+Route::delete('/transaction/delete/{id}',[TransactionController::class,'delete']);
 Route::put('/transaction/update/{id}',[TransactionController::class,'update']);
 Route::get('/transaction/ShowTransactionByuserId/{id}',[TransactionController::class,'ShowTransactionByuserId']);
 Route::get('/transaction/ShowTransactionByautoecoleId/{id}',[TransactionController::class,'ShowTransactionByautoecoleId']);
