@@ -1,21 +1,31 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <side-bar-component></side-bar-component>
+    <!--  Main wrapper -->
+  <div class="body-wrapper">
+      <header class="app-header">  
+        <nav-bar-component></nav-bar-component>
+      </header>
+      <router-view></router-view>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
+import FooterComponent from '../components/Layout/FooterComponent.vue';
+import SideBarComponent from '../components/Layout/SideBarComponent.vue';
+import NavBarComponent from '../components/Layout/NavBarComponent.vue';
+import DashbordComponent from './Page/Dashbord.component.vue';
+export default {
+      name: 'ExempleComponent',
+  components: { // Register the child component
+    FooterComponent,
+    SideBarComponent,
+    NavBarComponent,
+    DashbordComponent 
+  },
         mounted() {
             console.log('Component mounted.')
         }
