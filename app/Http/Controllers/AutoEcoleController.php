@@ -52,10 +52,41 @@ class AutoEcoleController extends Controller
  *      )
  * )
  */
-  public function index(){
+   public function index(){
     $autoEcole= AutoEcole::get();
   return response()->json($autoEcole, 200);
+  } 
+
+    /**
+ * @OA\Get(
+ *      path="/api/autoEcole/user",
+ *      operationId="getUserAutoEcole",
+ *      tags={"AutoEcole"},
+ *      summary="Obtient toutes les auto-écoles",
+ *      description="Renvoie les auto ecole pour chaque utilisateur",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Liste des auto-écoles",
+ *          @OA\JsonContent(
+ *              type="array",
+ *              @OA\Items(ref="#/components/schemas/AutoEcole")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Erreur interne du serveur"
+ *      )
+ * )
+ */
+  public function getUsersAutoEcole()
+  {
+    $usersWithAutoEcole = User::has('autoEcole')->with('autoEcole')
+    ->with('autoEcole') // Eager load the autoEcole relationship
+    ->get();
+    return response()->json($usersWithAutoEcole, 200);
+
   }
+
   /**
  * @OA\Post(
  *      path="/api/autoEcole/store",

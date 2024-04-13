@@ -9,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/styles.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet">
 
 </head>
 

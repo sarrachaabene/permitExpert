@@ -51,6 +51,7 @@ Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
 Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
 Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
 Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
+Route::get('/autoEcole/user',[AutoEcoleController::class,'getUsersAutoEcole']);
 Route::get('/autoEcole/show/{id}',[AutoEcoleController::class,'show']);
 Route::put('/autoEcole/update/{id}',[AutoEcoleController::class,'update']);
 Route::delete('/autoEcole/delete/{id}',[AutoEcoleController::class,'delete']);

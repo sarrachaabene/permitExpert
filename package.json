@@ -8,14 +8,19 @@
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
         "@vitejs/plugin-vue": "^4.5.0",
-        "axios": "^1.6.4",
+        "axios": "^1.6.8",
         "bootstrap": "^5.2.3",
         "laravel-vite-plugin": "^1.0.0",
         "sass": "^1.56.1",
         "vite": "^5.1.6",
-        "vue": "^3.2.37"
+        "vite-plugin-vuetify": "^2.0.3",
+        "vue": "^3.2.37",
+        "vuetify": "^3.4.0-beta.1"
     },
     "dependencies": {
+        "@mdi/font": "^7.4.47",
+        "@syncfusion/ej2-vue-richtexteditor": "^25.1.38",
+        "@syncfusion/ej2-vue-schedule": "^25.1.37",
         "vue-router": "^4.3.0"
     }
 }
