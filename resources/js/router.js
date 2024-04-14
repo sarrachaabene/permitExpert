@@ -7,7 +7,7 @@ import CalendarComponent from './components//Page/CalendarComponent.vue';
 import DemandeComponent from './components//Page/DemandeComponent.vue';
 import PageNotFound from './components/Page/PageNotFound.component.vue';
 const routes = [
-  { path: '/', component: DashbordComponent },
+  { path: '/', component: LoginComponent },
   { path: '/autoEcole', component: AutoEcoleComponent },
   { path: '/login', component: LoginComponent },
   { path: '/Register', component: RegisterComponent },

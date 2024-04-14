@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\AutoEcole;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 /**
  * @OA\Schema(
  *     schema="User",
@@ -91,20 +95,20 @@ class ApiController extends Controller {
  * )
  */
 
-    public function store(Request $request)
-    {
-      $user= User::create($request->all());
-      $autoecole = AutoEcole::find($request->auto_ecole_id);
-      return($user) ;
-      if($user->role='admin')
-
-      {  $user->auto_ecole_id = $autoecole->id; // Assign auto_ecole_id to the new user
-        $user->save();
-
-        return response()->json($user, 200);
-      }
-      return response()->json("user not created", 400);
+ public function store(Request $request)
+ {
+     $user = User::create($request->all());
+     $token = $user->createToken('My Token')->accessToken;
+     return response()->json(['access_token' => $token]);
+    /*  $autoecole = AutoEcole::find($request->auto_ecole_id);
+ 
+     if ($user->role == 'admin') {  
+         $user->auto_ecole_id = $autoecole->id; // Assign auto_ecole_id to the new user
+         $user->save();
      }
+ 
+     return response()->json(["user" => $user, "token" => $token], 200); */
+ }
 /**
  * @OA\Get(
  *      path="/api/user/show/{id}",
@@ -239,4 +243,54 @@ public function delete($id) {
         return response()->json("Failed to delete user", 500);
     } */
 }
+  public function registerClient(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'email' => ['required', 'string', 'email', 'max:255', Rule::exists('users', 'email')],
+      'password' => ['required', 'string', 'min:8','confirmed'],
+      'numTel' => ['required', 'string', 'max:8']
+  ]);
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 402);
+    }
+     // Create or update the user
+     $user = User::updateOrCreate(
+      ['email' => $request->email], // Find user by email
+      ['password' => Hash::make($request->password), // Hash the password
+       'numTel' => $request->numTel, // Update the phone number
+       'name' => $request->name // Update the phone number
+      ]
+  );
+  // You can return a success response if needed
+  return response()->json(['user' => $user], 200);
+  }
+  
+  public function loginClient(Request $request)
+  {
+      $validator = Validator::make($request->all(), [
+          'email' => ['required', 'string', 'email', 'max:255', Rule::exists('users', 'email')],
+          'password' => ['required', 'string', 'min:8']
+      ]);
+      if ($validator->fails()) {
+          return response()->json($validator->errors(), 402);
+      }
+       // Attempt to authenticate the user
+    $credentials = $request->only('email', 'password');
+    if (!Auth::attempt($credentials)) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+      // Generate a token for the authenticated user
+  //    $accessToken = Auth::user()->createToken('authToken')->accessToken;
+      return  Auth::user()->createToken("habib")
+             ->plainTextToken;
+
+      // You can add additional payload data here
+  /*     $payload = [
+          'user' => Auth::user(), // Add user data to the payload if needed
+          'access_token' => $accessToken,
+      ]; */
+  
+      // Return the payload and token
+    /*   return response()->json($payload, 200); */
+  }
 }
