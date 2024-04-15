@@ -6,7 +6,7 @@
         <div class="card">
           <div class="card-body">
             <h4 style="text-align: center; font-weight: bold">
-              Liste des auto-écoles
+              Liste des véhicules
             </h4>
             <div class="content">
               <div class="pb-5">
@@ -22,7 +22,7 @@
                             background-color: #1F4069;
                             border-color: #1F4069;
                           " class="btn btn-primary m-1">
-                          Ajouter auto-école
+                          Ajouter véhicule
                         </button>
                       </div>
                     </div>
@@ -32,22 +32,20 @@
                       <thead>
                         <tr>
                           <th scope="col">id</th>
-                          <th scope="col">auto école</th>
-                          <th scope="col">Adresse</th>
-                          <th scope="col">nom d'admin</th>
-                          <th scope="col">Numéro de téléphone</th>
-                          <th scope="col">Email</th>
+                          <th scope="col">Immatriculation</th>
+                          <th scope="col">Marque</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Kilométrage</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(auto, key) in autoEcole" :key="auto.id">
+                        <tr v-for="(veh, key) in vehicule" :key="veh.id">
                           <th scope="row">{{ key + 1 }}</th>
-                          <td>{{ auto.auto_ecole.nom }}</td>
-                          <td>{{ auto.auto_ecole.adresse }}</td>
-                          <td>{{ auto.prenom }} {{ auto.name }} </td>
-                          <td>{{ auto.numTel }}</td>
-                          <td>{{ auto.email }}</td>
+                          <td>{{ veh.immatricule}}</td>
+                          <td>{{ veh.marque}}</td>
+                          <td>{{ veh.typeV }}</td>
+                          <td>{{ veh.kilometrage }}</td>
                           <td>
                             <a href="" style="
                                 background-color: #9dcd5a;
@@ -83,7 +81,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title mx-auto" id="exampleModalLabel" style="font-weight: bold; margin-top: 30px">
-            Ajouter auto-école
+            Ajouter véhicule
           </h5>
           <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span class="fas fa-times fs--1"></span>
@@ -93,27 +91,29 @@
         <div class="modal-body">
           <form action="" method="post">
             <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1">Nom d'auto école:</label>
-              <input name="nom auto ecole" class="form-control" id="exampleFormControlInput1" type="text"
-                placeholder="Nom d'auto école" />
+              <label class="form-label" for="exampleFormControlInput1">Immatriculation:</label>
+              <input name="Immatriculation" class="form-control" id="exampleFormControlInput1" type="text"
+                placeholder="Immatriculation" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Adresse:</label>
-              <input name="adresse" class="form-control" id="exampleTextarea" placeholder="Adresse" />
+              <label class="form-label" for="exampleTextarea">Kilométrage:</label>
+              <input name="Kilométrage" class="form-control" id="exampleTextarea" placeholder="Kilométrage" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Nom d'admin:</label>
-              <input name="nom admin" class="form-control" id="exampleTextarea" placeholder="Nom d'admin" />
+              <label class="form-label" for="exampleTextarea">Marque:</label>
+              <input name="Marque" class="form-control" id="exampleTextarea" placeholder="Marque" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="telephone">Numéro de téléphone:</label>
-              <input name="telephone" type="tel" class="form-control" id="telephone"
-                placeholder="Numéro de téléphone" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="email">E-mail:</label>
-              <input name="email" type="email" class="form-control" id="email" placeholder="E-mail" />
-            </div>
+  <label class="form-label" for="type">Marque:</label>
+  <select name="type" class="form-select" id="type">
+    <option value="option1">Moto</option>
+    <option value="option2">Voiture</option>
+    <option value="option3">Cammion</option>
+    <option value="option3">Bus</option>
+    <!-- Ajoutez d'autres options selon vos besoins -->
+  </select>
+</div>
+        
           </form>
         </div>
         <div class="modal-footer">
@@ -130,13 +130,13 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-const AUTOECOLE_API_BASE_URL = "http://localhost:8000/api/autoEcole";
+ import axios from "axios";
+const VEHICULE_API_BASE_URL = "http://localhost:8000/api/vehicule";
 
 export default {
   data() {
     return {
-      autoEcole: [],
+      vehicule: [],
     };
   },
   mounted() {
@@ -146,7 +146,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(`${AUTOECOLE_API_BASE_URL}/user`);
+        const response = await axios.get(`${VEHICULE_API_BASE_URL}/index`);
         this.handleSuccess(response.data);
       } catch (error) {
         this.handleError(error);
@@ -154,8 +154,8 @@ export default {
     },
     handleSuccess(data) {
       console.log("Data fetched successfully:", data);
-      this.autoEcole = data;
-      console.log("Data fetched successfully:", this.autoEcole);
+      this.vehicule = data;
+      console.log("Data fetched successfully:", this.vehicule);
       // Do something with the data, like assigning it to a variable
       // this.messages = data;
     },
@@ -164,5 +164,5 @@ export default {
       // Handle error, show error message to user, etc.
     },
   },
-};
+}; 
 </script>

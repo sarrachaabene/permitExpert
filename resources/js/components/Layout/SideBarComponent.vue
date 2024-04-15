@@ -19,7 +19,7 @@
               <span class="hide-menu">Accueil</span>
             </li>-->
             <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/" aria-expanded="false">
+              <router-link class="sidebar-link" to="/dashbord" aria-expanded="false">
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -48,7 +48,7 @@
               </router-link>
             </li>
             <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/user" aria-expanded="false">
+              <router-link class="sidebar-link" to="/utilisateur" aria-expanded="false">
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -70,6 +70,15 @@
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
                 <span class="hide-menu">Transactions</span>
+              </router-link>
+
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/vehicule" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span  class="hide-menu">véhicules</span>
               </router-link>
 
             </li>

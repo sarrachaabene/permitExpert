@@ -39,14 +39,14 @@ use App\Models\Notification;
 Route::get('/login',[ApiController::class,'loginClient']);
 Route::post('/updateProfile',[ApiController::class,'registerClient']);
 
-Route::middleware('auth:api')->group(function () {
+//Route::middleware('auth:api')->group(function () {
 
   Route::get('/user/index', [ApiController::class, 'index']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
-  Route::post('/user/store',[ApiController::class,'store']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
   Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
-  
+  Route::post('/user/store',[ApiController::class,'store']);
+
   
   Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
   Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
@@ -122,4 +122,4 @@ Route::middleware('auth:api')->group(function () {
   Route::post('/demandeInscript/store',[DemandeInscriptionController::class,'store']);
   Route::put('/demandeInscript/update/{id}',[DemandeInscriptionController::class,'update']);
   Route::delete('/demandeInscript/delete/{id}',[DemandeInscriptionController::class,'delete']);
-});
+//});

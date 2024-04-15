@@ -6,7 +6,7 @@
         <div class="card">
           <div class="card-body">
             <h4 style="text-align: center; font-weight: bold">
-              Liste des auto-écoles
+              Liste des utilisateurs
             </h4>
             <div class="content">
               <div class="pb-5">
@@ -22,7 +22,7 @@
                             background-color: #1F4069;
                             border-color: #1F4069;
                           " class="btn btn-primary m-1">
-                          Ajouter auto-école
+                          Ajouter utilisateur
                         </button>
                       </div>
                     </div>
@@ -32,11 +32,13 @@
                       <thead>
                         <tr>
                           <th scope="col">id</th>
-                          <th scope="col">auto école</th>
+                          <th scope="col">nom</th>
                           <th scope="col">Adresse</th>
-                          <th scope="col">nom d'admin</th>
                           <th scope="col">Numéro de téléphone</th>
                           <th scope="col">Email</th>
+                          <th scope="col">Catégorie permis</th>
+                          <th scope="col">Moniteur</th>
+                          <th scope="col">Resultat</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -130,7 +132,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+/* import axios from "axios";
 const AUTOECOLE_API_BASE_URL = "http://localhost:8000/api/autoEcole";
 
 export default {
@@ -164,5 +166,5 @@ export default {
       // Handle error, show error message to user, etc.
     },
   },
-};
+}; */
 </script>

@@ -5,6 +5,669 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/user/index": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get list of Users",
+                "description": "Returns list of Users",
+                "operationId": "getUserList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/store": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new User",
+                "description": "Create a new User",
+                "operationId": "createUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/user/show/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a User by ID",
+                "description": "Returns a single User",
+                "operationId": "getUserById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/user/update/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update an existing User",
+                "description": "Updates an existing User",
+                "operationId": "updateUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/user/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a User",
+                "description": "Delete a user by ID",
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/updateProfile": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update user profile",
+                "operationId": "daae7f7e94e599aaccbe2b029ccc9928",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "numTel": {
+                                        "type": "string",
+                                        "example": "12345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "user@example.com"
+                                                },
+                                                "numTel": {
+                                                    "type": "string",
+                                                    "example": "12345678"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login user and generate access token",
+                "operationId": "b88ab9328b29d44e6d8883b83a3c161e",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User email",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "user@example.com"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "User password",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "password123"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Message": {
+                                            "type": "string",
+                                            "example": "welcome"
+                                        },
+                                        "access_token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/index": {
+            "get": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Obtient toutes les auto-écoles",
+                "description": "Renvoie toutes les auto-écoles disponibles",
+                "operationId": "getAllAutoEcoles",
+                "responses": {
+                    "200": {
+                        "description": "Liste des auto-écoles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AutoEcole"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/user": {
+            "get": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Obtient toutes les auto-écoles",
+                "description": "Renvoie les auto ecole pour chaque utilisateur",
+                "operationId": "getUserAutoEcole",
+                "responses": {
+                    "200": {
+                        "description": "Liste des auto-écoles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AutoEcole"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/store": {
+            "post": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Crée une nouvelle auto-école",
+                "description": "Crée une nouvelle auto-école avec les données fournies dans la requête",
+                "operationId": "createAutoEcole",
+                "requestBody": {
+                    "description": "Données de l'auto-école à créer",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AutoEcole"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Nouvelle auto-école créée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AutoEcole"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "L'utilisateur n'est pas un administrateur ou les données fournies sont invalides"
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/show/{id}": {
+            "get": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Récupère les détails d'une auto-école spécifique",
+                "description": "Récupère les détails d'une auto-école en fonction de son ID",
+                "operationId": "getAutoEcoleById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'auto-école à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de l'auto-école récupérés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AutoEcole"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "ID non trouvé, aucune auto-école correspondante",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "Votre ID n'est pas trouvé"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/update/{id}": {
+            "put": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Mise à jour des détails d'une auto-école",
+                "description": "Mise à jour des détails d'une auto-école existante en fonction de son ID",
+                "operationId": "updateAutoEcole",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'auto-école à mettre à jour",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Objet de mise à jour de l'auto-école",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AutoEcole"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Détails de l'auto-école mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AutoEcole"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "ID non trouvé, aucune auto-école correspondante",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "Auto-école non trouvée"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/findAutoEcoleByUserId/{id}": {
+            "get": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Affiche les détails de l'auto-école associée à un utilisateur",
+                "description": "Affiche les détails de l'auto-école associée à un utilisateur en fonction de son ID",
+                "operationId": "showAutoEcoleByUserId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails de l'auto-école associée à l'utilisateur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "autoEcole": {
+                                            "$ref": "#/components/schemas/AutoEcole"
+                                        },
+                                        "admin": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé, aucune auto-école associée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "User has no associated autoEcole"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/autoEcole/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "AutoEcole"
+                ],
+                "summary": "Supprime une auto-école et l'utilisateur associé",
+                "description": "Supprime une auto-école et l'utilisateur associé en fonction de l'ID de l'utilisateur",
+                "operationId": "deleteAutoEcole",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Auto-école et utilisateur associé supprimés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "autoEcole and associated user deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Auto-école non trouvée, aucun utilisateur associé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "autoEcole not found"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Impossible de supprimer l'auto-école ou l'utilisateur associé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "message": "Failed to delete associated user"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/demandeInscript/index": {
             "get": {
                 "tags": [
@@ -26,6 +689,41 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/demandeInscript/store": {
+            "post": {
+                "tags": [
+                    "Demande Inscriptions"
+                ],
+                "summary": "Create a new Demande Inscription",
+                "description": "Create a new Demande Inscription",
+                "operationId": "storeDemandeInscription",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DemandeInscription"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DemandeInscription"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
                     }
                 }
             }
@@ -438,6 +1136,935 @@
                 }
             }
         },
+        "/api/message/index": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Get all messages",
+                "description": "Retrieves all messages from the database",
+                "operationId": "getMessageIndex",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Message"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/message/store": {
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Store a new message",
+                "description": "Stores a new message in the database",
+                "operationId": "storeMessage",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Message"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Invalid data provided"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/message/show/{id}": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Get a message by ID",
+                "description": "Retrieves a message by its ID",
+                "operationId": "getMessageById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Message",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Message not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Notification/index": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get all notifications",
+                "description": "Retrieves all notifications from the database",
+                "operationId": "getNotifications",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Notification"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Notification/ShowNotificationsByReceptientId/{ReceptientId}": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get notifications by Recipient ID",
+                "description": "Retrieves notifications associated with a specific Recipient by their ID",
+                "operationId": "getNotificationsByReceptientId",
+                "parameters": [
+                    {
+                        "name": "ReceptientId",
+                        "in": "path",
+                        "description": "ID of the Recipient",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Notification"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/Notification/show/{id}": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get a notification by ID",
+                "description": "Retrieves a notification by its ID",
+                "operationId": "getNotificationById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Notification",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Notification"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Notification not found"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressourceeducative/index": {
+            "get": {
+                "tags": [
+                    "Ressources Educatives"
+                ],
+                "summary": "Get all Ressources Educatives",
+                "description": "Renvoie toutes les ressources éducatives disponibles",
+                "operationId": "getAllRessources",
+                "responses": {
+                    "200": {
+                        "description": "Liste des ressources éducatives",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RessourceEducative"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur"
+                    }
+                }
+            }
+        },
+        "/api/ressourceeducative/store": {
+            "post": {
+                "tags": [
+                    "Ressources Educatives"
+                ],
+                "summary": "Create a new Ressource Educative",
+                "description": "Create a new Ressource Educative record",
+                "operationId": "createRessourceEducative",
+                "requestBody": {
+                    "description": "Ressource Educative object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RessourceEducative"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ressource Educative created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the newly created Ressource Educative",
+                                            "type": "integer",
+                                            "format": "int64"
+                                        },
+                                        "titreR": {
+                                            "description": "Titre of the newly created Ressource Educative",
+                                            "type": "string"
+                                        },
+                                        "descriptionR": {
+                                            "description": "Description of the newly created Ressource Educative",
+                                            "type": "string"
+                                        },
+                                        "typeR": {
+                                            "description": "Type of the newly created Ressource Educative",
+                                            "type": "string"
+                                        },
+                                        "dateD": {
+                                            "description": "Date of the newly created Ressource Educative",
+                                            "type": "string",
+                                            "format": "date"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to create Ressource Educative"
+                    }
+                }
+            }
+        },
+        "/api/ressourceeducative/show/{id}": {
+            "get": {
+                "tags": [
+                    "Ressources Educatives"
+                ],
+                "summary": "Get a Ressource Educative by ID",
+                "description": "Récupère une ressource éducative par son ID",
+                "operationId": "getRessourceById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la ressource éducative à récupérer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ressource éducative récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RessourceEducative"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ressource éducative non trouvée"
+                    }
+                }
+            }
+        },
+        "/api/ressourceeducative/update/{id}": {
+            "put": {
+                "tags": [
+                    "Ressources Educatives"
+                ],
+                "summary": "Update a Ressource Educative",
+                "description": "Update an existing Ressource Educative record",
+                "operationId": "updateRessourceEducative",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Ressource Educative to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Updated Ressource Educative object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RessourceEducative"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ressource Educative updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RessourceEducative"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ressource Educative not found"
+                    },
+                    "500": {
+                        "description": "Failed to update Ressource Educative"
+                    }
+                }
+            }
+        },
+        "/api/ressourceeducative/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Ressources Educatives"
+                ],
+                "summary": "Delete a Ressource Educative",
+                "description": "Delete an existing Ressource Educative record",
+                "operationId": "deleteRessourceEducative",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Ressource Educative to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ressource Educative deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Ressource Educative deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ressource Educative not found"
+                    },
+                    "500": {
+                        "description": "Failed to delete Ressource Educative"
+                    }
+                }
+            }
+        },
+        "/api/seance/index": {
+            "get": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Get list of Seances",
+                "description": "Returns list of Seances",
+                "operationId": "getSeancesList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Seance"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/seance/store": {
+            "post": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Create a new Seance",
+                "description": "Create a new Seance",
+                "operationId": "createSeance",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Seance"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Seance"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/seance/show/{id}": {
+            "get": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Get a Seance by ID",
+                "description": "Returns a single Seance",
+                "operationId": "getSeanceById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the seance to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Seance"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Seance not found"
+                    }
+                }
+            }
+        },
+        "/api/seance/ShowSeanceBycandidatId/{id}": {
+            "get": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Get Seances by Candidat ID",
+                "description": "Returns Seances associated with a specific Candidat",
+                "operationId": "getSeanceByCandidatId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the candidat",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Seance"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No seance found for the candidat"
+                    }
+                }
+            }
+        },
+        "/api/seance/ShowSeanceByvehiculeId/{id}": {
+            "get": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Get Seances by vehicule ID",
+                "description": "Returns Seances associated with a specific vehicule",
+                "operationId": "ShowSeanceByvehiculeId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the vehicule",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Seance"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No seance found for the vehicule"
+                    }
+                }
+            }
+        },
+        "/api/seance/ShowSeanceBymoniteurId/{id}": {
+            "get": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Get Seances by moniteur ID",
+                "description": "Returns Seances associated with a specific moniteur",
+                "operationId": "ShowSeanceBymoniteurId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the moniteur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Seance"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No seance found for the moniteur"
+                    }
+                }
+            }
+        },
+        "/api/seance/update/{id}": {
+            "put": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Update an existing Seance",
+                "description": "Update an existing Seance record",
+                "operationId": "updateSeance",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Seance to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Seance"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Seance"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Seance not found"
+                    }
+                }
+            }
+        },
+        "/api/seance/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Delete an existing Seance",
+                "description": "Delete an existing Seance record",
+                "operationId": "deleteSeance",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Seance to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Seance deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Seance deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Seance not found"
+                    },
+                    "500": {
+                        "description": "Failed to delete Seance"
+                    }
+                }
+            }
+        },
+        "/api/seance/AccepterPourCandidat/{id}": {
+            "post": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Accepter une séance pour le candidat",
+                "description": "Accepter une séance pour le candidat en mettant à jour l'attribut candidat_status",
+                "operationId": "accepterPourCandidat",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la séance à accepter",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attribut candidat_status mis à jour avec succès pour la séance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Attribut candidat_status mis à jour avec succès pour la séance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status"
+                    }
+                }
+            }
+        },
+        "/api/seance/RefuserPourCandidat/{id}": {
+            "post": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Refuser une séance pour le candidat",
+                "description": "Refuser une séance pour le candidat en mettant à jour l'attribut candidat_status à false",
+                "operationId": "refuserPourCandidat",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la séance à refuser",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attribut candidat_status mis à jour avec succès pour la séance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Attribut candidat_status mis à jour avec succès pour la séance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status"
+                    }
+                }
+            }
+        },
+        "/api/seance/AccepterPourMoniteur/{id}": {
+            "post": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Accepter une séance pour le moniteur",
+                "description": "Accepter une séance pour le moniteur en mettant à jour l'attribut moniteur_status à true",
+                "operationId": "accepterPourMoniteur",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la séance à accepter pour le moniteur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attribut moniteur_status mis à jour avec succès pour la séance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Attribut moniteur_status mis à jour avec succès pour la séance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_status"
+                    }
+                }
+            }
+        },
+        "/api/seance/RefuserPourMoniteur/{id}": {
+            "post": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Refuser une séance pour le moniteur",
+                "description": "Refuser une séance pour le moniteur en mettant à jour l'attribut moniteur_status à false",
+                "operationId": "refuserPourMoniteur",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la séance à refuser pour le moniteur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Attribut moniteur_status mis à jour avec succès pour la séance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Attribut moniteur_status mis à jour avec succès pour la séance"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_status"
+                    }
+                }
+            }
+        },
+        "/api/seance/updateSeanceStatus/{id}": {
+            "post": {
+                "tags": [
+                    "Seances"
+                ],
+                "summary": "Mettre à jour le statut d'une séance",
+                "description": "Mettre à jour le statut d'une séance en fonction des attributs candidat_status et moniteur_status",
+                "operationId": "updateSeanceStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la séance à mettre à jour",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Statut de la séance mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Statut de la séance mis à jour avec succès"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Séance non trouvée. Impossible de mettre à jour le statut de la séance"
+                    }
+                }
+            }
+        },
         "/api/transaction/index": {
             "get": {
                 "tags": [
@@ -702,6 +2329,62 @@
                 }
             }
         },
+        "/api/transaction/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Delete a Transaction",
+                "description": "Deletes a Transaction by its ID",
+                "operationId": "deleteTransaction",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Transaction to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Transaction deleted successfully"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Transaction not found"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Failed to delete Transaction"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/vehicule/index": {
             "get": {
                 "tags": [
@@ -873,6 +2556,60 @@
     },
     "components": {
         "schemas": {
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "cin": {
+                        "type": "string"
+                    },
+                    "prenom": {
+                        "type": "string"
+                    },
+                    "numTel": {
+                        "type": "string"
+                    },
+                    "dateNaissance": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AutoEcole": {
+                "title": "AutoEcole",
+                "description": "Modèle de l'auto-école",
+                "required": [
+                    "nom",
+                    "adresse"
+                ],
+                "properties": {
+                    "nom": {
+                        "description": "Nom de l'auto-école",
+                        "type": "string"
+                    },
+                    "adresse": {
+                        "description": "Adresse de l'auto-école",
+                        "type": "string"
+                    },
+                    "autoecole_image": {
+                        "description": "Image de l'auto-école",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "DemandeInscription": {
                 "title": "Demande Inscription",
                 "description": "Demande Inscription model",
@@ -896,9 +2633,6 @@
                         "type": "string"
                     },
                     "emailA": {
-                        "type": "string"
-                    },
-                    "passwordA": {
                         "type": "string"
                     },
                     "cin": {
@@ -940,6 +2674,131 @@
                     },
                     "vehicule_id": {
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Message": {
+                "title": "Message",
+                "description": "Message model",
+                "properties": {
+                    "dateM": {
+                        "description": "Date of the message",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "description": {
+                        "description": "Description of the message",
+                        "type": "string"
+                    },
+                    "sender_id": {
+                        "description": "ID of the sender user",
+                        "type": "integer"
+                    },
+                    "recipient_id": {
+                        "description": "ID of the recipient user",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Notification": {
+                "title": "Notification",
+                "description": "Notification model",
+                "properties": {
+                    "message_id": {
+                        "description": "ID of the message associated with the notification",
+                        "type": "integer"
+                    },
+                    "message_description": {
+                        "description": "Description of the message",
+                        "type": "string"
+                    },
+                    "sender_msg": {
+                        "description": "Sender of the message",
+                        "type": "string"
+                    },
+                    "receptient_msg": {
+                        "description": "Recipient of the message",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "RessourceEducative": {
+                "title": "RessourceEducative",
+                "description": "Modèle de ressource éducative",
+                "required": [
+                    "titreR",
+                    "descriptionR",
+                    "typeR",
+                    "dateD"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "ID de la ressource éducative",
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "titreR": {
+                        "description": "Titre de la ressource éducative",
+                        "type": "string"
+                    },
+                    "descriptionR": {
+                        "description": "Description de la ressource éducative",
+                        "type": "string"
+                    },
+                    "typeR": {
+                        "description": "Type de la ressource éducative",
+                        "type": "string"
+                    },
+                    "dateD": {
+                        "description": "Date de la ressource éducative",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            },
+            "Seance": {
+                "title": "Seance",
+                "description": "Seance model",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "heureD": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "heureF": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dateS": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "vehicule_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "candidat_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "moniteur_id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "candidat_status": {
+                        "type": "string"
+                    },
+                    "moniteur_status": {
+                        "type": "string"
                     }
                 },
                 "type": "object"

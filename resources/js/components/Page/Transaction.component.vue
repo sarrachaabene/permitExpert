@@ -6,7 +6,7 @@
         <div class="card">
           <div class="card-body">
             <h4 style="text-align: center; font-weight: bold">
-              Liste des auto-écoles
+              Liste des transactions
             </h4>
             <div class="content">
               <div class="pb-5">
@@ -22,7 +22,7 @@
                             background-color: #1F4069;
                             border-color: #1F4069;
                           " class="btn btn-primary m-1">
-                          Ajouter auto-école
+                          Ajouter transaction
                         </button>
                       </div>
                     </div>
@@ -31,12 +31,10 @@
                     <table class="table table-borded">
                       <thead>
                         <tr>
-                          <th scope="col">id</th>
-                          <th scope="col">auto école</th>
-                          <th scope="col">Adresse</th>
-                          <th scope="col">nom d'admin</th>
-                          <th scope="col">Numéro de téléphone</th>
-                          <th scope="col">Email</th>
+                          <th scope="col">Immatriculation</th>
+                          <th scope="col">Marque</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Kilométrage</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -130,13 +128,13 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-const AUTOECOLE_API_BASE_URL = "http://localhost:8000/api/autoEcole";
+/* import axios from "axios";
+const TRANSACTION_API_BASE_URL = "http://localhost:8000/api/transaction";
 
 export default {
   data() {
     return {
-      autoEcole: [],
+      transaction: [],
     };
   },
   mounted() {
@@ -146,7 +144,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(`${AUTOECOLE_API_BASE_URL}/user`);
+        const response = await axios.get(`${TRANSACTION_API_BASE_URL}/user`);
         this.handleSuccess(response.data);
       } catch (error) {
         this.handleError(error);
@@ -155,7 +153,7 @@ export default {
     handleSuccess(data) {
       console.log("Data fetched successfully:", data);
       this.autoEcole = data;
-      console.log("Data fetched successfully:", this.autoEcole);
+      console.log("Data fetched successfully:", this.transaction);
       // Do something with the data, like assigning it to a variable
       // this.messages = data;
     },
@@ -164,5 +162,5 @@ export default {
       // Handle error, show error message to user, etc.
     },
   },
-};
+}; */
 </script>

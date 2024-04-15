@@ -98,16 +98,16 @@ class ApiController extends Controller {
  public function store(Request $request)
  {
      $user = User::create($request->all());
-     $token = $user->createToken('My Token')->accessToken;
-     return response()->json(['access_token' => $token]);
+     //$token = $user->createToken('My Token')->accessToken;
+     //return response()->json(['access_token' => $token]);
     /*  $autoecole = AutoEcole::find($request->auto_ecole_id);
  
      if ($user->role == 'admin') {  
          $user->auto_ecole_id = $autoecole->id; // Assign auto_ecole_id to the new user
          $user->save();
-     }
+     }*/
  
-     return response()->json(["user" => $user, "token" => $token], 200); */
+     return response()->json(["user" => $user], 200); 
  }
 /**
  * @OA\Get(
@@ -243,6 +243,40 @@ public function delete($id) {
         return response()->json("Failed to delete user", 500);
     } */
 }
+/**
+ * @OA\Post(
+ *     path="/api/updateProfile",
+ *     summary="Update user profile",
+ *     tags={"Profile"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *             @OA\Property(property="password", type="string", example="password123"),
+ *             @OA\Property(property="password_confirmation", type="string", example="password123"),
+ *             @OA\Property(property="numTel", type="string", example="12345678")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Profile updated successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="user", type="object",
+ *                 @OA\Property(property="name", type="string", example="John Doe"),
+ *                 @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *                 @OA\Property(property="numTel", type="string", example="12345678")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=402,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="error", type="string")
+ *         )
+ *     )
+ * )
+ */
   public function registerClient(Request $request)
   {
     $validator = Validator::make($request->all(), [
@@ -261,10 +295,64 @@ public function delete($id) {
        'name' => $request->name // Update the phone number
       ]
   );
+  $msg='register validee';
   // You can return a success response if needed
-  return response()->json(['user' => $user], 200);
+  return response()->json(['Message'=>$msg ,'user' => $user], 200);
   }
   
+
+
+
+  /**
+ * @OA\Get(
+ *     path="/api/login",
+ *     summary="Login user and generate access token",
+ *     tags={"Authentication"},
+ *     @OA\Parameter(
+ *         name="email",
+ *         in="query",
+ *         description="User email",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string",
+ *             format="email",
+ *             example="user@example.com"
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="password",
+ *         in="query",
+ *         description="User password",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string",
+ *             example="password123"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="Message", type="string", example="welcome"),
+ *             @OA\Property(property="access_token", type="string")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Invalid credentials",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Invalid credentials")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=402,
+ *         description="Validation error",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="error", type="string")
+ *         )
+ *     )
+ * )
+ */
   public function loginClient(Request $request)
   {
       $validator = Validator::make($request->all(), [
@@ -274,23 +362,17 @@ public function delete($id) {
       if ($validator->fails()) {
           return response()->json($validator->errors(), 402);
       }
-       // Attempt to authenticate the user
-    $credentials = $request->only('email', 'password');
-    if (!Auth::attempt($credentials)) {
-        return response()->json(['message' => 'Invalid credentials'], 401);
-    }
-      // Generate a token for the authenticated user
-  //    $accessToken = Auth::user()->createToken('authToken')->accessToken;
-      return  Auth::user()->createToken("habib")
-             ->plainTextToken;
-
-      // You can add additional payload data here
-  /*     $payload = [
-          'user' => Auth::user(), // Add user data to the payload if needed
-          'access_token' => $accessToken,
-      ]; */
   
-      // Return the payload and token
-    /*   return response()->json($payload, 200); */
+      // Attempt to authenticate the user
+      $credentials = $request->only('email', 'password');
+      if (!Auth::attempt($credentials)) {
+          return response()->json(['message' => 'Invalid credentials'], 401);
+      }
+  
+      // If the credentials are valid, generate a token using Passport
+      $accessToken = Auth::user()->createToken('authToken')->accessToken;
+      $msg="welcome";
+      // Return the token as a response
+      return response()->json([ 'Message'=>$msg ,'access_token' => $accessToken]);
   }
 }

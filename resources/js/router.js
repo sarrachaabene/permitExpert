@@ -5,15 +5,22 @@ import LoginComponent from './components//Page/Logincomponent.vue';
 import RegisterComponent from './components//Page/Registercomponent.vue';
 import CalendarComponent from './components//Page/CalendarComponent.vue';
 import DemandeComponent from './components//Page/DemandeComponent.vue';
+import UtilisateurComponent from './components//Page/Utilisateurs.component.vue';
+import Vehicule from './components//Page/Vehicule.component.vue';
+import Transaction from './components//Page/Transaction.component.vue';
 import PageNotFound from './components/Page/PageNotFound.component.vue';
 const routes = [
   { path: '/', component: LoginComponent },
+  { path: '/dashbord', component: DashbordComponent },
   { path: '/autoEcole', component: AutoEcoleComponent },
   { path: '/login', component: LoginComponent },
   { path: '/Register', component: RegisterComponent },
   { path: '/Calendar', component: CalendarComponent },
   { path: '/demande', component: DemandeComponent },
+  { path: '/vehicule', component: Vehicule },
+  { path: '/transaction', component: Transaction },
   { path: '/:pathMatch(.*)*', component: PageNotFound },
+  { path: '/utilisateur', component: UtilisateurComponent },
 
 ];
 
