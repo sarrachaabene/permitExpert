@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
  *     title="User",
  *     description="User model",
  *     @OA\Property(
- *         property="name",
+ *         property="user_name",
  *         type="string"
  *     ),
  *     @OA\Property(
@@ -32,10 +32,6 @@ use Illuminate\Support\Facades\Hash;
  *     ),
  *     @OA\Property(
  *         property="cin",
- *         type="string"
- *     ),
- *     @OA\Property(
- *         property="prenom",
  *         type="string"
  *     ),
  *     @OA\Property(
@@ -353,7 +349,7 @@ public function delete($id) {
  *     )
  * )
  */
-  public function loginClient(Request $request)
+   public function loginClient(Request $request)
   {
       $validator = Validator::make($request->all(), [
           'email' => ['required', 'string', 'email', 'max:255', Rule::exists('users', 'email')],
@@ -374,5 +370,5 @@ public function delete($id) {
       $msg="welcome";
       // Return the token as a response
       return response()->json([ 'Message'=>$msg ,'access_token' => $accessToken]);
-  }
+  } 
 }

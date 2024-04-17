@@ -36,10 +36,10 @@ use App\Models\Notification;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::get('/login',[ApiController::class,'loginClient']);
+Route::post('/login', [ApiController::class, 'loginClient']);
 Route::post('/updateProfile',[ApiController::class,'registerClient']);
 
-//Route::middleware('auth:api')->group(function () {
+//Route::middleware('auth')->group(function () {
 
   Route::get('/user/index', [ApiController::class, 'index']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);

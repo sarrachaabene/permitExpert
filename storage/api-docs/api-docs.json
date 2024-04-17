@@ -2560,7 +2560,7 @@
                 "title": "User",
                 "description": "User model",
                 "properties": {
-                    "name": {
+                    "user_name": {
                         "type": "string"
                     },
                     "email": {
@@ -2573,9 +2573,6 @@
                         "type": "string"
                     },
                     "cin": {
-                        "type": "string"
-                    },
-                    "prenom": {
                         "type": "string"
                     },
                     "numTel": {

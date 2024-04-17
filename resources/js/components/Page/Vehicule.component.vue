@@ -104,7 +104,7 @@
               <input name="Marque" class="form-control" id="exampleTextarea" placeholder="Marque" />
             </div>
             <div class="mb-3">
-  <label class="form-label" for="type">Marque:</label>
+  <label class="form-label" for="type">Type:</label>
   <select name="type" class="form-select" id="type">
     <option value="option1">Moto</option>
     <option value="option2">Voiture</option>
