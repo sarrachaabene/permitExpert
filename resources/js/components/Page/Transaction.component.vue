@@ -31,10 +31,12 @@
                     <table class="table table-borded">
                       <thead>
                         <tr>
-                          <th scope="col">Immatriculation</th>
-                          <th scope="col">Marque</th>
-                          <th scope="col">Type</th>
-                          <th scope="col">Kilométrage</th>
+                          <th scope="col">id</th>
+                          <th scope="col">Type de transaction</th>
+                          <th scope="col">Montant</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Date</th>
+                          <th scope="col">--</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -81,7 +83,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title mx-auto" id="exampleModalLabel" style="font-weight: bold; margin-top: 30px">
-            Ajouter auto-école
+            Ajouter Transaction
           </h5>
           <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span class="fas fa-times fs--1"></span>

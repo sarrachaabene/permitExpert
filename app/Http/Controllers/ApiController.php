@@ -273,31 +273,41 @@ public function delete($id) {
  *     )
  * )
  */
-  public function registerClient(Request $request)
-  {
-    $validator = Validator::make($request->all(), [
-      'email' => ['required', 'string', 'email', 'max:255', Rule::exists('users', 'email')],
-      'password' => ['required', 'string', 'min:8','confirmed'],
-      'numTel' => ['required', 'string', 'max:8']
-  ]);
-    if ($validator->fails()) {
-      return response()->json($validator->errors(), 402);
+public function registerClient(Request $request, $email)
+{
+    // Trouver l'utilisateur par son email
+    $user = User::where('email', $email)->first();
+
+    if ($user) {
+        // Si l'utilisateur existe, valider les données envoyées
+        $validator = Validator::make($request->all(), [
+            'user_name' => [
+                'required', 
+                'string', 
+                'max:255'
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'numTel' => ['required', 'string', 'max:8']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 402);
+        }
+
+        // Mettre à jour les informations de l'utilisateur
+        $user->user_name = $request->user_name;
+        $user->password = Hash::make($request->password);
+        $user->numTel = $request->numTel;
+        $user->save();
+
+        $msg = 'Informations de l\'utilisateur mises à jour avec succès';
+        return response()->json(['Message' => $msg, 'user' => $user], 200);
+    } else {
+        // Si l'utilisateur n'existe pas, renvoyer un message d'erreur
+        $error = 'L\'utilisateur avec cet email n\'existe pas';
+        return response()->json(['error' => $error], 404);
     }
-     // Create or update the user
-     $user = User::updateOrCreate(
-      ['email' => $request->email], // Find user by email
-      ['password' => Hash::make($request->password), // Hash the password
-       'numTel' => $request->numTel, // Update the phone number
-       'name' => $request->name // Update the phone number
-      ]
-  );
-  $msg='register validee';
-  // You can return a success response if needed
-  return response()->json(['Message'=>$msg ,'user' => $user], 200);
-  }
-  
-
-
+}
 
   /**
  * @OA\Get(
@@ -370,5 +380,5 @@ public function delete($id) {
       $msg="welcome";
       // Return the token as a response
       return response()->json([ 'Message'=>$msg ,'access_token' => $accessToken]);
-  } 
+  }
 }

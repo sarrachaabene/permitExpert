@@ -19,7 +19,7 @@
 
 <body>
     <div id="app">
-        <example-component></example-component>
+        <example-component :user="{{ Auth::user() }}"></example-component>
     </div>
     <script src="{{ asset('assets/libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>

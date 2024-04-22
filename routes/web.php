@@ -14,16 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+  if(Auth::check())
+  return view('auth.login');
 });
-Auth::routes();
 
-Route::get('/welcome', function () {
-  return view('welcome'); // Assurez-vous que le nom de la vue correspond au nom de votre fichier blade.php
-})->middleware('auth');
 Route::get('/dashbord', function () {
   return view('welcome'); 
-})->middleware('auth');
+});
+
+
+/* Route::middleware(['auth'])->group(function () {
+}); */
+Auth::routes();
 
 Route::get('/autoEcole', function () {
   return view('welcome'); 

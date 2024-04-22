@@ -37,9 +37,9 @@ use App\Models\Notification;
 |
 */
 Route::post('/login', [ApiController::class, 'loginClient']);
-Route::post('/updateProfile',[ApiController::class,'registerClient']);
+Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 
-//Route::middleware('auth')->group(function () {
+/* Route::middleware('auth')->group(function () { */
 
   Route::get('/user/index', [ApiController::class, 'index']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);

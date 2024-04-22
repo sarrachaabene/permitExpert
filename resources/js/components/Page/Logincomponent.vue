@@ -62,6 +62,9 @@ export default {
       showMessage: false // Variable pour afficher ou masquer le message
     };
   },
+  mounted() {
+      if (localStorage.getItem('token')) window.location.href = '/welcome';
+    },
   computed: {
     isSuccess() {
       // Détermine si le message est un message de succès
@@ -71,26 +74,14 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('/api/login', {
+        const response = await axios.post('/login', {
           email: this.email,
           password: this.password
+        }).then(res=>{
+          localStorage.setItem('token', res.data.access_token);
+          axios.defaults.headers.common['Authorization'] = `${res.data.access_token}`;
+          window.location.href = '/welcome';
         });
-        console.log('Login successful:', response.data);
-        // Mettre à jour le message de succès
-        this.message = 'Connexion réussie !';
-        // Afficher le message
-        this.showMessage = true;
-        // Effacer le message après 5 secondes
-        setTimeout(() => {
-          this.showMessage = false;
-        }, 5000);
-        
-        // Extraire l'URL de bienvenue de la réponse
-        const welcomeUrl = response.data.welcome_url;
-
-        // Rediriger l'utilisateur vers la page de bienvenue
-        window.location.href = welcomeUrl;
-
       } catch (error) {
         console.error('Login failed:', error.response.data);
         // Mettre à jour le message d'erreur

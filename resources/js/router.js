@@ -10,7 +10,7 @@ import Vehicule from './components//Page/Vehicule.component.vue';
 import Transaction from './components//Page/Transaction.component.vue';
 import PageNotFound from './components/Page/PageNotFound.component.vue';
 const routes = [
-  { path: '/', component: LoginComponent },
+  { path: '/'        , component: LoginComponent },
   { path: '/dashbord', component: DashbordComponent },
   { path: '/autoEcole', component: AutoEcoleComponent },
   { path: '/login', component: LoginComponent },
