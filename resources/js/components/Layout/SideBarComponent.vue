@@ -26,6 +26,14 @@
               <span class="hide-menu">Tableau de bord</span>
             </router-link>
           </li>
+          <li class="sidebar-item">
+            <router-link class="sidebar-link" to="/admin" aria-expanded="false">
+              <span>
+                <i class="ti ti-user"></i>
+              </span>
+              <span class="hide-menu">Administrateurs</span>
+            </router-link>
+          </li>
 
           <!-- <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>

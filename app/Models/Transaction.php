@@ -10,7 +10,7 @@ class Transaction extends Model
     use HasFactory;
     
 
-    protected $fillable = ['dateT', 'typeT', 'montantT','description','user_id','auto_ecole_id','vehicule_id'];
+    protected $fillable = ['dateT', 'Type_T', 'montantT','description','user_id','auto_ecole_id','vehicule_id'];
 
     public function autoecole(): BelongsTo
     {

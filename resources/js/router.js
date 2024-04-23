@@ -8,6 +8,7 @@ import DemandeComponent from './components//Page/DemandeComponent.vue';
 import UtilisateurComponent from './components//Page/Utilisateurs.component.vue';
 import Vehicule from './components//Page/Vehicule.component.vue';
 import Transaction from './components//Page/Transaction.component.vue';
+import Administrateur from './components//Page/Admin.component.vue';
 import PageNotFound from './components/Page/PageNotFound.component.vue';
 const routes = [
   { path: '/'        , component: LoginComponent },
@@ -19,6 +20,7 @@ const routes = [
   { path: '/demande', component: DemandeComponent },
   { path: '/vehicule', component: Vehicule },
   { path: '/transaction', component: Transaction },
+  { path: '/admin', component: Administrateur },
   { path: '/:pathMatch(.*)*', component: PageNotFound },
   { path: '/utilisateur', component: UtilisateurComponent },
 

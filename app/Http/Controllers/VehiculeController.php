@@ -194,16 +194,11 @@ class VehiculeController extends Controller
 
 
 public function delete($id) {
-    // Find the vehicle by ID
     $vehicle = Vehicule::find($id);
-
-    // Check if the vehicle exists
     if (!$vehicle) {
         $msg = "Vehicle not found";
         return response()->json($msg, 404);
     }
-
-    // Attempt to delete the vehicle
     try {
         $vehicle->delete();
         return response()->json("Vehicle deleted successfully", 200);
@@ -214,7 +209,7 @@ public function delete($id) {
 
 
 
-public function deletee($id) {
+/* public function deletee($id) {
   // Find the user by ID
   $vehicule = Vehicule::find($id);
 
@@ -233,7 +228,7 @@ public function deletee($id) {
   } else {
       return response()->json("Failed to delete vehicule", 500);
   }
-}
+} */
 
 
 

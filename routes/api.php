@@ -46,7 +46,7 @@ Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
   Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
   Route::post('/user/store',[ApiController::class,'store']);
-
+  Route::get('/user/indexForSuper', [ApiController::class, 'indexForSuper']);
   
   Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
   Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 

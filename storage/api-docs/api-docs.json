@@ -2090,6 +2090,102 @@
                 }
             }
         },
+        "/api/transaction/store": {
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create a new Transaction",
+                "description": "Creates a new transaction based on the provided parameters.",
+                "operationId": "storeTransaction",
+                "requestBody": {
+                    "description": "Transaction data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "Type_T",
+                                    "montantT",
+                                    "dateT",
+                                    "description",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "Type_T": {
+                                        "type": "string"
+                                    },
+                                    "montantT": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "dateT": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "auto_ecole_id": {
+                                        "type": "integer"
+                                    },
+                                    "vehicule_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "Type_T": {
+                                            "type": "string"
+                                        },
+                                        "montantT": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "dateT": {
+                                            "type": "string",
+                                            "format": "date"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "user_id": {
+                                            "type": "integer"
+                                        },
+                                        "auto_ecole_id": {
+                                            "type": "integer"
+                                        },
+                                        "vehicule_id": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
+            }
+        },
         "/api/transaction/show/{id}": {
             "get": {
                 "tags": [

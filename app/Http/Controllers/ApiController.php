@@ -64,10 +64,20 @@ class ApiController extends Controller {
  *      ),
  * )
  */
-  public function index(){
+/*   public function index(){
     $user= User::get();
   return response()->json($user, 200);
-  }
+  } */
+  public function index(){
+    $roles = ['candidat', 'moniteur', 'secretaire'];
+    $users = User::whereIn('role', $roles)->get();
+    return response()->json($users, 200);
+}
+public function indexForSuper(){
+ $users = User::where('role', 'admin')->get();
+  return response()->json($users, 200);
+}
+
 /**
  * @OA\Post(
  *      path="/api/user/store",
@@ -147,6 +157,7 @@ class ApiController extends Controller {
 
 
       }   }
+    
 
       /**
  * @OA\Put(

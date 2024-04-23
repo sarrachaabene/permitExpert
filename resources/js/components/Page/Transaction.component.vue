@@ -14,7 +14,7 @@
                   <div class="col">
                     <div class="row mt-4">
                       <div class="col-lg-4 order-lg-last">
-                        <input type="text" class="form-control" v-model="searchQuery" placeholder="Rechercher..." />
+                        <input type="text" class="form-control" v-model="searchQuery" @input="filterTransactions" placeholder="Rechercher..." />
                       </div>
                       <div class="col-lg-4 text-right">
                         <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" style="
@@ -25,6 +25,14 @@
                           Ajouter transaction
                         </button>
                       </div>
+                      <div class="col-lg-4 text-right">
+                        <select v-model="selectedTransactionType" @change="filterTransactions" class="form-select">
+                            <option value="">Tous les types</option>
+                            <option value="utilisateur">Utilisateur</option>
+                            <option value="general">Général</option>
+                            <option value="vehicule">Véhicule</option>
+                        </select>
+                      </div>
                     </div>
                     <br />
 
@@ -33,21 +41,23 @@
                         <tr>
                           <th scope="col">id</th>
                           <th scope="col">Type de transaction</th>
-                          <th scope="col">Montant</th>
                           <th scope="col">Description</th>
+                          <th scope="col">Montant</th>
                           <th scope="col">Date</th>
-                          <th scope="col">--</th>
+                          <th scope="col">Nom d'utilisateur</th>
+                          <th scope="col">vehicule</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(auto, key) in autoEcole" :key="auto.id">
-                          <th scope="row">{{ key + 1 }}</th>
-                          <td>{{ auto.auto_ecole.nom }}</td>
-                          <td>{{ auto.auto_ecole.adresse }}</td>
-                          <td>{{ auto.prenom }} {{ auto.name }} </td>
-                          <td>{{ auto.numTel }}</td>
-                          <td>{{ auto.email }}</td>
+                        <tr v-for="(tran) in filteredTransactions" :key="tran.id">
+                          <th scope="row">{{ tran.id }}</th>
+                          <td>{{ tran.Type_T }}</td>
+                          <td>{{ tran.description }}</td>
+                          <td>{{ tran.montantT }}</td>
+                          <td>{{ tran.dateT }}</td>
+                          <td>{{ tran.user_id }}  </td>
+                          <td>{{ tran.vehicule_id }}</td>
                           <td>
                             <a href="" style="
                                 background-color: #9dcd5a;
@@ -129,15 +139,28 @@
     </div>
   </div>
 </template>
+
 <script>
-/* import axios from "axios";
+import axios from "axios";
 const TRANSACTION_API_BASE_URL = "http://localhost:8000/api/transaction";
 
 export default {
   data() {
     return {
       transaction: [],
+      searchQuery: '',
+      selectedTransactionType: '', // Ajoutez la propriété pour stocker le type de transaction sélectionné
     };
+  },
+  computed: {
+    filteredTransactions() {
+      // Filtrer les transactions en fonction du type sélectionné et du texte de recherche
+      return this.transaction.filter(tran => {
+        const matchesSearch = tran.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchesType = !this.selectedTransactionType || tran.Type_T === this.selectedTransactionType;
+        return matchesSearch && matchesType;
+      });
+    }
   },
   mounted() {
     console.log("Component mounted.");
@@ -146,7 +169,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(`${TRANSACTION_API_BASE_URL}/user`);
+        const response = await axios.get(`${TRANSACTION_API_BASE_URL}/index`);
         this.handleSuccess(response.data);
       } catch (error) {
         this.handleError(error);
@@ -154,15 +177,16 @@ export default {
     },
     handleSuccess(data) {
       console.log("Data fetched successfully:", data);
-      this.autoEcole = data;
+      this.transaction = data;
       console.log("Data fetched successfully:", this.transaction);
-      // Do something with the data, like assigning it to a variable
-      // this.messages = data;
     },
     handleError(error) {
       console.error("Error fetching data from the backend:", error);
-      // Handle error, show error message to user, etc.
     },
+    filterTransactions() {
+      // Appeler filteredTransactions pour mettre à jour les transactions filtrées lorsque la recherche ou le type de transaction change
+      this.filteredTransactions();
+    }
   },
-}; */
+};
 </script>

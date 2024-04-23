@@ -68,6 +68,47 @@ class TransactionController extends Controller
     $transaction=Transaction::get();
     return response()->json($transaction,200);
   }
+/**
+ * @OA\Post(
+ *     path="/api/transaction/store",
+ *     operationId="storeTransaction",
+ *     tags={"Transactions"},
+ *     summary="Create a new Transaction",
+ *     description="Creates a new transaction based on the provided parameters.",
+ *     @OA\RequestBody(
+ *         required=true,
+ *         description="Transaction data",
+ *         @OA\JsonContent(
+ *             required={"Type_T", "montantT", "dateT", "description", "user_id"},
+ *             @OA\Property(property="Type_T", type="string"),
+ *             @OA\Property(property="montantT", type="number", format="float"),
+ *             @OA\Property(property="dateT", type="string", format="date"),
+ *             @OA\Property(property="description", type="string"),
+ *             @OA\Property(property="user_id", type="integer"),
+ *             @OA\Property(property="auto_ecole_id", type="integer"),
+ *             @OA\Property(property="vehicule_id", type="integer"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success response",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="id", type="integer"),
+ *             @OA\Property(property="Type_T", type="string"),
+ *             @OA\Property(property="montantT", type="number", format="float"),
+ *             @OA\Property(property="dateT", type="string", format="date"),
+ *             @OA\Property(property="description", type="string"),
+ *             @OA\Property(property="user_id", type="integer"),
+ *             @OA\Property(property="auto_ecole_id", type="integer"),
+ *             @OA\Property(property="vehicule_id", type="integer"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid input",
+ *     ),
+ * )
+ */
   public function store(Request $request)
   {
       $user = User::find($request->user_id);
@@ -75,7 +116,7 @@ class TransactionController extends Controller
       $vehicule=Vehicule::find($request->vehicule_id);
   if ($user ){
         $transaction = Transaction::create([
-          'typeT' => $request->typeT,
+          'Type_T' => $request->Type_T,
           'montantT' => $request->montantT,
           'dateT'=> $request->dateT,
           'description'=> $request->description,
@@ -85,7 +126,7 @@ class TransactionController extends Controller
       }elseif ($autoecole)
       {
         $transaction = Transaction::create([
-          'typeT' => $request->typeT,
+          'Type_T' => $request->Type_T,
           'montantT' => $request->montantT,
           'dateT'=> $request->dateT,
           'auto_ecole_id'=> $request->auto_ecole_id,
@@ -97,7 +138,7 @@ class TransactionController extends Controller
       elseif ($vehicule)
       {
         $transaction = Transaction::create([
-          'typeT' => $request->typeT,
+          'Type_T' => $request->Type_T,
           'montantT' => $request->montantT,
           'dateT'=> $request->dateT,
           'description'=> $request->description,

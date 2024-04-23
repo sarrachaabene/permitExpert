@@ -6,7 +6,7 @@
         <div class="card">
           <div class="card-body">
             <h4 style="text-align: center; font-weight: bold">
-              Liste des auto-écoles
+              Liste des administrateurs
             </h4>
             <div class="content">
               <div class="pb-5">
@@ -22,7 +22,7 @@
                             background-color: #1F4069;
                             border-color: #1F4069;
                           " class="btn btn-primary m-1">
-                          Ajouter auto-école
+                          Ajouter un administrateur
                         </button>
                       </div>
                     </div>
@@ -32,40 +32,29 @@
                       <thead>
                         <tr>
                           <th scope="col">id</th>
-                          <th scope="col">auto école</th>
-                          <th scope="col">Adresse</th>
-                          <th scope="col">nom d'admin</th>
+                          <th scope="col">nom</th>
                           <th scope="col">Numéro de téléphone</th>
                           <th scope="col">Email</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(auto) in autoEcole" :key="auto.id">
-                          <th scope="row">{{ auto.id}}</th>
-                          <td>{{ auto.auto_ecole.nom }}</td>
-                          <td>{{ auto.auto_ecole.adresse }}</td>
-                          <td>{{ auto.user_name }} </td>
-                          <td>{{ auto.numTel }}</td>
-                          <td>{{ auto.email }}</td>
+                        <tr v-for="(use) in user" :key="use.id">
+                          <th scope="row">{{ use.id }}</th> <!-- Ajoutez cette ligne pour afficher l'ID -->
+                          <td>{{ use.user_name }}</td>
+                          <td>{{ use.numTel }}</td>
+                          <td>{{ use.email }}</td>
                           <td>
-                            <a href="" style="
-                                background-color: #9dcd5a;
-                                border-color: #9dcd5a;
-                                margin-right: 5px;
-                              " class="btn btn-success">Modifier
-                            </a>
-                            <a href="" style="
-                                background-color: orangered;
-                                border-color: orangered;
-                                margin-left: 5px;
-                              " class="btn btn-danger">Supprimer
-                            </a>
+                            <a href="" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;"
+                              class="btn btn-success">Modifier</a>
+                            <a href="" style="background-color: orangered; border-color: orangered; margin-left: 5px;"
+                              class="btn btn-danger">Supprimer</a>
                           </td>
                         </tr>
+
                       </tbody>
                     </table>
-                    
+
                   </div>
                 </div>
               </div>
@@ -83,7 +72,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title mx-auto" id="exampleModalLabel" style="font-weight: bold; margin-top: 30px">
-            Ajouter auto-école
+            Ajouter administrateur
           </h5>
           <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span class="fas fa-times fs--1"></span>
@@ -93,26 +82,17 @@
         <div class="modal-body">
           <form action="" method="post">
             <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1">Nom d'auto école:</label>
+              <label class="form-label" for="exampleFormControlInput1">Nom d'admin:</label>
               <input name="nom auto ecole" class="form-control" id="exampleFormControlInput1" type="text"
                 placeholder="Nom d'auto école" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Adresse:</label>
+              <label class="form-label" for="exampleTextarea">Numéro de telephone:</label>
               <input name="adresse" class="form-control" id="exampleTextarea" placeholder="Adresse" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Nom d'admin:</label>
+              <label class="form-label" for="exampleTextarea">Email:</label>
               <input name="nom admin" class="form-control" id="exampleTextarea" placeholder="Nom d'admin" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="telephone">Numéro de téléphone:</label>
-              <input name="telephone" type="tel" class="form-control" id="telephone"
-                placeholder="Numéro de téléphone" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="email">E-mail:</label>
-              <input name="email" type="email" class="form-control" id="email" placeholder="E-mail" />
             </div>
           </form>
         </div>
@@ -131,12 +111,12 @@
 </template>
 <script>
 import axios from "axios";
-const AUTOECOLE_API_BASE_URL = "http://localhost:8000/api/autoEcole";
+const USER_API_BASE_URL = "http://localhost:8000/api/user";
 
 export default {
   data() {
     return {
-      autoEcole: [],
+      user: [],
     };
   },
   mounted() {
@@ -146,7 +126,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(`${AUTOECOLE_API_BASE_URL}/user`);
+        const response = await axios.get(`${USER_API_BASE_URL}/indexForSuper`);
         this.handleSuccess(response.data);
       } catch (error) {
         this.handleError(error);
@@ -154,8 +134,8 @@ export default {
     },
     handleSuccess(data) {
       console.log("Data fetched successfully:", data);
-      this.autoEcole = data;
-      console.log("Data fetched successfully:", this.autoEcole);
+      this.user = data;
+      console.log("Data fetched successfully:", this.use);
       // Do something with the data, like assigning it to a variable
       // this.messages = data;
     },
