@@ -79,6 +79,8 @@ class SeanceController extends Controller
    *      ),
    * )
    */
+      // TODO: Add error handling
+
   public function index(){
     $seance= Seance::get();
   return response()->json($seance, 200);
@@ -105,6 +107,8 @@ class SeanceController extends Controller
  *      )
  * )
  */
+    // TODO: Add validation and error handling verify they  are in the database and all in the same autoecoles
+
 public function store(Request $request)
   {
       // Trouver l'utilisateur par son ID
@@ -155,6 +159,7 @@ public function store(Request $request)
  *      )
  * )
  */
+    // TODO: 404 not found
      public function show($id){
       $seance = Seance::find($id);
       if($seance){
@@ -197,6 +202,7 @@ public function store(Request $request)
  * )
  */
 
+    // TODO: Add error handling
 
       public function ShowSeanceBycandidatId($candidatId)
       {
@@ -234,6 +240,7 @@ public function store(Request $request)
  *      )
  * )
  */
+    // TODO: Add and error handling
 
       public function ShowSeanceByvehiculeId($vehiculeId)
       {
@@ -271,6 +278,8 @@ public function store(Request $request)
  *      )
  * )
  */
+    // TODO: Add error handling 
+
       public function ShowSeanceBymoniteurId($moniteurId)
       {
           $seance = Seance::where('moniteur_id', $moniteurId)->get();
@@ -309,6 +318,7 @@ public function store(Request $request)
  *      )
  * )
  */
+    // TODO: Add validation and error handling and test if the authenticated user can update
 
       public function update(Request $request,$id){
         $seance= Seance::find($id);
@@ -577,6 +587,7 @@ public function store(Request $request)
  *      )
  * )
  */
+    // TODO: Add error handling
 
         public function updateSeanceStatus($id)
         {

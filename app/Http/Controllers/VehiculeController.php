@@ -48,6 +48,7 @@ class VehiculeController extends Controller
  *      ),
  * )
  */
+    // TODO: error handling
   public function index(){
     $vehicule= Vehicule::get();
   return response()->json($vehicule, 200);
@@ -83,6 +84,8 @@ class VehiculeController extends Controller
  *      ),
  * )
  */
+
+     // TODO: Add validation and error handling
 
     public function store(Request $request)
     {
@@ -128,6 +131,8 @@ class VehiculeController extends Controller
  *      ),
  * )
  */
+    // TODO: changer le code 404
+
      public function show($id){
       $vehicule = Vehicule::find($id);
       if($vehicule){
@@ -180,6 +185,8 @@ class VehiculeController extends Controller
  *      ),
  * )
  */
+    // TODO: Add validation and error handling
+
       public function update(Request $request,$id){
        $vehicule= Vehicule::find($id);
         if($vehicule){

@@ -31,31 +31,12 @@ use Illuminate\Support\Facades\DB;
  */
 class AutoEcoleController extends Controller
 {
-  /**
- * @OA\Get(
- *      path="/api/autoEcole/index",
- *      operationId="getAllAutoEcoles",
- *      tags={"AutoEcole"},
- *      summary="Obtient toutes les auto-écoles",
- *      description="Renvoie toutes les auto-écoles disponibles",
- *      @OA\Response(
- *          response=200,
- *          description="Liste des auto-écoles",
- *          @OA\JsonContent(
- *              type="array",
- *              @OA\Items(ref="#/components/schemas/AutoEcole")
- *          )
- *      ),
- *      @OA\Response(
- *          response=500,
- *          description="Erreur interne du serveur"
- *      )
- * )
- */
-   public function index(){
-    $autoEcole= AutoEcole::get();
-  return response()->json($autoEcole, 200);
-  } 
+    // TODO: error handling
+    public function index()
+    {
+        $autoEcole = AutoEcole::get();
+        return response()->json($autoEcole, 200);
+    }
 
     /**
  * @OA\Get(
@@ -78,10 +59,12 @@ class AutoEcoleController extends Controller
  *      )
  * )
  */
+    // TODO: error handling
+
   public function getUsersAutoEcole()
   {
     $usersWithAutoEcole = User::has('autoEcole')->with('autoEcole')
-    ->with('autoEcole') // Eager load the autoEcole relationship
+    ->with('autoEcole')
     ->get();
     return response()->json($usersWithAutoEcole, 200);
 
@@ -113,16 +96,15 @@ class AutoEcoleController extends Controller
  *      )
  * )
  */
-
+    // TODO: Add validation and error handling test sur les role comme indiquer dans mon message
   public function store(Request $request)
   {
-      // Trouver l'utilisateur par son ID
       $user = User::find($request->user_id);
       
       // Vérifier si l'utilisateur est un admin
       if ($user && $user->role === "admin") {
-          // Créer une nouvelle auto-école avec les données fournies dans la requête
-          $autoEcole = AutoEcole::create([
+
+      $autoEcole = AutoEcole::create([
               'nom' => $request->nom,
               'adresse' => $request->adresse,
               'description'=> $request->description
@@ -177,6 +159,8 @@ class AutoEcoleController extends Controller
  * )
  */
 
+     // TODO:  changer la reponse 404
+
      public function show($id){
       $autoEcole = AutoEcole::find($id);
       if($autoEcole){
@@ -229,14 +213,13 @@ class AutoEcoleController extends Controller
  *      )
  * )
  */
-
+      //TODO Validate the data  dont update without verifying the request as this will cause data to be removed
     public function update(Request $request,$id)
     {
       $autoEcole= AutoEcole::find($id);
       if($autoEcole){
         $autoEcole->update($request->all());
         return response()->json($autoEcole, 200);
-
       }else {
         $msg = "User not found";
         return response()->json($msg, 404);
@@ -287,7 +270,7 @@ class AutoEcoleController extends Controller
  *      )
  * )
  */
-
+    // TODO: Add validation and error handling
     public function showAutoEcoleByUserId($id)
     {
       $user = User::find($id);
@@ -375,6 +358,7 @@ class AutoEcoleController extends Controller
     }
 }*/
 
+//Tres bien
 public function delete($autoEcoleId)
 {
     // Trouver l'auto-école par son ID

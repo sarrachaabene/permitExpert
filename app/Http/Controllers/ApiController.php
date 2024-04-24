@@ -219,6 +219,8 @@ class ApiController extends Controller {
  *      )
  * )
  */
+
+     // TODO: Test sur le role , utiliser
 public function delete($id) {
     // Find the user by ID
     $user = User::find($id);
@@ -273,6 +275,7 @@ public function delete($id) {
  *     )
  * )
  */
+
 public function registerClient(Request $request, $email)
 {
     // Trouver l'utilisateur par son email
@@ -377,6 +380,7 @@ public function registerClient(Request $request, $email)
   
       // If the credentials are valid, generate a token using Passport
       $accessToken = Auth::user()->createToken('authToken')->accessToken;
+      
       $msg="welcome";
       // Return the token as a response
       return response()->json([ 'Message'=>$msg ,'access_token' => $accessToken]);

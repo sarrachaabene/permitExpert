@@ -63,11 +63,17 @@ class TransactionController extends Controller
  *      ),
  * )
  */
+
+     // TODO: error handling
+
   public function index()
   {
     $transaction=Transaction::get();
     return response()->json($transaction,200);
   }
+
+
+      // TODO: Add validation and error handling test sur le role d'utilisateur est si l'autoecole appartient a lui
   public function store(Request $request)
   {
       $user = User::find($request->user_id);
@@ -141,6 +147,7 @@ class TransactionController extends Controller
  *      ),
  * )
  */
+    // TODO: not found 404
 
    public function show($id){
     $transaction = Transaction::find($id);
@@ -189,6 +196,8 @@ class TransactionController extends Controller
  *      ),
  * )
  */
+    // TODO: error handling
+
     public function ShowTransactionByuserId($userId)
     {
         $transaction = Transaction::where('user_id', $userId)->get();
@@ -267,6 +276,8 @@ class TransactionController extends Controller
  *      ),
  * )
  */
+    // TODO:error handling
+
     public function ShowTransactionByautoecoleId($ecoleId)
     {
         $transaction = Transaction::where('auto_ecole_id', $ecoleId)->get();
@@ -309,6 +320,7 @@ class TransactionController extends Controller
  *      ),
  * )
  */
+    // TODO: Add validation and error handling
     public function update(Request $request,$id){
       $transaction= Transaction::find($id);
        if($transaction){

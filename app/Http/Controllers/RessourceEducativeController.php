@@ -61,6 +61,8 @@ class RessourceEducativeController extends Controller
  *      )
  * )
  */
+    // TODO: Add  error handling
+
   public function index()
   {
     $ressourceEducative=RessourceEducative::get();
@@ -96,6 +98,8 @@ class RessourceEducativeController extends Controller
  *      )
  * )
  */
+
+     // TODO: Add validation and error handling
 
   public function store(Request $request)
   {
@@ -135,6 +139,7 @@ class RessourceEducativeController extends Controller
  *      )
  * )
  */
+    // TODO: 404 !!
 
    public function show($id){
     $ressourceEducative = RessourceEducative::find($id);
@@ -185,6 +190,7 @@ class RessourceEducativeController extends Controller
  *      )
  * )
  */
+    // TODO: Add validation and error handling
     public function update(Request $request,$id){
       $ressourceEducative= RessourceEducative::find($id);
        if($ressourceEducative){
