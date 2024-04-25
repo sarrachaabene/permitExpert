@@ -14,7 +14,7 @@
                   <div class="col">
                     <div class="row mt-4">
                       <div class="col-lg-4 order-lg-last">
-                        <input type="text" class="form-control" v-model="searchQuery" @input="filterTransactions" placeholder="Rechercher..." />
+                        <input type="text" class="form-control" v-model="searchQuery" @input="filterTransactions" placeholder="Recherche par description..." />
                       </div>
                       <div class="col-lg-4 text-right">
                         <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" style="
@@ -45,7 +45,7 @@
                           <th scope="col">Montant</th>
                           <th scope="col">Date</th>
                           <th scope="col">Nom d'utilisateur</th>
-                          <th scope="col">vehicule</th>
+                          <th scope="col">véhicule</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>

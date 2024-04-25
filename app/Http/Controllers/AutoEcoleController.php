@@ -1,7 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\AutoEcole;
@@ -31,12 +30,47 @@ use Illuminate\Support\Facades\DB;
  */
 class AutoEcoleController extends Controller
 {
+
+/**
+ * @OA\Get(
+ *      path="/api/autoEcole",
+ *      operationId="getAutoEcoles",
+ *      tags={"AutoEcole"},
+ *      summary="Récupère la liste de toutes les auto-écoles",
+ *      description="Retourne une liste de toutes les auto-écoles disponibles",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Liste des auto-écoles récupérée avec succès",
+ *          @OA\JsonContent(
+ *              type="array",
+ *              @OA\Items(ref="#/components/schemas/AutoEcole")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Aucune auto-école n'a été trouvée"
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Erreur interne du serveur"
+ *      )
+ * )
+ */
+
+
     // TODO: error handling
     public function index()
     {
-        $autoEcole = AutoEcole::get();
-        return response()->json($autoEcole, 200);
-    }
+      try {
+          $autoEcole = AutoEcole::get();
+          if ($autoEcole->isEmpty()) {
+              return response()->json("Aucune auto-école n'a été trouvée", 404);
+          }
+          return response()->json($autoEcole, 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur interne du serveur", 500);
+      }
+  }
 
     /**
  * @OA\Get(
@@ -61,14 +95,21 @@ class AutoEcoleController extends Controller
  */
     // TODO: error handling
 
-  public function getUsersAutoEcole()
-  {
-    $usersWithAutoEcole = User::has('autoEcole')->with('autoEcole')
-    ->with('autoEcole')
-    ->get();
-    return response()->json($usersWithAutoEcole, 200);
-
-  }
+    public function getUsersAutoEcole()
+    {
+        try {
+            $usersWithAutoEcole = User::has('autoEcole')->get();
+            
+            if ($usersWithAutoEcole->isEmpty()) {
+                return response()->json("Aucun utilisateur avec une auto-école n'a été trouvé", 404);
+            }
+            
+            return response()->json($usersWithAutoEcole, 200);
+        } catch (\Exception $e) {
+            return response()->json("Erreur interne du serveur", 500);
+        }
+    }
+    
 
   /**
  * @OA\Post(
@@ -97,30 +138,29 @@ class AutoEcoleController extends Controller
  * )
  */
     // TODO: Add validation and error handling test sur les role comme indiquer dans mon message
-  public function store(Request $request)
-  {
-      $user = User::find($request->user_id);
-      
-      // Vérifier si l'utilisateur est un admin
-      if ($user && $user->role === "admin") {
-
-      $autoEcole = AutoEcole::create([
-              'nom' => $request->nom,
-              'adresse' => $request->adresse,
-              'description'=> $request->description
+    public function store(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'nom' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+        ]);
+            $user = User::find($request->user_id);
+                if ($user && $user->role === "admin") {
+            $autoEcole = AutoEcole::create([
+                'nom' => $request->nom,
+                'adresse' => $request->adresse,
+                'description' => $request->description
             ]);
-  
-          // Assigner l'ID de l'auto-école à l'utilisateur
-          $user->auto_ecole_id = $autoEcole->id;
-          $user->save();
-  
-          // Retourner la nouvelle auto-école en réponse
-          return response()->json($autoEcole, 200);
-      } else {
-          // Retourner une réponse indiquant que l'utilisateur n'est pas autorisé à créer une auto-école
-          return response()->json("User is not an admin", 400);
-      }
-  }
+                $user->auto_ecole_id = $autoEcole->id;
+            $user->save();
+            return response()->json($autoEcole, 201);
+        } else {
+            return response()->json("User is not admin", 403);
+        }
+    }
+    
   
 
 /**
@@ -161,16 +201,22 @@ class AutoEcoleController extends Controller
 
      // TODO:  changer la reponse 404
 
-     public function show($id){
-      $autoEcole = AutoEcole::find($id);
-      if($autoEcole){
+     public function show($id)
+     {  $validator = Validator::make(['id' => $id], [
+    'id' => 'required|integer|exists:auto_ecoles,id',
+]);
+if ($validator->fails()) {
+    return response()->json($validator->errors(), 400);
+}
+$autoEcole = AutoEcole::find($id);
+if ($autoEcole) {
     return response()->json($autoEcole, 200);
-  
-      }else{
-        $msg="votre id n'est pas trouve";
-            return response()->json($msg, 200);
-        } 
-} 
+} else {
+    $msg = "L'auto-école avec l'ID spécifié n'a pas été trouvée.";
+    return response()->json($msg, 404);
+}
+     }
+     
 /**
  * @OA\Put(
  *      path="/api/autoEcole/update/{id}",
@@ -271,26 +317,27 @@ class AutoEcoleController extends Controller
  * )
  */
     // TODO: Add validation and error handling
-    public function showAutoEcoleByUserId($id)
+public function showAutoEcoleByUserId($id)
     {
-      $user = User::find($id);
-      if (!$user) {
-          $msg = "User not found";
-          return response()->json($msg, 404);
-      }
-  
-      // Vérifier si l'utilisateur a une auto-école associée
-      if ($user->autoEcole) {
-          return response()->json([
-              'autoEcole' => $user->autoEcole,
-              'admin' => $user
-          ], 200);
-      } else {
-          // Si l'utilisateur n'a pas d'auto-école associée
-          return response()->json("User has no associated autoEcole", 404);
-      }
+    $validator = Validator::make(['id' => $id], [
+      'id' => 'required|integer|exists:users,id',
+  ]);
+  if ($validator->fails()) {
+      return response()->json($validator->errors(), 400);
   }
-
+  $user = User::find($id);
+  if (!$user) {
+      return response()->json("User not found", 404);
+  }
+  if ($user->autoEcole) {
+      return response()->json([
+          'autoEcole' => $user->autoEcole,
+          'admin' => $user
+      ], 200);
+  } else {
+      return response()->json("User has no associated autoEcole", 404);
+  }
+  }
   /**
  * @OA\Delete(
  *      path="/api/autoEcole/delete/{id}",
@@ -335,67 +382,87 @@ class AutoEcoleController extends Controller
  * )
  */
 
-/*public function delete($userId)
+public function delete($userId)
 {
-    $user = User::find($userId);
-    $autoEcole = $user->autoEcole;
+  // Trouver l'utilisateur par son ID
+  $user = User::find($userId);
 
-    if (!$autoEcole) {
-        $msg = "autoEcole not found";
-        return response()->json($msg, 404);
-    }
+  // Vérifier si l'utilisateur existe
+  if (!$user) {
+      $msg = "User not found";
+      return response()->json($msg, 404);
+  }
 
-    // Supprimer l'auto-école elle-même
-    if ($autoEcole->delete()) {
-        // Supprimer l'utilisateur associé à cette auto-école
-        if ($user->delete()) {
-            return response()->json("autoEcole and associated user deleted successfully", 200);
-        } else {
-            return response()->json("Failed to delete associated user", 500);
-        }
-    } else {
-        return response()->json("impossible to delete autoEcole", 500);
-    }
-}*/
+  // Récupérer l'auto-école associée à l'utilisateur
+  $autoEcole = $user->autoEcole;
+
+  // Vérifier si l'auto-école existe
+  if (!$autoEcole) {
+      $msg = "Auto-école not found";
+      return response()->json($msg, 404);
+  }
+
+  try {
+      // Commencer une transaction
+      DB::beginTransaction();
+
+      // Supprimer tous les utilisateurs associés à cette auto-école
+      $usersDeleted = $autoEcole->users()->delete();
+
+      // Supprimer l'auto-école elle-même
+      $autoEcoleDeleted = $autoEcole->delete();
+
+      // Valider la transaction
+      DB::commit();
+
+      // Vérifier si la suppression s'est bien déroulée
+      if ($autoEcoleDeleted) {
+          return response()->json("Auto-école and associated users deleted successfully", 200);
+      } else {
+          return response()->json("Failed to delete auto-école and associated users", 500);
+      }
+  } catch (\Exception $e) {
+      // En cas d'erreur, annuler la transaction et renvoyer une réponse d'erreur
+      DB::rollBack();
+      return response()->json("Failed to delete auto-école and associated users: " . $e->getMessage(), 500);
+  }
+}
 
 //Tres bien
-public function delete($autoEcoleId)
+/* public function delete($autoEcoleId)
 {
+  try {
+    // Commencer une transaction
+    DB::beginTransaction();
+
     // Trouver l'auto-école par son ID
     $autoEcole = AutoEcole::find($autoEcoleId);
 
+    // Vérifier si l'auto-école existe
     if (!$autoEcole) {
         return response()->json("Auto-école not found", 404);
     }
 
-    // Trouver l'utilisateur associé à cette auto-école
-    $user = User::where('auto_ecole_id', $autoEcoleId)->first();
-
-    if (!$user) {
-        return response()->json("Associated user not found", 404);
+    // Supprimer tous les utilisateurs associés à cette auto-école
+    $users = $autoEcole->user; // Obtenir tous les utilisateurs associés
+    foreach ($users as $user) {
+        $user->delete(); // Supprimer chaque utilisateur associé
     }
 
-    try {
-        // Commencer une transaction
-        DB::beginTransaction();
+    // Supprimer l'auto-école
+    $autoEcole->delete();
 
-        // Supprimer l'auto-école
-        $autoEcole->delete();
+    // Valider la transaction
+    DB::commit();
 
-        // Supprimer l'utilisateur associé
-        $user->delete();
-
-        // Valider la transaction
-        DB::commit();
-
-        return response()->json("Auto-école and associated user deleted successfully", 200);
-    } catch (\Exception $e) {
-        // En cas d'erreur, annuler la transaction et renvoyer une réponse d'erreur
-        DB::rollBack();
-        return response()->json("Failed to delete auto-école and associated user", 500);
-    }
+    return response()->json("Auto-école and associated users deleted successfully", 200);
+} catch (\Exception $e) {
+    // En cas d'erreur, annuler la transaction et renvoyer une réponse d'erreur
+    DB::rollBack();
+    return response()->json("Failed to delete auto-école and associated users: " . $e->getMessage(), 500);
 }
-
+}
+ */
 
 
 

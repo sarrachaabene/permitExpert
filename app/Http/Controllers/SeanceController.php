@@ -81,10 +81,19 @@ class SeanceController extends Controller
    */
       // TODO: Add error handling
 
-  public function index(){
-    $seance= Seance::get();
-  return response()->json($seance, 200);
-  }
+      public function index()
+      {
+          try {
+              $seances = Seance::all();
+                    if ($seances->isEmpty()) {
+                  return response()->json(["error" => "Aucune séance trouvée."], 404);
+              }
+                    return response()->json($seances, 200);
+          } catch (\Exception $e) {
+              $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+              return response()->json(["error" => $error], 500);
+          }
+      }  
 /**
  * @OA\Post(
  *      path="/api/seance/store",
@@ -108,29 +117,45 @@ class SeanceController extends Controller
  * )
  */
     // TODO: Add validation and error handling verify they  are in the database and all in the same autoecoles
-
-public function store(Request $request)
-  {
-      // Trouver l'utilisateur par son ID
-      $moniteur = User::find($request->moniteur_id);
-      $candidat = User::find($request->candidat_id);
-      $vehicule=Vehicule::find($request->vehicule_id);
-      if (($candidat && $candidat->role === "candidat")&&($moniteur && $moniteur->role === "moniteur")) {
-          $seance = Seance::create([
-              'type' => $request->type,
-              'heureD' => $request->heureD,
-              'heureF'=> $request->heureF,
-              'dateS'=> $request->dateS,
-              'moniteur_id'=> $request->moniteur_id,
-              'candidat_id'=> $request->candidat_id,
-              'vehicule_id'=> $request->vehicule_id,
-                ]); 
-          return response()->json($seance, 200);
-      } else {
-          return response()->json("User is not an candidat", 400);
-      }
-  }
-
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'type' => 'required|string|in:code,circuit,parc',
+                'heureD' => 'required|date_format:H:i',
+                'heureF' => 'required|date_format:H:i|after:heureD',
+                'dateS' => 'required|date',
+                'moniteur_id' => 'required|exists:users,id,role,moniteur',
+                'candidat_id' => 'required|exists:users,id,role,candidat',
+                'vehicule_id' => 'required|exists:vehicules,id',
+            ]);
+                $existingSeance = Seance::where('moniteur_id', $validatedData['moniteur_id'])
+                ->where('candidat_id', $validatedData['candidat_id'])
+                ->where('vehicule_id', $validatedData['vehicule_id'])
+                ->where('dateS', $validatedData['dateS'])
+                ->where(function ($query) use ($validatedData) {
+                    $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                        ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                })
+                ->exists();
+            if ($existingSeance) {
+                return response()->json(["error" => "Il existe déjà une séance planifiée pour ce moniteur, candidat et véhicule à ce moment."], 400);
+            }
+                $seance = Seance::create([
+                'type' => $validatedData['type'],
+                'heureD' => $validatedData['heureD'],
+                'heureF' => $validatedData['heureF'],
+                'dateS' => $validatedData['dateS'],
+                'moniteur_id' => $validatedData['moniteur_id'],
+                'candidat_id' => $validatedData['candidat_id'],
+                'vehicule_id' => $validatedData['vehicule_id'],
+            ]);
+            return response()->json($seance, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la création de la séance: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
   /**
  * @OA\Get(
  *      path="/api/seance/show/{id}",
@@ -160,16 +185,20 @@ public function store(Request $request)
  * )
  */
     // TODO: 404 not found
-     public function show($id){
-      $seance = Seance::find($id);
-      if($seance){
-    return response()->json($seance, 200);
-
-      }else{
-        $msg="votre id n'est pas trouve";
-            return response()->json($msg, 200);
-      }   }
-
+    public function show($id)
+    {
+        try {
+            $seance = Seance::find($id);
+                if (!$seance) {
+                $msg = "La séance avec l'ID spécifié n'a pas été trouvée.";
+                return response()->json(["error" => $msg], 404);
+            }
+            return response()->json($seance, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération de la séance: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
 /**
  * @OA\Get(
  *      path="/api/seance/ShowSeanceBycandidatId/{id}",
@@ -201,14 +230,20 @@ public function store(Request $request)
  *      )
  * )
  */
-
     // TODO: Add error handling
-
-      public function ShowSeanceBycandidatId($candidatId)
-      {
-          $seance = Seance::where('candidat_id', $candidatId)->get();
-          return response()->json($seance, 200);
-      }
+    public function ShowSeanceBycandidatId($candidatId)
+    {
+        try {
+            $seances = Seance::where('candidat_id', $candidatId)->get();
+                if ($seances->isEmpty()) {
+                return response()->json(["error" => "Aucune séance trouvée pour le candidat spécifié."], 404);
+            }
+            return response()->json($seances, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }    
       /**
  * @OA\Get(
  *      path="/api/seance/ShowSeanceByvehiculeId/{id}",
@@ -241,12 +276,19 @@ public function store(Request $request)
  * )
  */
     // TODO: Add and error handling
-
-      public function ShowSeanceByvehiculeId($vehiculeId)
-      {
-          $seance = Seance::where('vehicule_id', $vehiculeId)->get();
-          return response()->json($seance, 200);
-      }
+    public function ShowSeanceByvehiculeId($vehiculeId)
+    {
+        try {
+            $seances = Seance::where('vehicule_id', $vehiculeId)->get();
+                if ($seances->isEmpty()) {
+                return response()->json(["error" => "Aucune séance trouvée pour le véhicule spécifié."], 404);
+            }
+            return response()->json($seances, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }  
             /**
  * @OA\Get(
  *      path="/api/seance/ShowSeanceBymoniteurId/{id}",
@@ -279,13 +321,20 @@ public function store(Request $request)
  * )
  */
     // TODO: Add error handling 
-
-      public function ShowSeanceBymoniteurId($moniteurId)
-      {
-          $seance = Seance::where('moniteur_id', $moniteurId)->get();
-          return response()->json($seance, 200);
-      }
-
+    public function ShowSeanceBymoniteurId($moniteurId)
+    {
+        try {
+            $seances = Seance::where('moniteur_id', $moniteurId)->get();
+    
+            if ($seances->isEmpty()) {
+                return response()->json(["error" => "Aucune séance trouvée pour le moniteur spécifié."], 404);
+            }
+            return response()->json($seances, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
       /**
  * @OA\Put(
  *      path="/api/seance/update/{id}",
@@ -320,18 +369,43 @@ public function store(Request $request)
  */
     // TODO: Add validation and error handling and test if the authenticated user can update
 
-      public function update(Request $request,$id){
-        $seance= Seance::find($id);
-         if($seance){
-           $seance->update($request->all());
-           return response()->json($seance, 200);
- 
-         }else {
-           $msg = "User not found";
-           return response()->json($msg, 404);
-       }
-         }
-
+    public function update(Request $request, $id)
+    {
+        try {
+            $seance = Seance::find($id);
+                if (!$seance) {
+                return response()->json(["error" => "La séance avec l'ID spécifié n'a pas été trouvée."], 404);
+            }
+                $validatedData = $request->validate([
+                'type' => 'string|in:code,circuit,parc',
+                'heureD' => 'date_format:H:i',
+                'heureF' => 'date_format:H:i|after:heureD',
+                'dateS' => 'date',
+                'moniteur_id' => 'exists:users,id,role,moniteur',
+                'candidat_id' => 'exists:users,id,role,candidat',
+                'vehicule_id' => 'exists:vehicules,id',
+            ]);
+                $existingSeance = Seance::where('moniteur_id', $validatedData['moniteur_id'])
+                ->where('candidat_id', $validatedData['candidat_id'])
+                ->where('vehicule_id', $validatedData['vehicule_id'])
+                ->where('dateS', $validatedData['dateS'])
+                ->where(function ($query) use ($validatedData) {
+                    $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                        ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                })
+                ->where('id', '!=', $id) 
+                ->exists();
+    
+            if ($existingSeance) {
+                return response()->json(["error" => "Il existe déjà une séance planifiée pour ce moniteur, candidat et véhicule à ce moment."], 400);
+            }
+                $seance->update($validatedData);
+            return response()->json($seance, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la mise à jour de la séance: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
          /**
  * @OA\Delete(
  *      path="/api/seance/delete/{id}",
@@ -367,20 +441,25 @@ public function store(Request $request)
  *      )
  * )
  */
-         public function delete($id) {
-          $seance = Seance::find($id);
-                if (!$seance) {
-              $msg = "seance not found";
-              return response()->json($msg, 404);
-          }
-      
-          if ($seance->delete()) {
-              return response()->json("seance deleted successfully", 200);
-          } else {
-              return response()->json("seance to delete permis", 500);
-          }
-           }
-           
+public function delete($id)
+{
+    try {
+        $seance = Seance::find($id);
+
+        if (!$seance) {
+            $msg = "La séance n'a pas été trouvée.";
+            return response()->json(["error" => $msg], 404);
+        }
+        if ($seance->delete()) {
+            return response()->json("La séance a été supprimée avec succès.", 200);
+        } else {
+            return response()->json("Erreur lors de la suppression de la séance.", 500);
+        }
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la suppression de la séance: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}         
           /**
  * @OA\Post(
  *      path="/api/seance/AccepterPourCandidat/{id}",
@@ -412,18 +491,30 @@ public function store(Request $request)
  *      )
  * )
  */
+public function AccepterPourCandidat(Request $request)
+{
+    try {
+        // Validation de l'ID de la séance
+        $request->validate([
+            'id' => 'required|integer|exists:seances,id',
+        ]);
 
-           public function AccepterPourCandidat($id) {
-            $seance = Seance::find($id);
-        
-            if ($seance) {
-                $seance->candidat_status = true;
-                $seance->save();
-                return response()->json("Attribut candidat_status mis à jour avec succès pour la séance", 200);
-            } else {
-                return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_status", 404);
-            }
+        $id = $request->id;
+        $seance = Seance::find($id);
+
+        if ($seance) {
+            $seance->candidat_status = true;
+            $seance->save();
+            return response()->json("Attribut 'candidat_status' mis à jour avec succès pour la séance.", 200);
+        } else {
+            return response()->json("La séance n'a pas été trouvée. Impossible de mettre à jour l'attribut 'candidat_status'.", 404);
         }
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la mise à jour de l'attribut 'candidat_status' pour la séance: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
         /**
  * @OA\Post(
  *      path="/api/seance/RefuserPourCandidat/{id}",

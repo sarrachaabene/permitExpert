@@ -177,19 +177,19 @@
           <form @submit.prevent="updateVehicle" method="post">
             <div class="mb-3">
               <label class="form-label" for="EditImmatriculation">Immatriculation:</label>
-              <input v-model="selectedVehicle.immatricule" class="form-control" id="EditImmatriculation" type="text" placeholder="Immatriculation" />
+              <input v-model="editedVehicle.immatricule" class="form-control" id="EditImmatriculation" type="text" placeholder="Immatriculation" />
             </div>
             <div class="mb-3">
               <label class="form-label" for="EditKilometrage">Kilométrage:</label>
-              <input v-model="selectedVehicle.kilometrage" class="form-control" id="EditKilometrage" type="text" placeholder="Kilométrage" />
+              <input v-model="editedVehicle.kilometrage" class="form-control" id="EditKilometrage" type="text" placeholder="Kilométrage" />
             </div>
             <div class="mb-3">
               <label class="form-label" for="EditMarque">Marque:</label>
-              <input v-model="selectedVehicle.marque" class="form-control" id="EditMarque" type="text" placeholder="Marque" />
+              <input v-model="editedVehicle.marque" class="form-control" id="EditMarque" type="text" placeholder="Marque" />
             </div>
             <div class="mb-3">
               <label class="form-label" for="EditType">Type:</label>
-              <select v-model="selectedVehicle.typeV" class="form-select" id="EditType">
+              <select v-model="editedVehicle.typeV" class="form-select" id="EditType">
                 <option value="Moto">Moto</option>
                 <option value="Voiture">Voiture</option>
                 <option value="Camion">Camion</option>
@@ -246,7 +246,8 @@ export default {
       selectedVehicle: {},
       transactions: [],
       newVehicle: { Immatriculation: '', kilometrage: '', marque: '', typeV: '' },
-      selectedVehicleId: null // Variable pour stocker l'ID du véhicule sélectionné pour la suppression
+      selectedVehicleId: null, // Variable pour stocker l'ID du véhicule sélectionné pour la suppression
+      editedVehicle: {}, // Objet pour stocker les modifications dans le modal de modification
     };
   },
   mounted() {
@@ -314,12 +315,13 @@ export default {
       }
     },
     openEditModal(veh) {
-      this.selectedVehicle = veh;
+      // Créez une copie profonde de l'objet veh pour éviter les références partagées
+      this.editedVehicle = JSON.parse(JSON.stringify(veh));
       $('#editModal').modal('show');
     },
     async updateVehicle() {
       try {
-        const response = await axios.put(`${VEHICULE_API_BASE_URL}/update/${this.selectedVehicle.id}`, this.selectedVehicle);
+        const response = await axios.put(`${VEHICULE_API_BASE_URL}/update/${this.editedVehicle.id}`, this.editedVehicle);
         console.log("Vehicle updated successfully:", response.data);
         this.fetchData();
         $('#editModal').modal('hide');

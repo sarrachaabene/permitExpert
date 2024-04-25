@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+
+
 /**
  * @OA\Schema(
  *     schema="User",
@@ -64,20 +67,35 @@ class ApiController extends Controller {
  *      ),
  * )
  */
-/*   public function index(){
-    $user= User::get();
-  return response()->json($user, 200);
-  } */
-  public function index(){
-    $roles = ['candidat', 'moniteur', 'secretaire'];
-    $users = User::whereIn('role', $roles)->get();
-    return response()->json($users, 200);
-}
-public function indexForSuper(){
- $users = User::where('role', 'admin')->get();
-  return response()->json($users, 200);
-}
-
+//Affichage pour admin
+  public function index()
+  {
+      try {
+          $roles = ['candidat', 'moniteur', 'secretaire'];
+                    $users = User::whereIn('role', $roles)->get();
+                    if ($users->isEmpty()) {
+              return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés", 404);
+          }
+          return response()->json($users, 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+      }
+  }
+  
+//Affichage pour superAdmin
+  public function indexForSuper()
+  {
+      try {
+          $users = User::where('role', 'admin')->get();
+                    if ($users->isEmpty()) {
+              return response()->json("Aucun utilisateur trouvé avec le rôle 'admin'", 404);
+          }
+                    return response()->json($users, 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+      }
+  }
+  
 /**
  * @OA\Post(
  *      path="/api/user/store",
@@ -100,21 +118,32 @@ public function indexForSuper(){
  *      )
  * )
  */
+public function store(Request $request)
+{
+    try {
+        $validatedData = $request->validate([
+            'user_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|string|in:admin,candidat,moniteur,superAdmin,secretaire',
+            'cin' => 'required|string|max:255',
+            'numTel' => 'required|string|max:255',
+            'dateNaissance' => 'required|date',
+        ]);
 
- public function store(Request $request)
- {
-     $user = User::create($request->all());
-     //$token = $user->createToken('My Token')->accessToken;
-     //return response()->json(['access_token' => $token]);
-    /*  $autoecole = AutoEcole::find($request->auto_ecole_id);
- 
-     if ($user->role == 'admin') {  
-         $user->auto_ecole_id = $autoecole->id; // Assign auto_ecole_id to the new user
-         $user->save();
-     }*/
- 
-     return response()->json(["user" => $user], 200); 
- }
+        // Créer l'utilisateur avec les données validées
+        $user = User::create($validatedData);
+
+        // Attribuer le rôle par défaut
+        $defaultRole = $validatedData['role']; // Récupérer le rôle spécifié dans les données validées
+        $user->assignRole($defaultRole);
+
+        return response()->json(["user" => $user], 200); 
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Failed to create user: " . $e->getMessage()], 500);
+    }
+}
+
 /**
  * @OA\Get(
  *      path="/api/user/show/{id}",
@@ -143,22 +172,19 @@ public function indexForSuper(){
  *      )
  * )
  */
-
-
-     public function show($id){
-      $user = User::find($id);
-      if($user){
-    return response()->json($user, 200);
-
-      }else{
-        $msg="votre id n'est pas trouve";
-            return response()->json($msg, 200);
-
-
-
-      }   }
-    
-
+ public function show($id)
+ {
+     try {
+         $user = User::find($id);
+                  if (!$user) {
+             $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
+             return response()->json($msg, 404);
+         }
+                  return response()->json($user, 200);
+     } catch (\Exception $e) {
+         return response()->json(["error" => "Failed to fetch user: " . $e->getMessage()], 500);
+     }
+ }
       /**
  * @OA\Put(
  *      path="/api/user/update/{id}",
@@ -191,17 +217,29 @@ public function indexForSuper(){
  *      )
  * )
  */
-      public function update(Request $request,$id){
-       $user= User::find($id);
-        if($user){
-          $user->update($request->all());
-          return response()->json($user, 200);
-
-        }else {
-          $msg = "User not found";
-          return response()->json($msg, 404);
-      }
+public function update(Request $request, $id)
+{
+    try {
+      $validatedData = $request->validate([
+        'user_name' => 'string|max:255',
+        'email' => 'string|email|max:255|unique:users,email,' . $id,
+        'password' => 'string|min:8',
+        'role' => 'string|in:admin,candidat,moniteur,superAdmin,secretaire',
+        'cin' => 'string|max:255',
+        'numTel' => 'string|max:255',
+        'dateNaissance' => 'date',
+    ]);
+        $user = User::find($id);
+        if (!$user) {
+            $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
+            return response()->json($msg, 404);
         }
+        $user->update($validatedData);
+        return response()->json($user, 200);
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Failed to update user: " . $e->getMessage()], 500);
+    }
+}
 /**
  * @OA\Delete(
  *      path="/api/user/delete/{id}",
@@ -232,26 +270,24 @@ public function indexForSuper(){
  */
 
      // TODO: Test sur le role , utiliser
-public function delete($id) {
-    // Find the user by ID
-    $user = User::find($id);
+     public function delete($id) {
+      $user = User::find($id);
+        if (!$user) {
+          $msg = "User not found";
+          return response()->json($msg, 404);
+      }
+        try {
+          $user->delete();
+      } catch (\Exception $e) {
+          return response()->json("Failed to delete user. Error: " . $e->getMessage(), 500);
+      }
+        if ($user->trashed()) {
+          return response()->json("User deleted successfully", 200);
+      } else {
+          return response()->json("Failed to delete user", 500);
+      }
+  }
 
-    // Check if the user exists
-    if (!$user) {
-        $msg = "User not found";
-        return response()->json($msg, 404);
-    }
-    return response()->json($user, 200);
-    // Delete the user
-    //$user->delete();
-
-    // Check if the deletion was successful
-    /* if ($user->trashed()) {
-        return response()->json("User deleted successfully", 200);
-    } else {
-        return response()->json("Failed to delete user", 500);
-    } */
-}
 /**
  * @OA\Post(
  *     path="/api/updateProfile",
@@ -289,11 +325,8 @@ public function delete($id) {
 
 public function registerClient(Request $request, $email)
 {
-    // Trouver l'utilisateur par son email
     $user = User::where('email', $email)->first();
-
     if ($user) {
-        // Si l'utilisateur existe, valider les données envoyées
         $validator = Validator::make($request->all(), [
             'user_name' => [
                 'required', 
@@ -303,21 +336,16 @@ public function registerClient(Request $request, $email)
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'numTel' => ['required', 'string', 'max:8']
         ]);
-
         if ($validator->fails()) {
             return response()->json($validator->errors(), 402);
         }
-
-        // Mettre à jour les informations de l'utilisateur
         $user->user_name = $request->user_name;
         $user->password = Hash::make($request->password);
         $user->numTel = $request->numTel;
         $user->save();
-
         $msg = 'Informations de l\'utilisateur mises à jour avec succès';
         return response()->json(['Message' => $msg, 'user' => $user], 200);
     } else {
-        // Si l'utilisateur n'existe pas, renvoyer un message d'erreur
         $error = 'L\'utilisateur avec cet email n\'existe pas';
         return response()->json(['error' => $error], 404);
     }
@@ -382,15 +410,11 @@ public function registerClient(Request $request, $email)
       if ($validator->fails()) {
           return response()->json($validator->errors(), 402);
       }
-  
-      // Attempt to authenticate the user
-      $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
       if (!Auth::attempt($credentials)) {
           return response()->json(['message' => 'Invalid credentials'], 401);
       }
-  
-      // If the credentials are valid, generate a token using Passport
-      $accessToken = Auth::user()->createToken('authToken')->accessToken;
+        $accessToken = Auth::user()->createToken('authToken')->accessToken;
       
       $msg="welcome";
       // Return the token as a response

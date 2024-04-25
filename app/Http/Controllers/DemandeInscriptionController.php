@@ -75,12 +75,20 @@ class DemandeInscriptionController extends Controller
      *      ),
      * )
      */
-  public function index()
-  {
-    $demandeInscription=DemandeInscription::get();
-    return response()->json($demandeInscription,200);
-  }
-
+    public function index()
+    {
+        try {
+            $demandeInscription = DemandeInscription::get();
+            
+            if ($demandeInscription->isEmpty()) {
+                return response()->json("Aucune demande d'inscription trouvée", 404);
+            }
+                return response()->json($demandeInscription, 200);
+        } catch (\Exception $e) {
+            return response()->json("Erreur lors de la récupération des demandes d'inscription: " . $e->getMessage(), 500);
+        }
+    }
+    
 /**
  * @OA\Post(
  *      path="/api/demandeInscript/store",
@@ -104,47 +112,50 @@ class DemandeInscriptionController extends Controller
  * )
  */
 
-  public function store(Request $request)
-  {
-    $demandeInscription= DemandeInscription::create($request->all());
-    if($demandeInscription)
-    {
-      $demandeInscription->save();
-      return response()->json($demandeInscription, 200);
-    }
-    return response()->json("demandeInscription not created", 400);
-   }
-
-
+ public function store(Request $request)
+ {
+     $validatedData = $request->validate([
+         'nomEcole' => 'required|string',
+         'adresseEcole' => 'required|string',
+         'descriptionEcole' => 'required|string',
+         'nomA' => 'required|string',
+         'prenomA' => 'required|string',
+         'emailA' => 'required|email',
+         'cin' => 'required|string',
+         'numTel' => 'required|string',
+         'dateNaissance' => 'required|date',
+         'status' => 'string',
+     ]);
+     try {
+         $demandeInscription = DemandeInscription::create($validatedData);
+          if ($demandeInscription) {
+             return response()->json($demandeInscription, 200);
+         } else {
+             return response()->json("La demande d'inscription n'a pas été créée", 400);
+         }
+     } catch (\Exception $e) {
+         return response()->json("Erreur lors de la création de la demande d'inscription: " . $e->getMessage(), 500);
+     }
+ }
 public function accepteDemande($idDemande){
-  // Trouver la demande d'inscription par son ID
   $demande = DemandeInscription::find($idDemande);
-  // Vérifier si la demande existe
   if (!$demande) {
       return response()->json("Demande not found", 404);
   }
-  // Mettre à jour le statut de la demande à true
   $demande->status = true;
   $demande->save();
-  // Créer un nouvel utilisateur admin
   $admin = User::create([
-      'name' => $demande->nomA,
-      'prenom' => $demande->prenomA,
+       'user_name'=>$demande->nomA,
       'email' => $demande->emailA,
       'cin' => $demande->cin,
       'numTel'=>$demande->numTel,
       'dateNaissance'=>$demande->dateNaissance,
-      'user_image' =>$demande->imageA,
   ]);
-  // Créer une nouvelle auto-école associée à l'admin
   $autoEcole = AutoEcole::create([
       'nom' => $demande->nomEcole,
       'adresse' => $demande->adresseEcole,
       'description' => $demande->descriptionEcole,
-      'autoecole_image' => $demande->imageEcole, 
-      // Ajoutez d'autres champs d'auto-école si nécessaire
   ]);
-  // Associer l'auto-école créée à l'admin
   $admin->autoEcole()->associate($autoEcole);
   $admin->save();
   return response()->json("Demande accepted successfully", 200);

@@ -29,27 +29,27 @@ Auth::routes();
 
 Route::get('/autoEcole', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 Route::get('/demande', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 
 Route::get('/utilisateur', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 Route::get('/Calendar', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 
 Route::get('/transaction', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 Route::get('/vehicule', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 Route::get('/profile', function () {
   return view('welcome'); 
-})->middleware('auth');
+});//->middleware('auth');
 Route::get('/parametre', function () {
   return view('welcome'); 
 })->middleware('auth');

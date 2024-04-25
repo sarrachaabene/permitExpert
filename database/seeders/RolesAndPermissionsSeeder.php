@@ -1,14 +1,9 @@
 <?php
-
 namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-
-
 class RolesAndPermissionsSeeder extends Seeder
 {
     /**
@@ -16,23 +11,12 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-      app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions(); 
-        // Créer les permissions
-        $createExamPermission = Permission::firstOrCreate(['name' => 'create Examen']);
-        $editExamPermission = Permission::firstOrCreate(['name' => 'edit Examen']);
-        $deleteExamPermission = Permission::firstOrCreate(['name' => 'delete Examen']);
-        //Define Roles
-
-        $superadminRole = Role::firstOrCreate(['name' => 'super admin']);
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $secretaireRole = Role::firstOrCreate(['name' => 'secretaire']);
-        $moniteurRole = Role::firstOrCreate(['name' => 'moniteur']);
-        $candidatRole = Role::firstOrCreate(['name' => 'candidat']);
-        $visiteurtRole = Role::firstOrCreate(['name' => 'visiteur']);
-
-        // Associer les permissions aux rôles
-        $adminRole->givePermissionTo($createExamPermission, $editExamPermission, $deleteExamPermission);
-
-     // Associer les rôles aux utilisateurs dans le seeder UserSeeder
+      app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+         Role::firstOrCreate(['name' => 'superAdmin']);
+         Role::firstOrCreate(['name' => 'admin']);
+         Role::firstOrCreate(['name' => 'secretaire']);
+         Role::firstOrCreate(['name' => 'moniteur']);
+         Role::firstOrCreate(['name' => 'candidat']);
+         Role::firstOrCreate(['name' => 'visiteur']);
     }
 }

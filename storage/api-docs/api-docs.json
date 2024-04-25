@@ -355,17 +355,17 @@
                 }
             }
         },
-        "/api/autoEcole/index": {
+        "/api/autoEcole": {
             "get": {
                 "tags": [
                     "AutoEcole"
                 ],
-                "summary": "Obtient toutes les auto-écoles",
-                "description": "Renvoie toutes les auto-écoles disponibles",
-                "operationId": "getAllAutoEcoles",
+                "summary": "Récupère la liste de toutes les auto-écoles",
+                "description": "Retourne une liste de toutes les auto-écoles disponibles",
+                "operationId": "getAutoEcoles",
                 "responses": {
                     "200": {
-                        "description": "Liste des auto-écoles",
+                        "description": "Liste des auto-écoles récupérée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -376,6 +376,9 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Aucune auto-école n'a été trouvée"
                     },
                     "500": {
                         "description": "Erreur interne du serveur"

@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
@@ -39,7 +38,10 @@ use App\Models\Notification;
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 
-/* Route::middleware('auth')->group(function () { */
+ Route::middleware('auth:api','role:superAdmin')->group(function () { 
+  Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);});
+
+
 
   Route::get('/user/index', [ApiController::class, 'index']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
@@ -48,7 +50,6 @@ Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
   Route::post('/user/store',[ApiController::class,'store']);
   Route::get('/user/indexForSuper', [ApiController::class, 'indexForSuper']);
   
-  Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
   Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
   Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::get('/autoEcole/user',[AutoEcoleController::class,'getUsersAutoEcole']);
@@ -120,6 +121,6 @@ Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
   Route::get('/demandeInscript/index',[DemandeInscriptionController::class,'index']);
   Route::get('/demandeInscript/show/{id}',[DemandeInscriptionController::class,'show']);
   Route::post('/demandeInscript/store',[DemandeInscriptionController::class,'store']);
-  Route::put('/demandeInscript/update/{id}',[DemandeInscriptionController::class,'update']);
-  Route::delete('/demandeInscript/delete/{id}',[DemandeInscriptionController::class,'delete']);
+  Route::post('/demandeInscript/accepter{idDemande}',[DemandeInscriptionController::class,'  accepteDemande']);
+
 //});

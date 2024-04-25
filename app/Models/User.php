@@ -12,6 +12,7 @@ use App\Models\Message;
 use App\Models\AutoEcole;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 
 
 class User extends Authenticatable
@@ -93,4 +94,26 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Resource::class);
     }
+  /*   public function assignRole()
+    {
+        // Logic to assign role based on 'role' attribute
+        switch ($this->role) {
+            case 'admin':
+                $role = Role::where('name', 'admin')->first();
+                break;
+            case 'secretaire':
+                $role = Role::where('name', 'secretaire')->first();
+                break;
+            // Add more cases as needed
+            default:
+                // Default role assignment if 'role' attribute doesn't match
+                $role = Role::where('name', 'candidat')->first();
+                break;
+        }
+        if ($role) {
+            $this->assignRole($role);
+        }
+    } */
+    
+
 }

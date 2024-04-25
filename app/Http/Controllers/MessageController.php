@@ -57,13 +57,20 @@ class MessageController extends Controller
  *      ),
  * )
  */
-    public function index()
-    {
-        $message = Message::get();
-        return response()->json($message, 200);
+public function index()
+{
+    try {
+        $messages = Message::get();
+
+        if ($messages->isEmpty()) {
+            return response()->json(["error" => "Aucun message trouvé."], 404);
+        }
+        return response()->json($messages, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des messages: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
     }
-
-
+}
 /**
  * @OA\Post(
  *      path="/api/message/store",
@@ -90,21 +97,38 @@ class MessageController extends Controller
  *      ),
  * )
  */
-    public function store(Request $request)
-    {  // $user = User::find($request->sender_id);
-
-        $message = Message::create($request->all());
-        // Créer une nouvelle notification associée au message créé
-        $notification=Notification::create([
-          'message_id' => $message->id,
-          'message_description' =>$message->description,
-          'sender_msg' =>$message->sender_id,
-          'receptient_msg'=>$message->recipient_id
+public function store(Request $request)
+{
+    try {
+        $validatedData = $request->validate([
+            'message_description' => 'required|string',
+            'sender_msg' => 'required|exists:users,id',
+            'recipient_id' => 'required|exists:users,id|different:sender_msg',
         ]);
-      /* $user->notification_id = $notification->id;
-        $user->save();*/
+        if ($validatedData['sender_msg'] === $validatedData['recipient_id']) {
+            return response()->json(["error" => "Le destinataire et l'expéditeur ne peuvent pas être les mêmes."], 400);
+        }
+        $message = Message::create([
+            'description' => $validatedData['message_description'],
+            'sender_id' => $validatedData['sender_msg'],
+            'recipient_id' => $validatedData['recipient_id'],
+            'dateM' => now(), 
+        ]);
+        Notification::create([
+            'message_id' => $message->id,
+            'message_description' => $message->description,
+            'sender_msg' => $message->sender_id,
+            'receptient_msg' => $message->recipient_id,
+        ]);
+
         return response()->json($message, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la création du message: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
     }
+}
+
+
 /**
  * @OA\Get(
  *      path="/api/message/show/{id}",
@@ -136,14 +160,20 @@ class MessageController extends Controller
  *      ),
  * )
  */
-    public function show($id)
-    {
+public function show($id)
+{
+    try {
         $message = Message::find($id);
         if ($message) {
             return response()->json($message, 200);
         } else {
-            $msg = "votre id n'est pas trouve";
-            return response()->json($msg, 200);
-        }   
+            $msg = "Le message avec l'ID spécifié n'a pas été trouvé.";
+            return response()->json(["error" => $msg], 404);
+        }
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération du message: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
     }
+}
+
 }

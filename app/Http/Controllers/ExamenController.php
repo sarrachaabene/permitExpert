@@ -60,10 +60,20 @@ class ExamenController extends Controller
  *      ),
  * )
  */
-  public function index(){
-    $examen= Examen::get();
-  return response()->json($examen, 200);
-  }
+public function index()
+{
+    try {
+        $examens = Examen::get();
+        
+        if ($examens->isEmpty()) {
+            return response()->json(["message" => "Aucun examen trouvé"], 404);
+        }      
+        return response()->json($examens, 200);
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Erreur lors de la récupération des examens: " . $e->getMessage()], 500);
+    }
+}
+
 /**
  * @OA\Post(
  *      path="/api/Examen/store",
@@ -95,24 +105,51 @@ class ExamenController extends Controller
  *      ),
  * )
  */
-  public function store(Request $request)
-  {
-      $user = User::find($request->user_id);
-     $vehicule=Vehicule::find($request->vehicule_id);
-      if ($user && $user->role=='candidat'&& $vehicule ){
+public function store(Request $request)
+{
+    try {
+        $validatedData = $request->validate([
+            'type' => 'required|string',
+            'heureD' => 'required|date_format:H:i',
+            'heureF' => 'required|date_format:H:i|after:heureD',
+            'dateE' => 'required|date',
+            'user_id' => 'required|exists:users,id',
+            'vehicule_id' => 'required|exists:vehicules,id',
+        ]);
+        $existingExamen = Examen::where('user_id', $validatedData['user_id'])
+                                ->where('dateE', $validatedData['dateE'])
+                                ->where(function ($query) use ($validatedData) {
+                                    $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                                          ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                                })
+                                ->exists();
+        if ($existingExamen) {
+            return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
+        }
+        $existingExamenVehicule = Examen::where('vehicule_id', $validatedData['vehicule_id'])
+                                        ->where('dateE', $validatedData['dateE'])
+                                        ->where(function ($query) use ($validatedData) {
+                                            $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                                                  ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                                        })
+                                        ->exists();
+        if ($existingExamenVehicule) {
+            return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
+        }
         $examen = Examen::create([
-          'type' => $request->type,
-          'heureD' => $request->heureD,
-          'heureF'=> $request->heureF,
-          'dateE'=> $request->dateE,
-          'user_id'=> $request->user_id,
-          'vehicule_id'=> $request->vehicule_id,
+            'type' => $validatedData['type'],
+            'heureD' => $validatedData['heureD'],
+            'heureF' => $validatedData['heureF'],
+            'dateE' => $validatedData['dateE'],
+            'user_id' => $validatedData['user_id'],
+            'vehicule_id' => $validatedData['vehicule_id'],
         ]);
         return response()->json($examen, 200);
-      }else {
-        return response()->json("examen not created", 400);
+        
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Erreur lors de la création de l'examen: " . $e->getMessage()], 500);
     }
-  }
+}
   /**
  * @OA\Get(
  *      path="/api/Examen/show/{id}",
@@ -146,19 +183,21 @@ class ExamenController extends Controller
  *      ),
  * )
  */
-
-     public function show($id){
-      $examen = Examen::find($id);
-      if($examen){
-    return response()->json($examen, 200);
-
-      }else{
-        $msg="votre id n'est pas trouve";
-            return response()->json($msg, 200);
-
-
-
-      }   }
+ public function show($id)
+ {
+     try {
+         $examen = Examen::find($id);
+         
+         if (!$examen) {
+             $msg = "L'examen avec l'ID spécifié n'a pas été trouvé.";
+             return response()->json(["error" => $msg], 404);
+         }
+         return response()->json($examen, 200);
+     } catch (\Exception $e) {
+         $error = "Erreur lors de la récupération de l'examen: " . $e->getMessage();
+         return response()->json(["error" => $error], 500);
+     }
+ } 
       /**
  * @OA\Get(
  *      path="/api/Examen/ShowExamensBycandidatId/{id}",
@@ -193,11 +232,22 @@ class ExamenController extends Controller
  *      ),
  * )
  */
-      public function ShowExamensBycandidatId($candidatId)
-      {
-          $examen = Examen::where('user_id', $candidatId)->get();
-          return response()->json($examen, 200);
-      }
+public function showExamensByCandidatId($candidatId)
+{
+    try {
+        $examens = Examen::where('user_id', $candidatId)->get();
+        
+        if ($examens->isEmpty()) {
+            $msg = "Aucun examen trouvé pour le candidat avec l'ID spécifié.";
+            return response()->json(["error" => $msg], 404);
+        }
+        return response()->json($examens, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des examens pour le candidat: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
       /**
  * @OA\Get(
  *      path="/api/Examen/ShowExamensByvehiculeId/{id}",
@@ -232,11 +282,22 @@ class ExamenController extends Controller
  *      ),
  * )
  */
-      public function ShowExamensByvehiculeId($vehiculeId)
-      {
-          $examen = Examen::where('vehicule_id', $vehiculeId)->get();
-          return response()->json($examen, 200);
-      }
+public function showExamensByVehiculeId($vehiculeId)
+{
+    try {
+        $examens = Examen::where('vehicule_id', $vehiculeId)->get();
+        
+        if ($examens->isEmpty()) {
+            $msg = "Aucun examen trouvé pour le véhicule avec l'ID spécifié.";
+            return response()->json(["error" => $msg], 404);
+        }
+
+        return response()->json($examens, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des examens pour le véhicule: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
       /**
  * @OA\Put(
  *      path="/api/Examen/update/{id}",
@@ -277,19 +338,53 @@ class ExamenController extends Controller
  *      ),
  * )
  */
-      public function update(Request $request,$id){
-       $examen= Examen::find($id);
-        if($examen){
-          $examen->update($request->all());
-          return response()->json($examen, 200);
+public function update(Request $request, $id)
+{
+    try {
+        $examen = Examen::find($id);
 
-        }else {
-          $msg = "User not found";
-          return response()->json($msg, 404);
-      }
+        if (!$examen) {
+            $msg = "L'examen avec l'ID spécifié n'a pas été trouvé.";
+            return response()->json(["error" => $msg], 404);
         }
 
-
+        $validatedData = $request->validate([
+            'type' => 'string',
+            'heureD' => 'date_format:H:i',
+            'heureF' => 'date_format:H:i|after:heureD',
+            'dateE' => 'date',
+            'user_id' => 'exists:users,id',
+            'vehicule_id' => 'exists:vehicules,id',
+        ]);
+        $existingExamen = Examen::where('user_id', $validatedData['user_id'])
+                                ->where('dateE', $validatedData['dateE'])
+                                ->where(function ($query) use ($validatedData, $examen) {
+                                    $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                                          ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                                })
+                                ->where('id', '!=', $examen->id)
+                                ->exists();
+        if ($existingExamen) {
+            return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
+        }
+        $existingExamenVehicule = Examen::where('vehicule_id', $validatedData['vehicule_id'])
+                                        ->where('dateE', $validatedData['dateE'])
+                                        ->where(function ($query) use ($validatedData, $examen) {
+                                            $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                                                  ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                                        })
+                                        ->where('id', '!=', $examen->id)
+                                        ->exists();
+        if ($existingExamenVehicule) {
+            return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
+        }
+        $examen->update($validatedData);
+        return response()->json($examen, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la mise à jour de l'examen: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
 /**
  * @OA\Delete(
  *      path="/api/Examen/delete/{id}",
@@ -333,19 +428,12 @@ class ExamenController extends Controller
  * )
  */
 public function delete($id) {
-    // Find the user by ID
     $examen = Examen::find($id);
-
-    // Check if the user exists
     if (!$examen) {
         $msg = "Exam not found";
         return response()->json($msg, 404);
     }
-
-    // Delete the user
     $examen->delete();
-
-    // Check if the deletion was successful
     if ($examen->trashed()) {
         return response()->json("Exam deleted successfully", 200);
     } else {
@@ -386,13 +474,23 @@ public function delete($id) {
  *      ),
  * )
  */
-public function AccepterExamen($id) {
-  $examen = Examen::find($id);
-  $examen->status = 'confirmee';
-  $examen->save();
-  return('examen acceptee');
+public function accepterExamen($id)
+{
+    try {
+        $examen = Examen::find($id);
 
- }
+        if (!$examen) {
+            return response()->json(["error" => "L'examen avec l'ID spécifié n'a pas été trouvé."], 404);
+        }
+        $examen->status = 'confirmee';
+        $examen->save();
+        return response()->json(["message" => "L'examen a été accepté avec succès."], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de l'acceptation de l'examen: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
 /**
  * @OA\Post(
  *      path="/api/Examen/RefuserExamen/{id}",
@@ -428,11 +526,23 @@ public function AccepterExamen($id) {
  * )
  */
 
- public function RefuserExamen($id) {
-  $examen = Examen::find($id);
-  $examen->status = 'refusee';
-  $examen->save();
-  return('examen refusee');
-
+ public function refuserExamen($id)
+ {
+     try {
+         $examen = Examen::find($id);
+ 
+         if (!$examen) {
+             return response()->json(["error" => "L'examen avec l'ID spécifié n'a pas été trouvé."], 404);
+         }
+ 
+         $examen->status = 'refusee';
+         $examen->save();
+ 
+         return response()->json(["message" => "L'examen a été refusé avec succès."], 200);
+     } catch (\Exception $e) {
+         $error = "Erreur lors du refus de l'examen: " . $e->getMessage();
+         return response()->json(["error" => $error], 500);
+     }
  }
+ 
 }

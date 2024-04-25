@@ -51,10 +51,19 @@ class NotificationController extends Controller
  *      ),
  * )
  */
-  public function index(){
-    $notification= Notification::get();
-  return response()->json($notification, 200);
-  }
+public function index()
+{
+    try {
+        $notifications = Notification::get();
+        if ($notifications->isEmpty()) {
+            return response()->json(["error" => "Aucune notification trouvée."], 404);
+        }      
+        return response()->json($notifications, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des notifications: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
 /**
  * @OA\Get(
  *      path="/api/Notification/ShowNotificationsByReceptientId/{ReceptientId}",
@@ -81,13 +90,19 @@ class NotificationController extends Controller
  *      ),
  * )
  */
-  public function ShowNotificationsByReceptientId($ReceptientId)
-  {
-      $notification = Notification::where('receptient_msg', $ReceptientId)->get();
-      return response()->json($notification, 200);
-  }
-
-
+public function showNotificationsByReceptientId($receptientId)
+{
+    try {
+        $notifications = Notification::where('receptient_msg', $receptientId)->get();
+        if ($notifications->isEmpty()) {
+            return response()->json(["error" => "Aucune notification trouvée pour le destinataire spécifié."], 404);
+        }        
+        return response()->json($notifications, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des notifications: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
 /**
  * @OA\Get(
  *      path="/api/Notification/show/{id}",
@@ -119,16 +134,18 @@ class NotificationController extends Controller
  *      ),
  * )
  */
-     public function show($id){
-      $notification = Notification::find($id);
-      if($notification){
-    return response()->json($notification, 200);
+public function show($id)
+{
+    try {
+        $notification = Notification::find($id);
 
-      }else{
-        $msg="votre id n'est pas trouve";
-            return response()->json($msg, 200);
-
-
-
-      }   }
+        if (!$notification) {
+            return response()->json(["error" => "Aucune notification trouvée pour l'ID spécifié."], 404);
+        }
+        return response()->json($notification, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération de la notification: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
 }
