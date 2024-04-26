@@ -16,10 +16,12 @@ window.axios = axios;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // Define the base URL for all axios requests:
 axios.defaults.baseURL = 'http://localhost:8000/api';
-// If there's a token in the localStorage, set it as the default Authorization header:
 const token = localStorage.getItem('token');
+
+
+// If there's a token in the localStorage, set it as the default Authorization header:
 if (token) {
-    axios.defaults.headers.common['Authorization'] = `${token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
 // Create Vuetify instance

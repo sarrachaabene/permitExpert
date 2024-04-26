@@ -63,16 +63,21 @@ class TransactionController extends Controller
  *      ),
  * )
  */
-
      // TODO: error handling
-
-  public function index()
-  {
-    $transaction=Transaction::get();
-    return response()->json($transaction,200);
-  }
-
-
+     public function index()
+     {
+         try {
+             $transactions = Transaction::get();
+     
+             if ($transactions->isEmpty()) {
+                 return response()->json("Aucune transaction trouvée.", 404);
+             } 
+             return response()->json($transactions, 200);
+         } catch (\Exception $e) {
+             $error = "Erreur lors de la récupération des transactions: " . $e->getMessage();
+             return response()->json(["error" => $error], 500);
+         }
+     }
 /**
  * @OA\Post(
  *     path="/api/transaction/store",
@@ -115,46 +120,37 @@ class TransactionController extends Controller
  * )
  */
       // TODO: Add validation and error handling test sur le role d'utilisateur est si l'autoecole appartient a lui
-  public function store(Request $request)
-  {
-      $user = User::find($request->user_id);
-      $autoecole = AutoEcole::find($request->auto_ecole_id);
-      $vehicule=Vehicule::find($request->vehicule_id);
-  if ($user ){
-        $transaction = Transaction::create([
-          'Type_T' => $request->Type_T,
-          'montantT' => $request->montantT,
-          'dateT'=> $request->dateT,
-          'description'=> $request->description,
-          'user_id'=> $request->user_id,
-        ]);
-        $transaction->save();
-      }elseif ($autoecole)
+      public function store(Request $request)
       {
-        $transaction = Transaction::create([
-          'Type_T' => $request->Type_T,
-          'montantT' => $request->montantT,
-          'dateT'=> $request->dateT,
-          'auto_ecole_id'=> $request->auto_ecole_id,
-          'description'=> $request->description,
-        ]);
-        return response()->json($transaction, 200);
-        $transaction->save();
-      }
-      elseif ($vehicule)
-      {
-        $transaction = Transaction::create([
-          'Type_T' => $request->Type_T,
-          'montantT' => $request->montantT,
-          'dateT'=> $request->dateT,
-          'description'=> $request->description,
-          'vehicule_id'=> $request->vehicule_id,
-
-        ]);
-        $transaction->save();
-      }
-        return response()->json($transaction, 200);
-  } 
+          try {
+              $validatedData = $request->validate([
+                  'Type_T' => 'required|in:vehicule,utilisateur,general',
+                  'montantT' => 'required|numeric',
+                  'dateT' => 'required|date',
+                  'description' => 'required',
+                  'user_id' => 'required_without:vehicule_id|exists:users,id',
+                  'vehicule_id' => 'required_without:user_id|exists:vehicules,id',
+              ]);
+                    if (($validatedData['Type_T'] === 'vehicule' && !Vehicule::find($validatedData['vehicule_id'])) ||
+                  ($validatedData['Type_T'] === 'utilisateur' && !User::find($validatedData['user_id']))) {
+                  $msg = "L'utilisateur ou le véhicule spécifié n'a pas été trouvé.";
+                  return response()->json(["error" => $msg], 404);
+              }
+                    $transaction = Transaction::create([
+                  'Type_T' => $validatedData['Type_T'],
+                  'montantT' => $validatedData['montantT'],
+                  'dateT' => $validatedData['dateT'],
+                  'description' => $validatedData['description'],
+                  'user_id' => $validatedData['user_id'] ?? null,
+                  'vehicule_id' => $validatedData['vehicule_id'] ?? null,
+              ]);
+              $transaction->save();
+              return response()->json($transaction, 200);
+          } catch (\Exception $e) {
+              $error = "Erreur lors de la création de la transaction : " . $e->getMessage();
+              return response()->json(["error" => $error], 500);
+          }
+      }  
   /**
  * @OA\Get(
  *      path="/api/transaction/show/{id}",
@@ -189,20 +185,20 @@ class TransactionController extends Controller
  * )
  */
     // TODO: not found 404
-
-   public function show($id){
-    $transaction = Transaction::find($id);
-    if($transaction){
-  return response()->json($transaction, 200);
-
-    }else{
-      $msg="votre id n'est pas trouve";
-          return response()->json($msg, 200);
-
-
-
-    }   }
-    
+    public function show($id)
+    {
+        try {
+            $transaction = Transaction::find($id);      
+            if (!$transaction) {
+                $msg = "La transaction avec l'ID spécifié n'a pas été trouvée.";
+                return response()->json(["error" => $msg], 404);
+            }
+            return response()->json($transaction, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération de la transaction: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }    
 /**
  * @OA\Get(
  *      path="/api/transaction/ShowTransactionByuserId/{userId}",
@@ -239,11 +235,20 @@ class TransactionController extends Controller
  */
     // TODO: error handling
 
-    public function ShowTransactionByuserId($userId)
+    public function showTransactionByUserId($userId)
     {
-        $transaction = Transaction::where('user_id', $userId)->get();
-        return response()->json($transaction, 200);
-    }
+        try {
+            $transactions = Transaction::where('user_id', $userId)->get();
+            if ($transactions->isEmpty()) {
+                $msg = "Aucune transaction trouvée pour l'utilisateur avec l'ID spécifié.";
+                return response()->json(["error" => $msg], 404);
+            }
+            return response()->json($transactions, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des transactions pour l'utilisateur: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }    
     /**
  * @OA\Get(
  *      path="/api/transaction/ShowTransactionByvehiculeId/{vehiculeId}",
@@ -278,11 +283,20 @@ class TransactionController extends Controller
  *      ),
  * )
  */
-    public function ShowTransactionByvehiculeId($vehiculeId)
-    {
-        $transaction = Transaction::where('vehicule_id', $vehiculeId)->get();
-        return response()->json($transaction, 200);
+public function showTransactionByVehiculeId($vehiculeId)
+{
+    try {
+        $transactions = Transaction::where('vehicule_id', $vehiculeId)->get();      
+        if ($transactions->isEmpty()) {
+            $msg = "Aucune transaction trouvée pour le véhicule avec l'ID spécifié.";
+            return response()->json(["error" => $msg], 404);
+        }
+        return response()->json($transactions, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des transactions pour le véhicule: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
     }
+}
     /**
  * @OA\Get(
  *      path="/api/transaction/ShowTransactionByautoecoleId/{ecoleId}",
@@ -319,11 +333,23 @@ class TransactionController extends Controller
  */
     // TODO:error handling
 
-    public function ShowTransactionByautoecoleId($ecoleId)
+    public function showTransactionByAutoEcoleId($ecoleId)
     {
-        $transaction = Transaction::where('auto_ecole_id', $ecoleId)->get();
-        return response()->json($transaction, 200);
+        try {
+            $transactions = Transaction::where('auto_ecole_id', $ecoleId)->get();
+            
+            if ($transactions->isEmpty()) {
+                $msg = "Aucune transaction trouvée pour l'auto-école avec l'ID spécifié.";
+                return response()->json(["error" => $msg], 404);
+            }
+    
+            return response()->json($transactions, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des transactions pour l'auto-école : " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
     }
+    
     /**
  * @OA\Put(
  *      path="/api/transaction/update/{id}",
@@ -362,17 +388,63 @@ class TransactionController extends Controller
  * )
  */
     // TODO: Add validation and error handling
-    public function update(Request $request,$id){
-      $transaction= Transaction::find($id);
-       if($transaction){
-         $transaction->update($request->all());
-         return response()->json($transaction, 200);
-
-       }else {
-         $msg = "transaction not found";
-         return response()->json($msg, 404);
-     }
-       }
+    public function update(Request $request, $id)
+    {
+        try {
+            $validatedData = $request->validate([
+                'Type_T' => 'required|in:vehicule,utilisateur,general',
+                'montantT' => 'required|numeric',
+                'dateT' => 'required|date',
+                'description' => 'required',
+                'user_id' => 'sometimes|exists:users,id',
+                'vehicule_id' => 'sometimes|exists:vehicules,id',
+            ]);
+    
+            $transaction = Transaction::find($id);
+    
+            if ($transaction) {
+                if (($validatedData['Type_T'] === 'vehicule' && !Vehicule::find($validatedData['vehicule_id'])) ||
+                    ($validatedData['Type_T'] === 'utilisateur' && !User::find($validatedData['user_id']))) {
+                    $msg = "L'utilisateur ou le véhicule spécifié n'a pas été trouvé.";
+                    return response()->json(["error" => $msg], 404);
+                }  
+                if ($validatedData['Type_T'] === 'vehicule') {
+                    $transaction->update([
+                        'Type_T' => $validatedData['Type_T'],
+                        'montantT' => $validatedData['montantT'],
+                        'dateT' => $validatedData['dateT'],
+                        'description' => $validatedData['description'],
+                        'vehicule_id' => $validatedData['vehicule_id'],
+                        'user_id' => null,
+                    ]);
+                } elseif ($validatedData['Type_T'] === 'utilisateur') {
+                    $transaction->update([
+                        'Type_T' => $validatedData['Type_T'],
+                        'montantT' => $validatedData['montantT'],
+                        'dateT' => $validatedData['dateT'],
+                        'description' => $validatedData['description'],
+                        'user_id' => $validatedData['user_id'],
+                        'vehicule_id' => null,
+                    ]);
+                } elseif ($validatedData['Type_T'] === 'general') {
+                    $transaction->update([
+                        'Type_T' => $validatedData['Type_T'],
+                        'montantT' => $validatedData['montantT'],
+                        'dateT' => $validatedData['dateT'],
+                        'description' => $validatedData['description'],
+                        'user_id' => null,
+                        'vehicule_id' => null,
+                    ]);
+                }  
+                return response()->json($transaction, 200);
+            } else {
+                return response()->json("Transaction non trouvée", 404);
+            }
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la mise à jour de la transaction : " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
        /**
  * @OA\Delete(
  *      path="/api/transaction/delete/{id}",
@@ -415,24 +487,23 @@ class TransactionController extends Controller
  *      ),
  * )
  */
-       public function delete($id) {
-    // Find the transaction by ID
-    $transaction = Transaction::find($id);
-
-    // Check if the transaction exists
-    if (!$transaction) {
-        $msg = "transaction not found";
-        return response()->json($msg, 404);
-    }
-
-    // Delete the transaction
-    $transaction->delete();
-
-    // Check if the deletion was successful
-    if ($transaction->trashed()) {
-        return response()->json("transaction deleted successfully", 200);
-    } else {
-        return response()->json("Failed to delete transaction", 500);
+public function delete($id)
+{
+    try {
+        $transaction = Transaction::find($id);
+        if (!$transaction) {
+            $msg = "Transaction not found";
+            return response()->json($msg, 404);
+        }
+        $deleted = $transaction->delete();
+        if ($deleted) {
+            return response()->json("Transaction deleted successfully", 200);
+        } else {
+            return response()->json("Failed to delete transaction", 500);
+        }
+    } catch (\Exception $e) {
+        $error = "Error while deleting the transaction: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
     }
 }
 }

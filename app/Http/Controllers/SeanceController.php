@@ -491,17 +491,10 @@ public function delete($id)
  *      )
  * )
  */
-public function AccepterPourCandidat(Request $request)
+public function AccepterPourCandidat($id)
 {
     try {
-        // Validation de l'ID de la séance
-        $request->validate([
-            'id' => 'required|integer|exists:seances,id',
-        ]);
-
-        $id = $request->id;
         $seance = Seance::find($id);
-
         if ($seance) {
             $seance->candidat_status = true;
             $seance->save();
@@ -514,6 +507,7 @@ public function AccepterPourCandidat(Request $request)
         return response()->json(["error" => $error], 500);
     }
 }
+
 
         /**
  * @OA\Post(
@@ -547,18 +541,22 @@ public function AccepterPourCandidat(Request $request)
  * )
  */
 
-        public function RefuserPourCandidat($id) {
-          $seance = Seance::find($id);
-      
-          if ($seance) {
-              $seance->candidat_status = false;
-              $seance->save();
-              return response()->json("Attribut candidat_status mis à jour avec succès pour la séance", 200);
-          } else {
-              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut candidat_accepte", 404);
-          }
-      }
-        
+ public function RefuserPourCandidat($id)
+ {
+     try {
+         $seance = Seance::find($id);
+         if ($seance) {
+             $seance->candidat_status = false;
+             $seance->save();
+             return response()->json("Attribut 'candidat_status' mis à jour avec succès pour la séance.", 200);
+         } else {
+             return response()->json("La séance n'a pas été trouvée. Impossible de mettre à jour l'attribut 'candidat_status'.", 404);
+         }
+     } catch (\Exception $e) {
+         $error = "Erreur lors de la mise à jour de l'attribut 'candidat_status' pour la séance: " . $e->getMessage();
+         return response()->json(["error" => $error], 500);
+     }
+ }       
       /**
  * @OA\Post(
  *      path="/api/seance/AccepterPourMoniteur/{id}",
@@ -590,18 +588,24 @@ public function AccepterPourCandidat(Request $request)
  *      )
  * )
  */
+public function AccepterPourMoniteur($id)
+{
+    try {
+        $seance = Seance::find($id);
 
-        public function AccepterPourMoniteur($id) {
-          $seance = Seance::find($id);
-      
-          if ($seance) {
-              $seance->moniteur_status= true;
-              $seance->save();
-              return response()->json("Attribut moniteur_statusmis à jour avec succès pour la séance", 200);
-          } else {
-              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_status", 404);
-          }
-      }
+        if ($seance) {
+            $seance->moniteur_status = true;
+            $seance->save();
+            return response()->json("Attribut 'moniteur_status' mis à jour avec succès pour la séance.", 200);
+        } else {
+            return response()->json("La séance n'a pas été trouvée. Impossible de mettre à jour l'attribut 'moniteur_status'.", 404);
+        }
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la mise à jour de l'attribut 'moniteur_status' pour la séance: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
         
       /**
  * @OA\Post(
@@ -635,17 +639,24 @@ public function AccepterPourCandidat(Request $request)
  * )
  */
 
-        public function RefuserPourMoniteur($id) {
-          $seance = Seance::find($id);
-      
-          if ($seance) {
-              $seance->moniteur_status = false;
-              $seance->save();
-              return response()->json("Attribut moniteur_status mis à jour avec succès pour la séance", 200);
-          } else {
-              return response()->json("Séance non trouvée. Impossible de mettre à jour l'attribut moniteur_accepte", 404);
-          }
-      }
+ public function RefuserPourMoniteur($id)
+ {
+     try {
+         $seance = Seance::find($id);
+ 
+         if ($seance) {
+             $seance->moniteur_status = false;
+             $seance->save();
+             return response()->json("Attribut 'moniteur_status' mis à jour avec succès pour la séance.", 200);
+         } else {
+             return response()->json("La séance n'a pas été trouvée. Impossible de mettre à jour l'attribut 'moniteur_status'.", 404);
+         }
+     } catch (\Exception $e) {
+         $error = "Erreur lors de la mise à jour de l'attribut 'moniteur_status' pour la séance: " . $e->getMessage();
+         return response()->json(["error" => $error], 500);
+     }
+ }
+ 
 
       /**
  * @OA\Post(
@@ -680,26 +691,25 @@ public function AccepterPourCandidat(Request $request)
  */
     // TODO: Add error handling
 
-        public function updateSeanceStatus($id)
-        {
-          $seance = Seance::find($id);
-          if($seance->candidat_status=='1'&& $seance->moniteur_status=='0'){
-            $seance->status = 'refusee';
-            $seance->save();
-            return response()->json("Statut de la séance mis à jour avec succès", 200);
-
-          }elseif($seance->candidat_status=='0'&& $seance->moniteur_status=='0'){
-            $seance->status = 'refusee';
-            $seance->save();
-            return response()->json("Statut de la séance mis à jour avec succès", 200);
-          }elseif($seance->candidat_status=='1'&& $seance->moniteur_status=='1'){
-            $seance->status = 'confirmee';
-            $seance->save();
-            return response()->json("Statut de la séance mis à jour avec succès", 200);
-          }else{
-            $seance->status = 'refusee';
-            $seance->save();
-            return response()->json("Statut de la séance mis à jour avec succès", 200);
-          }
+    public function updateSeanceStatus($id)
+    {
+        try {
+            $seance = Seance::find($id);
+            
+            if ($seance) {
+                $status = ($seance->candidat_status == '1' && $seance->moniteur_status == '1') ? 'confirmee' : 'refusee';
+                
+                $seance->status = $status;
+                $seance->save();
+    
+                return response()->json("Statut de la séance mis à jour avec succès", 200);
+            } else {
+                return response()->json("Séance non trouvée. Impossible de mettre à jour le statut de la séance.", 404);
+            }
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la mise à jour du statut de la séance: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
         }
+    }
+    
       }

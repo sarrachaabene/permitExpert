@@ -118,32 +118,54 @@ class ApiController extends Controller {
  *      )
  * )
  */
-public function store(Request $request)
+
+ //store pour admin 
+ public function store(Request $request)
+ {
+     try {
+         $validatedData = $request->validate([
+             'user_name' => 'required|string|max:255',
+             'email' => 'required|string|email|max:255|unique:users',
+             'password' => 'required|string|min:8',
+             'role' => 'required|string|in:candidat,moniteur,secretaire',
+             'cin' => 'required|string|max:255',
+             'numTel' => 'required|string|max:255',
+             'dateNaissance' => 'required|date',
+             'cat_permis' => ($request->role === 'candidat') ? 'required|string|in:Permis_A1,Permis_A,Permis_B,Permis_B_E,Permis_C,Permis_C_E,Permis_D,Permis_D_E,Permis_D1,Permis_H' : '', // Validation conditionnelle pour cat_permis
+         ]);
+          $user = User::create($validatedData);
+          $defaultRole = $validatedData['role']; 
+         $user->assignRole($defaultRole);
+          if ($defaultRole === 'candidat') {
+             $user->cat_permis = $validatedData['cat_permis'];
+             $user->save();
+         }
+          return response()->json(["user" => $user], 200); 
+     } catch (\Exception $e) {
+         return response()->json(["error" => "Failed to create user: " . $e->getMessage()], 500);
+     }
+ }
+//store pour SuperAdmin
+public function storeForSuperAdmin(Request $request)
 {
     try {
         $validatedData = $request->validate([
             'user_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:admin,candidat,moniteur,superAdmin,secretaire',
+            'role' => 'required|string|in:admin',
             'cin' => 'required|string|max:255',
             'numTel' => 'required|string|max:255',
             'dateNaissance' => 'required|date',
         ]);
-
-        // Créer l'utilisateur avec les données validées
         $user = User::create($validatedData);
-
-        // Attribuer le rôle par défaut
-        $defaultRole = $validatedData['role']; // Récupérer le rôle spécifié dans les données validées
+        $defaultRole = $validatedData['role']; 
         $user->assignRole($defaultRole);
-
         return response()->json(["user" => $user], 200); 
     } catch (\Exception $e) {
         return response()->json(["error" => "Failed to create user: " . $e->getMessage()], 500);
     }
 }
-
 /**
  * @OA\Get(
  *      path="/api/user/show/{id}",
@@ -172,15 +194,36 @@ public function store(Request $request)
  *      )
  * )
  */
- public function show($id)
+//show for admin
+public function show($id)
+{
+    try {
+        $user = User::find($id);
+        if (!$user) {
+            $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
+            return response()->json($msg, 404);
+        }
+        if ($user->role !== 'secretaire' && $user->role !== 'candidat' && $user->role !== 'moniteur') {
+            return response()->json(["error" => "Accès non autorisé pour cet utilisateur"], 403);
+        }
+        return response()->json($user, 200);
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Failed to fetch user: " . $e->getMessage()], 500);
+    }
+}
+ //show for SuperAdmin
+ public function showForSuperAdmin($id)
  {
      try {
          $user = User::find($id);
-                  if (!$user) {
+         if (!$user) {
              $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
              return response()->json($msg, 404);
          }
-                  return response()->json($user, 200);
+         if ($user->role !== 'admin' ) {
+             return response()->json(["error" => "Accès non autorisé pour cet utilisateur"], 403);
+         }
+         return response()->json($user, 200);
      } catch (\Exception $e) {
          return response()->json(["error" => "Failed to fetch user: " . $e->getMessage()], 500);
      }
@@ -217,22 +260,61 @@ public function store(Request $request)
  *      )
  * )
  */
+//update for admin
 public function update(Request $request, $id)
 {
     try {
-      $validatedData = $request->validate([
-        'user_name' => 'string|max:255',
-        'email' => 'string|email|max:255|unique:users,email,' . $id,
-        'password' => 'string|min:8',
-        'role' => 'string|in:admin,candidat,moniteur,superAdmin,secretaire',
-        'cin' => 'string|max:255',
-        'numTel' => 'string|max:255',
-        'dateNaissance' => 'date',
-    ]);
+        $validatedData = $request->validate([
+            'user_name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:users,email,' . $id,
+            'password' => 'string|min:8',
+            'role' => 'string|in:candidat,moniteur,secretaire',
+            'cin' => 'string|max:255',
+            'numTel' => 'string|max:255',
+            'dateNaissance' => 'date',
+            'cat_permis' => ($request->role === 'candidat') ? 'required|string|in:Permis_A1,Permis_A,Permis_B,Permis_B_E,Permis_C,Permis_C_E,Permis_D,Permis_D_E,Permis_D1,Permis_H' : 'nullable', // Validation conditionnelle pour cat_permis
+        ]);
+
         $user = User::find($id);
         if (!$user) {
             $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
             return response()->json($msg, 404);
+        }
+        if (!in_array($user->role, ['candidat', 'moniteur', 'secretaire'])) {
+            return response()->json(["error" => "Accès non autorisé pour la mise à jour de cet utilisateur"], 403);
+        }
+        if ($user->role === 'candidat') {
+            if (!isset($validatedData['cat_permis'])) {
+                return response()->json(["error" => "Le champ 'cat_permis' est obligatoire pour le rôle 'candidat'"], 422);
+            }
+        }
+        $user->update($validatedData);
+        return response()->json($user, 200);
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Failed to update user: " . $e->getMessage()], 500);
+    }
+}
+//update dor SuperAdmin
+public function updateForSuperAdmin(Request $request, $id)
+{
+    try {
+        $validatedData = $request->validate([
+            'user_name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:users,email,' . $id,
+            'password' => 'string|min:8',
+            'role' => 'string|in:admin,candidat,moniteur,secretaire',
+            'cin' => 'string|max:255',
+            'numTel' => 'string|max:255',
+            'dateNaissance' => 'date',
+            'cat_permis' => ($request->role === 'candidat') ? 'required|string|in:Permis_A1,Permis_A,Permis_B,Permis_B_E,Permis_C,Permis_C_E,Permis_D,Permis_D_E,Permis_D1,Permis_H' : 'nullable', // Validation conditionnelle pour cat_permis
+        ]);
+        $user = User::find($id);
+        if (!$user) {
+            $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
+            return response()->json($msg, 404);
+        }
+        if ($user->role !== 'admin') {
+            return response()->json(["error" => "Accès non autorisé pour la mise à jour de cet utilisateur"], 403);
         }
         $user->update($validatedData);
         return response()->json($user, 200);
@@ -270,24 +352,48 @@ public function update(Request $request, $id)
  */
 
      // TODO: Test sur le role , utiliser
+     //delete for admin
      public function delete($id) {
       $user = User::find($id);
-        if (!$user) {
+      if (!$user) {
           $msg = "User not found";
           return response()->json($msg, 404);
       }
-        try {
+            if ($user->role !== 'candidat' && $user->role !== 'moniteur' && $user->role !== 'secretaire') {
+          return response()->json("Accès non autorisé pour supprimer cet utilisateur", 403);
+      }
+      try {
           $user->delete();
       } catch (\Exception $e) {
           return response()->json("Failed to delete user. Error: " . $e->getMessage(), 500);
       }
-        if ($user->trashed()) {
+      if ($user->trashed()) {
           return response()->json("User deleted successfully", 200);
       } else {
           return response()->json("Failed to delete user", 500);
       }
   }
-
+  //delete for superAdmin
+  public function deleteForSuperAdmin($id) {
+    $user = User::find($id);
+    if (!$user) {
+        $msg = "User not found";
+        return response()->json($msg, 404);
+    }
+          if ($user->role !== 'admin') {
+        return response()->json("Accès non autorisé pour supprimer cet utilisateur", 403);
+    }
+    try {
+        $user->delete();
+    } catch (\Exception $e) {
+        return response()->json("Failed to delete user. Error: " . $e->getMessage(), 500);
+    }
+    if ($user->trashed()) {
+        return response()->json("User deleted successfully", 200);
+    } else {
+        return response()->json("Failed to delete user", 500);
+    }
+}
 /**
  * @OA\Post(
  *     path="/api/updateProfile",

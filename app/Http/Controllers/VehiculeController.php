@@ -49,10 +49,20 @@ class VehiculeController extends Controller
  * )
  */
     // TODO: error handling
-  public function index(){
-    $vehicule= Vehicule::get();
-  return response()->json($vehicule, 200);
-  }
+    public function index()
+    {
+        try {
+            $vehicules = Vehicule::get();
+    
+            if ($vehicules->isEmpty()) {
+                return response()->json("Aucun véhicule trouvé.", 404);
+            } 
+            return response()->json($vehicules, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des véhicules: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }    
   /**
  * @OA\Post(
  *      path="/api/vehicule/store",
@@ -84,20 +94,27 @@ class VehiculeController extends Controller
  *      ),
  * )
  */
-
      // TODO: Add validation and error handling
-
-    public function store(Request $request)
-    {
-      $vehicule= Vehicule::create($request->all()); 
-      if($vehicule)
-      {
-        return response()->json($vehicule, 200);
-      }
-      return response()->json("vehicule not created", 400);
-     }
-
-
+     public function store(Request $request)
+     {
+         try {
+             $validatedData = $request->validate([
+                 'immatricule' => 'required|unique:vehicules',
+                 'kilometrage' => 'required|numeric',
+                 'marque' => 'required',
+                 'typeV' => ['required', \Illuminate\Validation\Rule::in(['voiture', 'moto', 'camion'])],
+             ]);
+                  $vehicule = Vehicule::create($validatedData);
+             if ($vehicule) {
+                 return response()->json($vehicule, 200);
+             } else {
+                 return response()->json("Erreur lors de la création du véhicule.", 400);
+             }
+         } catch (\Exception $e) {
+             $error = "Erreur lors de la création du véhicule: " . $e->getMessage();
+             return response()->json(["error" => $error], 500);
+         }
+     }     
 /**
  * @OA\Get(
  *      path="/api/vehicule/show/{id}",
@@ -132,19 +149,20 @@ class VehiculeController extends Controller
  * )
  */
     // TODO: changer le code 404
-
-     public function show($id){
-      $vehicule = Vehicule::find($id);
-      if($vehicule){
-    return response()->json($vehicule, 200);
-
-      }else{
-        $msg="votre id n'est pas trouve";
-            return response()->json($msg, 200);
-
-
-
-      }   }
+    public function show($id)
+    {
+        try {
+            $vehicule = Vehicule::find($id);
+                if (!$vehicule) {
+                $msg = "Véhicule non trouvé.";
+                return response()->json(["error" => $msg], 404);
+            }
+                return response()->json($vehicule, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération du véhicule: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }    
       /**
  * @OA\Put(
  *      path="/api/vehicule/update/{id}",
@@ -186,20 +204,27 @@ class VehiculeController extends Controller
  * )
  */
     // TODO: Add validation and error handling
-
-      public function update(Request $request,$id){
-       $vehicule= Vehicule::find($id);
-        if($vehicule){
-          $vehicule->update($request->all());
-          return response()->json($vehicule, 200);
-
-        }else {
-          $msg = "vehicule not found";
-          return response()->json($msg, 404);
-      }
+    public function update(Request $request, $id)
+    {
+        try {
+            $vehicule = Vehicule::find($id);
+                if (!$vehicule) {
+                $msg = "Véhicule non trouvé.";
+                return response()->json(["error" => $msg], 404);
+            }
+                $validatedData = $request->validate([
+                'immatricule' => 'required|unique:vehicules,immatricule,' . $id,
+                'kilometrage' => 'required|numeric',
+                'marque' => 'required',
+                'typeV' => ['required', \Illuminate\Validation\Rule::in(['voiture', 'moto', 'camion'])],
+            ]);
+                $vehicule->update($validatedData);
+            return response()->json($vehicule, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la mise à jour du véhicule: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
         }
-
-
+    }
 public function delete($id) {
     $vehicle = Vehicule::find($id);
     if (!$vehicle) {
@@ -213,30 +238,4 @@ public function delete($id) {
         return response()->json("Failed to delete vehicle", 500);
     }
 }
-
-
-
-/* public function deletee($id) {
-  // Find the user by ID
-  $vehicule = Vehicule::find($id);
-
-  // Check if the user exists
-  if (!$vehicule) {
-      $msg = "Vehicule not found";
-      return response()->json($msg, 404);
-  }
-
-  // Delete the user
-  $vehicule->delete();
-
-  // Check if the deletion was successful
-  if ($vehicule->trashed()) {
-      return response()->json("vehicule deleted successfully", 200);
-  } else {
-      return response()->json("Failed to delete vehicule", 500);
-  }
-} */
-
-
-
 }
