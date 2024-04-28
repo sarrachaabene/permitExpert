@@ -98,7 +98,7 @@ class AutoEcoleController extends Controller
     public function getUsersAutoEcole()
     {
         try {
-            $usersWithAutoEcole = User::has('autoEcole')->get();
+            $usersWithAutoEcole = User::has('autoEcole')->with('autoEcole')->with('autoEcole')->get();
             
             if ($usersWithAutoEcole->isEmpty()) {
                 return response()->json("Aucun utilisateur avec une auto-école n'a été trouvé", 404);
@@ -357,7 +357,6 @@ if ($autoEcole) {
  * )
  */
 
- use Illuminate\Support\Facades\DB;
 
  /* public function delete($id)
  {

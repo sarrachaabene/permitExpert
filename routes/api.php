@@ -32,11 +32,11 @@ use App\Models\Notification;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 
-
- Route::middleware('auth:api','role:superAdmin')->group(function () { 
+Route::middleware('auth:api','role:superAdmin')->group(function () { 
   Route::get('/user/showForSuperAdmin/{id}', [ApiController::class, 'showForSuperAdmin']);
   Route::get('/user/indexForSuper', [ApiController::class, 'indexForSuper']);
   Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
@@ -60,8 +60,9 @@ Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
   Route::post('/demandeInscript/accepter{idDemande}',[DemandeInscriptionController::class,'  accepteDemande']);
 });
 
-Route::middleware('auth:api','role:admin','role:secretaire')->group(function () { 
-  Route::post('/user/store',[ApiController::class,'store']);
+//Route::middleware('auth:api','role:superAdmin')->group(function () { 
+  Route::middleware('auth:api','role:admin')->group(function () { 
+    Route::post('/user/store',[ApiController::class,'store']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
   Route::get('/user/index', [ApiController::class, 'index']);
@@ -82,12 +83,6 @@ Route::middleware('auth:api','role:admin','role:secretaire')->group(function () 
   Route::post('/Examen/store',[ExamenController::class,'store']);
   Route::put('/Examen/update/{id}',[ExamenController::class,'update']);
   Route::delete('/Examen/delete/{id}',[ExamenController::class,'delete']);
-  Route::get('/Notification/index',[NotificationController::class,'index']);
-  Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
-  Route::get('/Notification/ShowNotificationsByReceptientId/{id}',[NotificationController::class,'ShowNotificationsByReceptientId']);
-  Route::get('/message/index',[MessageController::class,'index']);
-  Route::get('/message/show/{id}',[MessageController::class,'show']);
-  Route::post('/message/store',[MessageController::class,'store']);
   Route::get('/transaction/index',[TransactionController::class,'index']);
   Route::get('/transaction/show/{id}',[TransactionController::class,'show']);
   Route::post('/transaction/store',[TransactionController::class,'store']);
@@ -102,10 +97,8 @@ Route::middleware('auth:api','role:admin','role:secretaire')->group(function () 
   Route::put('/vehicule/update/{id}',[vehiculeController::class,'update']);
   Route::delete('/vehicule/delete/{id}',[vehiculeController::class,'delete']);
 
-
-
-});
-
+  });
+ 
 // Gestion d'erreur pour l'authentification
 Route::fallback(function () {
   return response()->json(['error' => 'Unauthorized. Please authenticate.'], 401);
@@ -117,7 +110,7 @@ Route::macro('role', function () {
   };
 });
 
-Route::middleware('auth:api','role:candidat')->group(function () { 
+/* Route::middleware('auth:api','role:candidat')->group(function () { 
   Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
   Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
   Route::get('/Examen/index',[ExamenController::class,'index']);
@@ -126,31 +119,33 @@ Route::middleware('auth:api','role:candidat')->group(function () {
   Route::get('/seance/show/{id}',[SeanceController::class,'show']);
   Route::post('/seance/AccepterPourCandidat/{id}',[SeanceController::class,'AccepterPourCandidat']);
   Route::post('/seance/RefuserPourCandidat/{id}',[SeanceController::class,'RefuserPourCandidat']);
-  Route::get('/Notification/index',[NotificationController::class,'index']);
-  Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
-  Route::get('/Notification/ShowNotificationsByReceptientId/{id}',[NotificationController::class,'ShowNotificationsByReceptientId']);
-  Route::get('/message/index',[MessageController::class,'index']);
-  Route::get('/message/show/{id}',[MessageController::class,'show']);
-  Route::post('/message/store',[MessageController::class,'store']);
-});
+
+}); */
 
 
 Route::middleware('auth:api','role:moniteur')->group(function () { 
   Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
   Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
-  Route::get('/Examen/index',[ExamenController::class,'index']);
+  //Route::get('/Examen/index',[ExamenController::class,'index']);
   Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
   Route::get('/seance/index',[SeanceController::class,'index']);
   Route::get('/seance/show/{id}',[SeanceController::class,'show']);
   Route::post('/seance/AccepterPourMoniteur/{id}',[SeanceController::class,'AccepterPourMoniteur']);
   Route::post('/seance/RefuserPourMoniteur/{id}',[SeanceController::class,'RefuserPourMoniteur']);
-  Route::get('/Notification/index',[NotificationController::class,'index']);
-  Route::get('/Notification/show/{id}',[NotificationController::class,'show']);
-  Route::get('/Notification/ShowNotificationsByReceptientId/{id}',[NotificationController::class,'ShowNotificationsByReceptientId']);
-  Route::get('/message/index',[MessageController::class,'index']);
-  Route::get('/message/show/{id}',[MessageController::class,'show']);
-  Route::post('/message/store',[MessageController::class,'store']);
+
 });
+Route::group(["auth:api" => ['moniteur', 'candidat','admin','secretaire']], function () {
+  Route::get('/Notification/index', [NotificationController::class, 'index']);
+  Route::get('/Notification/show/{id}', [NotificationController::class, 'show']);
+  Route::get('/Notification/ShowNotificationsByReceptientId/{id}', [NotificationController::class, 'ShowNotificationsByReceptientId']);
+  Route::get('/message/index', [MessageController::class, 'index']);
+  Route::get('/message/show/{id}', [MessageController::class, 'show']);
+  Route::post('/message/store', [MessageController::class, 'store']);
+});
+
+
+
+
 
 
 
@@ -181,4 +176,3 @@ Route::middleware('auth:api','role:moniteur')->group(function () {
 
 
 
-//});

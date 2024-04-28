@@ -26,12 +26,13 @@
                         </button>
                       </div>
                       <div class="col-lg-4 text-right">
-                        <select v-model="selectedTransactionType" @change="filterTransactions" class="form-select">
-                            <option value="">Tous les types</option>
-                            <option value="utilisateur">Utilisateur</option>
-                            <option value="general">Général</option>
-                            <option value="vehicule">Véhicule</option>
-                        </select>
+<select v-model="selectedTransactionType" @change="fetchData" class="form-select">
+  <option value="">Tous transactions</option>
+  <option value="secretaire">Flux entrant</option>
+  <option value="moniteur">Flux sortant</option>
+</select>
+
+
                       </div>
                     </div>
                     <br />
@@ -39,8 +40,8 @@
                     <table class="table table-borded">
                       <thead>
                         <tr>
-                          <th scope="col">id</th>
                           <th scope="col">Type de transaction</th>
+                          <th scope="col">Concernant</th>
                           <th scope="col">Description</th>
                           <th scope="col">Montant</th>
                           <th scope="col">Date</th>
@@ -51,27 +52,28 @@
                       </thead>
                       <tbody>
                         <tr v-for="(tran) in filteredTransactions" :key="tran.id">
-                          <th scope="row">{{ tran.id }}</th>
+                          <td>{{ tran.Type_Transaction }}</td>
                           <td>{{ tran.Type_T }}</td>
                           <td>{{ tran.description }}</td>
                           <td>{{ tran.montantT }}</td>
                           <td>{{ tran.dateT }}</td>
                           <td>{{ tran.user_id }}  </td>
                           <td>{{ tran.vehicule_id }}</td>
-                          <td>
-                            <a href="" style="
-                                background-color: #9dcd5a;
-                                border-color: #9dcd5a;
-                                margin-right: 5px;
-                              " class="btn btn-success">Modifier
-                            </a>
-                            <a href="" style="
-                                background-color: orangered;
-                                border-color: orangered;
-                                margin-left: 5px;
-                              " class="btn btn-danger">Supprimer
-                            </a>
-                          </td>
+                          <td style="display: flex; justify-content: space-between;">
+    <a href="" style="
+        background-color: #9dcd5a;
+        border-color: #9dcd5a;
+        margin-right: 5px;
+        " class="btn btn-success">Modifier
+    </a>
+    <a href="" style="
+        background-color: orangered;
+        border-color: orangered;
+        margin-left: 5px;
+        " class="btn btn-danger">Supprimer
+    </a>
+</td>
+
                         </tr>
                       </tbody>
                     </table>
@@ -146,22 +148,22 @@ const TRANSACTION_API_BASE_URL = "http://localhost:8000/api/transaction";
 
 export default {
   data() {
-    return {
-      transaction: [],
-      searchQuery: '',
-      selectedTransactionType: '', // Ajoutez la propriété pour stocker le type de transaction sélectionné
-    };
-  },
+  return {
+    transaction: [],
+    searchQuery: '',
+    selectedTransactionType: '',
+  };
+},
   computed: {
     filteredTransactions() {
-      // Filtrer les transactions en fonction du type sélectionné et du texte de recherche
-      return this.transaction.filter(tran => {
-        const matchesSearch = tran.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-        const matchesType = !this.selectedTransactionType || tran.Type_T === this.selectedTransactionType;
-        return matchesSearch && matchesType;
-      });
-    }
-  },
+    return this.transaction.filter(tran => {
+      const matchesSearch = tran.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchesType = !this.selectedTransactionType || tran.Type_Transaction === this.selectedTransactionType;
+      return matchesSearch && matchesType;
+    });
+  }
+
+},
   mounted() {
     console.log("Component mounted.");
     this.fetchData();
@@ -183,9 +185,13 @@ export default {
     handleError(error) {
       console.error("Error fetching data from the backend:", error);
     },
-    filterTransactions() {
-      // Appeler filteredTransactions pour mettre à jour les transactions filtrées lorsque la recherche ou le type de transaction change
-      this.filteredTransactions();
+    filterTransaction() {
+      if (this.selectedTransaction === "") {
+        this.fetchData();
+      } else {
+        const filteredTransaction = this.transaction.filter(transaction => transaction.Type_Transaction === this.selectedTransaction);
+        this.transaction = filteredTransaction;
+      }
     }
   },
 };

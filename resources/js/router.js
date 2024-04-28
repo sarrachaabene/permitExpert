@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DashbordComponent from './components/Page/Dashbord.component.vue';
+import DashbordComponentS from './components/Page/DashbordSuper.vue';
 import AutoEcoleComponent from './components/Page/AutoEcole.component.vue';
 import LoginComponent from './components//Page/Logincomponent.vue';
 import RegisterComponent from './components//Page/Registercomponent.vue';
@@ -13,6 +14,7 @@ import PageNotFound from './components/Page/PageNotFound.component.vue';
 const routes = [
   { path: '/'        , component: LoginComponent },
   { path: '/dashbord', component: DashbordComponent },
+  { path: '/dashbord_Super_Admin', component: DashbordComponentS },
   { path: '/autoEcole', component: AutoEcoleComponent },
   { path: '/login', component: LoginComponent },
   { path: '/Register', component: RegisterComponent },
@@ -21,7 +23,7 @@ const routes = [
   { path: '/vehicule', component: Vehicule },
   { path: '/transaction', component: Transaction },
   { path: '/admin', component: Administrateur },
-  { path: '/:pathMatch(.*)*', component: PageNotFound },
+  { path: '/:pathMatch(.*)*', component: DashbordComponent },
   { path: '/utilisateur', component: UtilisateurComponent },
 
 ];

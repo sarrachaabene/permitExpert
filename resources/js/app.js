@@ -9,7 +9,7 @@ import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
-
+import VueApexCharts from "vue3-apexcharts";
 // Set up axios globally:
 window.axios = axios;
 // Configure the default headers for axios:
@@ -36,7 +36,7 @@ const app = createApp({
 app.component('example-component', ExampleComponent);
 app.component('login-component', LoginComponent);
 app.component('register-component', RegisterComponent);
-
+app.use(VueApexCharts);
 // Handle token expiration or invalid tokens:
 axios.interceptors.response.use(
   (response) => response,

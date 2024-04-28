@@ -21,6 +21,9 @@
         "@mdi/font": "^7.4.47",
         "@syncfusion/ej2-vue-richtexteditor": "^25.1.38",
         "@syncfusion/ej2-vue-schedule": "^25.1.37",
-        "vue-router": "^4.3.0"
+        "apexcharts": "^3.49.0",
+        "postscribe": "^2.0.8",
+        "vue-router": "^4.3.0",
+        "vue3-apexcharts": "^1.5.2"
     }
 }

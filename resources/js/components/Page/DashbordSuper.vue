@@ -1,5 +1,6 @@
 <template>
-  <br/><br/><br/><br><br><br>
+  <br/><br/><br/><br>
+
   <div class="row">
   <div class="col-12 col-md-6">
     <div id="chart" class="mb-4">

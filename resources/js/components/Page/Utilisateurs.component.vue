@@ -39,7 +39,6 @@
                     <table class="table table-borded">
                       <thead>
                         <tr>
-                          <th scope="col" style="font-size: 14px;">ID</th>
 <th scope="col" style="font-size: 14px;">Rôle</th>
 <th scope="col" style="font-size: 14px;">Nom</th>
 <th scope="col" style="font-size: 14px;">Numéro de téléphone</th>
@@ -55,7 +54,6 @@
                       </thead>
                       <tbody>
                         <tr v-for="(use) in user" :key="use.id">
-                          <th scope="row">{{ use.id }}</th>
                           <td>{{ use.role }}</td>
                           <td>{{ use.user_name }}</td>
                           <td>{{ use.numTel }}</td>

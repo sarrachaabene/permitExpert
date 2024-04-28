@@ -125,6 +125,7 @@ class TransactionController extends Controller
           try {
               $validatedData = $request->validate([
                   'Type_T' => 'required|in:vehicule,utilisateur,general',
+                  'Type_Transaction' => 'required|in:flux entrant,flux sortant',
                   'montantT' => 'required|numeric',
                   'dateT' => 'required|date',
                   'description' => 'required',
@@ -140,6 +141,7 @@ class TransactionController extends Controller
                   'Type_T' => $validatedData['Type_T'],
                   'montantT' => $validatedData['montantT'],
                   'dateT' => $validatedData['dateT'],
+                  'Type_Transaction' => $validatedData['Type_Transaction'],
                   'description' => $validatedData['description'],
                   'user_id' => $validatedData['user_id'] ?? null,
                   'vehicule_id' => $validatedData['vehicule_id'] ?? null,

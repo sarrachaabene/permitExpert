@@ -31,7 +31,6 @@
                     <table class="table table-borded">
                       <thead>
                         <tr>
-                          <th scope="col">id</th>
                           <th scope="col">Immatriculation</th>
                           <th scope="col">Marque</th>
                           <th scope="col">Type</th>
@@ -42,7 +41,6 @@
                       </thead>
                       <tbody>
                         <tr v-for="(veh) in filteredVehicles" :key="veh.id">
-                          <th scope="row">{{ veh.id}}</th>
                           <td>{{ veh.immatricule}}</td>
                           <td>{{ veh.marque}}</td>
                           <td>{{ veh.typeV }}</td>

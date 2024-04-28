@@ -15,7 +15,7 @@
                 <h6 style="text-align: center;">Bienvenue sur PermitExpert</h6>
                 <br><br>
                 <!-- Affichage du message de succès ou d'erreur -->
-                <div v-if="message" class="alert" :class="{'alert-success': isSuccess, 'alert-danger': !isSuccess}">
+                <div v-if="message" class="alert" :class="{ 'alert-success': isSuccess, 'alert-danger': !isSuccess }">
                   {{ message }}
                 </div>
                 <form @submit.prevent="login">
@@ -31,8 +31,7 @@
                   </div>
 
                   <div class="text-center">
-                    <button type="submit"
-                      style="background-color: #FA7F35; border-color: #FA7F35; margin-left: 5px;"
+                    <button type="submit" style="background-color: #FA7F35; border-color: #FA7F35; margin-left: 5px;"
                       class="btn btn-danger">Se connecter</button>
                   </div>
                   <br>
@@ -58,16 +57,15 @@ export default {
     return {
       email: '',
       password: '',
-      message: '', // Variable pour stocker le message
-      showMessage: false // Variable pour afficher ou masquer le message
+      message: '',
+      showMessage: false
     };
   },
   mounted() {
-      if (localStorage.getItem('token')) window.location.href = '/welcome';
-    },
+    if (localStorage.getItem('token')) window.location.href = '/welcome';
+  },
   computed: {
     isSuccess() {
-      // Détermine si le message est un message de succès
       return this.message && this.message.startsWith('Connexion réussie');
     }
   },
@@ -77,13 +75,38 @@ export default {
         const response = await axios.post('/login', {
           email: this.email,
           password: this.password
-        }).then(res=>{
-          localStorage.setItem('token', res.data.access_token);
-          axios.defaults.headers.common['Authorization'] = `${res.data.access_token}`;
-          window.location.href = '/welcome';
+        }).then(res => {
+          if (res.data.role === "candidat" || res.data.role === "candidat") {
+            this.message = "user  doesn't have access";
+            // Afficher le message
+            this.showMessage = true;
+            // Effacer le message après 5 secondes
+            setTimeout(() => {
+              this.showMessage = false;
+            }, 5000);
+          } else {
+            localStorage.setItem('token', res.data.access_token);
+            var user = {
+              'email': res.data.email,
+              'role': res.data.role
+            };
+            var users = JSON.parse(localStorage.getItem('users')) || []; //get the existing users array from localStorage, or initialize it as an empty array if it doesn't exist
+            users.push(user); //add the new user object to the array
+            localStorage.setItem('users', JSON.stringify(users)); //store the updated users array in localStorage
+            console.log(users);
+            axios.defaults.headers.common['Authorization'] = `${res.data.access_token}`;
+            this.message = "Connexion réussie !";
+            this.showMessage = true;
+            setTimeout(() => {
+              this.showMessage = false;
+
+            window.location.href = '/welcome';
+          }, 5000);
+
+          }
         });
       } catch (error) {
-        console.error('Login failed:', error.response.data);
+        console.error('Login failed:', error);
         // Mettre à jour le message d'erreur
         this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';
         // Afficher le message

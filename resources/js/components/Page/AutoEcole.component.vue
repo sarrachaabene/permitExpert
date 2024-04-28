@@ -42,7 +42,7 @@
                       </thead>
                       <tbody>
                         <tr v-for="(auto) in autoEcole" :key="auto.id">
-                          <th scope="row">{{ auto.id}}</th>
+                          <th scope="row">#</th>
                           <td>{{ auto.auto_ecole.nom }}</td>
                           <td>{{ auto.auto_ecole.adresse }}</td>
                           <td>{{ auto.user_name }} </td>

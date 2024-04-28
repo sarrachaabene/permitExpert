@@ -18,7 +18,7 @@
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">Accueil</span>
             </li>-->
-          <li class="sidebar-item">
+          <li class="sidebar-item" v-if="!userRole">
             <router-link class="sidebar-link" to="/dashbord" aria-expanded="false">
               <span>
                 <i class="ti ti-dashboard"></i>
@@ -26,7 +26,16 @@
               <span class="hide-menu">Tableau de bord</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          
+          <li class="sidebar-item"  v-if="userRole">
+            <router-link class="sidebar-link" to="/dashbord_Super_Admin" aria-expanded="false">
+              <span>
+                <i class="ti ti-dashboard"></i>
+              </span>
+              <span class="hide-menu">Tableau de bord </span>
+            </router-link>
+          </li>
+          <li class="sidebar-item"  v-if="userRole">
             <router-link class="sidebar-link" to="/admin" aria-expanded="false">
               <span>
                 <i class="ti ti-user"></i>
@@ -39,7 +48,7 @@
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">Les auto écoles</span>
             </li>-->
-          <li class="sidebar-item">
+          <li class="sidebar-item"  v-if="userRole">
             <router-link class="sidebar-link" to="/autoEcole" aria-expanded="false">
               <span>
                 <i class="ti ti-home"></i>
@@ -47,7 +56,7 @@
               <span class="hide-menu">Auto écoles</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item"  v-if="userRole">
             <router-link class="sidebar-link" to="/demande" aria-expanded="false">
               <span>
                 <i class="ti ti-article"></i>
@@ -56,7 +65,7 @@
             </router-link>
           </li>
 
-          <li class="sidebar-item">
+          <li class="sidebar-item" v-if="!userRole">
             <router-link class="sidebar-link" to="/utilisateur" aria-expanded="false">
               <span>
                 <i class="ti ti-users"></i>
@@ -64,7 +73,7 @@
               <span class="hide-menu">Utilisateurs</span>
             </router-link>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" v-if="!userRole">
             <router-link class="sidebar-link" to="/Calendar" aria-expanded="false">
               <span>
                 <i class="ti ti-calendar"></i>
@@ -73,7 +82,7 @@
             </router-link>
           </li>
 
-          <li class="sidebar-item">
+          <li class="sidebar-item" v-if="!userRole">
             <router-link class="sidebar-link" to="/transaction" aria-expanded="false">
               <span>
                 <i class="ti ti-credit-card"></i>
@@ -82,7 +91,7 @@
             </router-link>
           </li>
 
-          <li class="sidebar-item">
+          <li class="sidebar-item" v-if="!userRole">
             <router-link class="sidebar-link" to="/vehicule" aria-expanded="false">
               <span>
                 <i class="ti ti-car"></i>
@@ -131,14 +140,18 @@
 </template>
 <script>
 export default {
-  mounted() {
-    console.log('Component mounted.')
-  },
+  data() {
+        return {
+          userRole: JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin"
+        }
+    },
+  mounted() {},
   methods: {
     logout() {
       // Remove token from localStorage
       console.log("hello");
       localStorage.removeItem('token');
+      localStorage.removeItem('users');
       window.location.href = '/login';
       // Optionally, you can navigate the user to a logout page or another route
       // this.$router.push('/logout'); // Change '/logout' to the desired route

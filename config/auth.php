@@ -45,6 +45,10 @@ return [
           'driver' => 'passport',
           'provider' => 'users',
       ],
+      'secretaire' => [
+        'driver' => 'session',
+        'provider' => 'secretaires', // Nom du fournisseur de données pour les secrétaires
+    ],
   ],
 
     /*
@@ -69,6 +73,15 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+
+      'candiday=t' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\candidat::class, // Assurez-vous que le chemin du modèle est correct
+    ],
+        'secretaires' => [
+          'driver' => 'eloquent',
+          'model' => App\Models\Secretaire::class, // Assurez-vous que le chemin du modèle est correct
+      ],
 
         // 'users' => [
         //     'driver' => 'database',

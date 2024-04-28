@@ -31,7 +31,6 @@
                     <table class="table table-borded">
                       <thead>
                         <tr>
-                          <th scope="col">id</th>
                           <th scope="col">nom</th>
                           <th scope="col">Numéro de téléphone</th>
                           <th scope="col">Email</th>
@@ -40,7 +39,6 @@
                       </thead>
                       <tbody>
                         <tr v-for="(use) in user" :key="use.id">
-                          <th scope="row">{{ use.id }}</th> <!-- Ajoutez cette ligne pour afficher l'ID -->
                           <td>{{ use.user_name }}</td>
                           <td>{{ use.numTel }}</td>
                           <td>{{ use.email }}</td>

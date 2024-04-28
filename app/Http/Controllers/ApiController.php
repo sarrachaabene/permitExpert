@@ -524,6 +524,9 @@ public function registerClient(Request $request, $email)
       
       $msg="welcome";
       // Return the token as a response
-      return response()->json([ 'Message'=>$msg ,'access_token' => $accessToken]);
+      return response()->json([ 'Message'=>$msg ,
+                                'access_token' => $accessToken,
+                                'email'=>Auth::user()->email,
+                                'role'=>Auth::user()->role]);
   }
 }
