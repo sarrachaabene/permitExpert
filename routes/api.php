@@ -60,8 +60,8 @@ Route::middleware('auth:api','role:superAdmin')->group(function () {
   Route::post('/demandeInscript/accepter{idDemande}',[DemandeInscriptionController::class,'  accepteDemande']);
 });
 
-//Route::middleware('auth:api','role:superAdmin')->group(function () { 
-  Route::middleware('auth:api','role:admin')->group(function () { 
+//  Route::middleware('auth:api','role:admin')->group(function () { 
+    Route::group(["auth:api" => ['admin','secretaire']], function () {
     Route::post('/user/store',[ApiController::class,'store']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
@@ -123,10 +123,10 @@ Route::macro('role', function () {
 }); */
 
 
-Route::middleware('auth:api','role:moniteur')->group(function () { 
+Route::group(["auth:api" => ['moniteur']], function () {
   Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
   Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
-  //Route::get('/Examen/index',[ExamenController::class,'index']);
+  Route::get('/Examen/index',[ExamenController::class,'index']);
   Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
   Route::get('/seance/index',[SeanceController::class,'index']);
   Route::get('/seance/show/{id}',[SeanceController::class,'show']);

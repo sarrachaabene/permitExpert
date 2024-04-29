@@ -101,7 +101,7 @@ export default {
               this.showMessage = false;
 
             window.location.href = '/welcome';
-          }, 5000);
+          }, 1000);
 
           }
         });

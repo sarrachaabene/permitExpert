@@ -27,7 +27,7 @@
                       </div>
                     </div>
                     <br />
-
+                    <div class="table-responsive">
                     <table class="table table-borded">
                       <thead>
                         <tr>
@@ -54,22 +54,25 @@
                             </a>
                           </td>
                           <td>
-                            <a href="#" @click="openEditModal(veh)" style="
-                                background-color: #9dcd5a;
-                                border-color: #9dcd5a;
-                                margin-right: 5px;
-                              " class="btn btn-success">Modifier
-                            </a>
-                            <a href="#" @click="deleteVehicle(veh.id)" style="
-                                background-color: orangered;
-                                border-color: orangered;
-                                margin-left: 5px;
-                              " class="btn btn-danger">Supprimer
-                            </a>
-                          </td>
+  <div class="btn-group" role="group" aria-label="Actions">
+    <a href="#" @click="openEditModal(veh)" style="
+      background-color: #9dcd5a;
+      border-color: #9dcd5a;
+      margin-right: 5px;
+      " class="btn btn-success">Modifier
+    </a>
+    <a href="#" @click="deleteVehicle(veh.id)" style="
+      background-color: orangered;
+      border-color: orangered;
+      margin-left: 5px;
+      " class="btn btn-danger">Supprimer
+    </a>
+  </div>
+</td>
                         </tr>
                       </tbody>
                     </table>
+                  </div>
                   </div>
                 </div>
               </div>

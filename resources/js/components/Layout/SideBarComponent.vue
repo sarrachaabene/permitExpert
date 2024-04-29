@@ -1,10 +1,8 @@
 <template>
-  <!-- Sidebar Start -->
   <aside class="left-sidebar">
-
     <div>
       <div class="brand-logo d-flex align-items-center justify-content-between">
-        <a href="./index.html" class="text-nowrap logo-img">
+        <a href="" class="text-nowrap logo-img">
           <img src="../../../../public/assets/images/logos/permit.png" width="180" height="120" alt="" />
         </a>
         <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -107,18 +105,18 @@
               <span>
                 <i class="ti ti-id-badge"></i>
               </span>
-              <span class="hide-menu">Profil</span>
+              <span class="hide-menu">Paramétres</span>
             </router-link>
           </li>
 
-          <li class="sidebar-item">
+  <!--         <li class="sidebar-item">
             <a class="sidebar-link" to="/parametre" aria-expanded="false">
               <span>
                 <i class="ti ti-settings"></i>
               </span>
               <span class="hide-menu">Paramètres</span>
             </a>
-          </li>
+          </li> -->
 
           <li class="sidebar-item">
             <a class="sidebar-link" v-on:click="logout" aria-expanded="false">

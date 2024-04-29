@@ -11,6 +11,8 @@ import Vehicule from './components//Page/Vehicule.component.vue';
 import Transaction from './components//Page/Transaction.component.vue';
 import Administrateur from './components//Page/Admin.component.vue';
 import PageNotFound from './components/Page/PageNotFound.component.vue';
+import Profile from './components//Page/ProfilComponent.vue';
+
 const routes = [
   { path: '/'        , component: LoginComponent },
   { path: '/dashbord', component: DashbordComponent },
@@ -21,6 +23,7 @@ const routes = [
   { path: '/Calendar', component: CalendarComponent },
   { path: '/demande', component: DemandeComponent },
   { path: '/vehicule', component: Vehicule },
+  { path: '/profile', component: Profile },
   { path: '/transaction', component: Transaction },
   { path: '/admin', component: Administrateur },
   { path: '/:pathMatch(.*)*', component: DashbordComponent },

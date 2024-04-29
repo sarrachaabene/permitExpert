@@ -26,58 +26,55 @@
                         </button>
                       </div>
                       <div class="col-lg-4 text-right">
-<select v-model="selectedTransactionType" @change="fetchData" class="form-select">
-  <option value="">Tous transactions</option>
-  <option value="secretaire">Flux entrant</option>
-  <option value="moniteur">Flux sortant</option>
-</select>
-
-
+                        <select v-model="selectedTransactionType" @change="filterTransactions" class="form-select">
+                          <option value="">Tous transactions</option>
+                          <option value="Flux entrant">Flux entrant</option>
+                          <option value="Flux sortant">Flux sortant</option>
+                        </select>
                       </div>
                     </div>
                     <br />
-
-                    <table class="table table-borded">
-                      <thead>
-                        <tr>
-                          <th scope="col">Type de transaction</th>
-                          <th scope="col">Concernant</th>
-                          <th scope="col">Description</th>
-                          <th scope="col">Montant</th>
-                          <th scope="col">Date</th>
-                          <th scope="col">Nom d'utilisateur</th>
-                          <th scope="col">véhicule</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(tran) in filteredTransactions" :key="tran.id">
-                          <td>{{ tran.Type_Transaction }}</td>
-                          <td>{{ tran.Type_T }}</td>
-                          <td>{{ tran.description }}</td>
-                          <td>{{ tran.montantT }}</td>
-                          <td>{{ tran.dateT }}</td>
-                          <td>{{ tran.user_id }}  </td>
-                          <td>{{ tran.vehicule_id }}</td>
-                          <td style="display: flex; justify-content: space-between;">
-    <a href="" style="
-        background-color: #9dcd5a;
-        border-color: #9dcd5a;
-        margin-right: 5px;
-        " class="btn btn-success">Modifier
-    </a>
-    <a href="" style="
-        background-color: orangered;
-        border-color: orangered;
-        margin-left: 5px;
-        " class="btn btn-danger">Supprimer
-    </a>
-</td>
-
-                        </tr>
-                      </tbody>
-                    </table>
-                    
+                    <div class="table-responsive">
+                      <table class="table table-borded">
+                        <thead>
+                          <tr>
+                            <th scope="col">Type de transaction</th>
+                            <th scope="col">Concernant</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Montant</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Nom d'utilisateur</th>
+                            <th scope="col">véhicule</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(tran) in filteredTransactions" :key="tran.id">
+                            <td>{{ tran.Type_Transaction }}</td>
+                            <td>{{ tran.Type_T }}</td>
+                            <td>{{ tran.description }}</td>
+                            <td>{{ tran.montantT }}</td>
+                            <td>{{ tran.dateT }}</td>
+                            <td>{{ tran.user_id }}  </td>
+                            <td>{{ tran.vehicule_id }}</td>
+                            <td style="display: flex; justify-content: space-between;">
+                              <a href="" style="
+                                background-color: #9dcd5a;
+                                border-color: #9dcd5a;
+                                margin-right: 5px;
+                                " class="btn btn-success">Modifier
+                              </a>
+                              <a href="" style="
+                                background-color: orangered;
+                                border-color: orangered;
+                                margin-left: 5px;
+                                " class="btn btn-danger">Supprimer
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -87,7 +84,8 @@
       </div>
     </div>
   </div>
-  <!-- modal Ajouter auto ecole -->
+
+  <!-- Modal Ajouter auto ecole -->
   <button type="button"></button>
 
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -148,22 +146,22 @@ const TRANSACTION_API_BASE_URL = "http://localhost:8000/api/transaction";
 
 export default {
   data() {
-  return {
-    transaction: [],
-    searchQuery: '',
-    selectedTransactionType: '',
-  };
-},
+    return {
+      originalTransactionList: [], // Ajouter cette variable pour stocker la liste originale des transactions
+      transaction: [],
+      searchQuery: '',
+      selectedTransactionType: '',
+    };
+  },
   computed: {
     filteredTransactions() {
-    return this.transaction.filter(tran => {
-      const matchesSearch = tran.description.toLowerCase().includes(this.searchQuery.toLowerCase());
-      const matchesType = !this.selectedTransactionType || tran.Type_Transaction === this.selectedTransactionType;
-      return matchesSearch && matchesType;
-    });
-  }
-
-},
+      return this.transaction.filter(tran => {
+        const matchesSearch = tran.description.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchesType = !this.selectedTransactionType || tran.Type_Transaction === this.selectedTransactionType;
+        return matchesSearch && matchesType;
+      });
+    }
+  },
   mounted() {
     console.log("Component mounted.");
     this.fetchData();
@@ -180,17 +178,17 @@ export default {
     handleSuccess(data) {
       console.log("Data fetched successfully:", data);
       this.transaction = data;
-      console.log("Data fetched successfully:", this.transaction);
+      this.originalTransactionList = data; // Sauvegarder la liste originale des transactions
     },
     handleError(error) {
       console.error("Error fetching data from the backend:", error);
     },
-    filterTransaction() {
-      if (this.selectedTransaction === "") {
-        this.fetchData();
+    filterTransactions() {
+      if (this.selectedTransactionType === "") {
+        this.transaction = this.originalTransactionList; // Rétablir la liste originale des transactions
       } else {
-        const filteredTransaction = this.transaction.filter(transaction => transaction.Type_Transaction === this.selectedTransaction);
-        this.transaction = filteredTransaction;
+        const filteredTransactions = this.originalTransactionList.filter(tran => tran.Type_Transaction === this.selectedTransactionType);
+        this.transaction = filteredTransactions;
       }
     }
   },
