@@ -99,8 +99,14 @@ export default {
             this.showMessage = true;
             setTimeout(() => {
               this.showMessage = false;
+if(res.data.role=="superAdmin"){
+  window.location.href = '/dashbord_Super_Admin';
 
-            window.location.href = '/welcome';
+}else if ((res.data.role=="admin"))
+{  window.location.href = '/dashbord';
+}else{      this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';
+        // Afficher le message
+        this.showMessage = true;}
           }, 1000);
 
           }

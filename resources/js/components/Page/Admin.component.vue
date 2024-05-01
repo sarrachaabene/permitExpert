@@ -27,7 +27,7 @@
                       </div>
                     </div>
                     <br />
-
+                    <div class="table-responsive">
                     <table class="table table-borded">
                       <thead>
                         <tr>
@@ -42,17 +42,15 @@
                           <td>{{ use.user_name }}</td>
                           <td>{{ use.numTel }}</td>
                           <td>{{ use.email }}</td>
-                          <td>
-                            <a href="" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;"
-                              class="btn btn-success">Modifier</a>
-                            <a href="" style="background-color: orangered; border-color: orangered; margin-left: 5px;"
-                              class="btn btn-danger">Supprimer</a>
-                          </td>
+                          <td class="d-flex justify-content-center">
+  <a href="" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-success">Modifier</a>
+  <a href="" style="background-color: orangered; border-color: orangered; margin-left: 5px;" class="btn btn-danger">Supprimer</a>
+</td>
                         </tr>
 
                       </tbody>
                     </table>
-
+</div>
                   </div>
                 </div>
               </div>
@@ -134,12 +132,10 @@ export default {
       console.log("Data fetched successfully:", data);
       this.user = data;
       console.log("Data fetched successfully:", this.use);
-      // Do something with the data, like assigning it to a variable
-      // this.messages = data;
+
     },
     handleError(error) {
       console.error("Error fetching data from the backend:", error);
-      // Handle error, show error message to user, etc.
     },
   },
 };

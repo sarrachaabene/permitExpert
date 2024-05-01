@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * @OA\Schema(
  *     schema="Notification",
@@ -90,10 +92,15 @@ public function index()
  *      ),
  * )
  */
-public function showNotificationsByReceptientId($receptientId)
+public function showNotificationsByReceptientId()
 {
     try {
-        $notifications = Notification::where('receptient_msg', $receptientId)->get();
+        if (!Auth::check()) {
+            return response()->json(["error" => "Utilisateur non authentifié."], 401);
+        }
+        $userId = Auth::id();
+        $notifications = Notification::where('receptient_msg', $userId)->get();
+        
         if ($notifications->isEmpty()) {
             return response()->json(["error" => "Aucune notification trouvée pour le destinataire spécifié."], 404);
         }        

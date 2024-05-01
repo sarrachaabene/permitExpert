@@ -7,6 +7,8 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\AutoEcole;
 use App\Models\Vehicule;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * @OA\Schema(
  *     schema="Transaction",
@@ -250,7 +252,26 @@ class TransactionController extends Controller
             $error = "Erreur lors de la récupération des transactions pour l'utilisateur: " . $e->getMessage();
             return response()->json(["error" => $error], 500);
         }
-    }    
+    }  
+    public function showTransactionByUserIdForMoniteurAndCandidat()
+    {
+        try {
+            if (!Auth::check()) {
+                return response()->json(["error" => "Utilisateur non authentifié."], 401);
+            }
+            $userId = Auth::id();
+            $transactions = Transaction::where('user_id', $userId)->get();
+            if ($transactions->isEmpty()) {
+                $msg = "Aucune transaction trouvée pour l'utilisateur avec l'ID spécifié.";
+                return response()->json(["error" => $msg], 404);
+            }
+            return response()->json($transactions, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des transactions pour l'utilisateur: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
+    
     /**
  * @OA\Get(
  *      path="/api/transaction/ShowTransactionByvehiculeId/{vehiculeId}",

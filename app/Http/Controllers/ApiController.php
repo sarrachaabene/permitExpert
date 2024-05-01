@@ -82,6 +82,37 @@ class ApiController extends Controller {
       }
   }
   
+  //afficher le nombre des utilisateurs
+  public function CountUser()
+  {
+      try {
+          $roles = ['candidat', 'moniteur', 'secretaire'];
+          $users = User::whereIn('role', $roles)->get();
+  
+          if ($users->isEmpty()) {
+              return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés", 404);
+          }
+  
+          $countByRole = [
+              'candidat' => 0,
+              'moniteur' => 0,
+              'secretaire' => 0,
+          ];
+            foreach ($users as $user) {
+              $countByRole[$user->role]++;
+          }
+  
+          return response()->json([
+              'candidats' => $countByRole['candidat'],
+              'moniteurs' => $countByRole['moniteur'],
+              'secretaires' => $countByRole['secretaire']
+          ], 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+      }
+  }
+
+
 //Affichage pour superAdmin
   public function indexForSuper()
   {

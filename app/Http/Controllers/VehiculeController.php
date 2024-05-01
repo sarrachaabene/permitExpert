@@ -62,7 +62,26 @@ class VehiculeController extends Controller
             $error = "Erreur lors de la récupération des véhicules: " . $e->getMessage();
             return response()->json(["error" => $error], 500);
         }
-    }    
+    }   
+    public function CountVehicule()
+{
+    try {
+        $nombreDeVehicules = Vehicule::count();
+
+        if ($nombreDeVehicules === 0) {
+            return response()->json("Aucun véhicule trouvé.", 404);
+        } 
+
+        return response()->json([
+            "nombre_de_vehicules" => $nombreDeVehicules
+        ], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des véhicules: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}  
+
+
   /**
  * @OA\Post(
  *      path="/api/vehicule/store",

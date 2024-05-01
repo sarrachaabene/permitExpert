@@ -74,13 +74,13 @@ return [
             'model' => App\Models\User::class,
         ],
 
-      'candiday=t' => [
+      'candidat' => [
         'driver' => 'eloquent',
-        'model' => App\Models\candidat::class, // Assurez-vous que le chemin du modèle est correct
+        'model' => App\Models\user::class, // Assurez-vous que le chemin du modèle est correct
     ],
-        'secretaires' => [
+        'secretaire' => [
           'driver' => 'eloquent',
-          'model' => App\Models\Secretaire::class, // Assurez-vous que le chemin du modèle est correct
+          'model' => App\Models\user::class, // Assurez-vous que le chemin du modèle est correct
       ],
 
         // 'users' => [

@@ -14,17 +14,16 @@
                   <div class="col">
                     <div class="row mt-4">
                       <div class="row">
-  <div class="col-lg-8"> <!-- Assuming you want the search input to take up 8 columns -->
-    <!-- Content here -->
+  <div class="col-lg-8"> 
   </div>
-  <div class="col-lg-4"> <!-- The remaining 4 columns for the search input -->
+  <div class="col-lg-4"> 
     <input type="text" class="form-control" v-model="searchQuery" placeholder="Rechercher..." />
   </div>
 </div>
 
                     </div>
                     <br />
-
+                    <div class="table-responsive">
                     <table class="table table-borded">
                       <thead>
                         <tr>
@@ -52,6 +51,7 @@
                         </tr>
                       </tbody>
                     </table>
+                    </div>
                   </div>
                 </div>
               </div>

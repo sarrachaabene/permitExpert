@@ -27,7 +27,7 @@
                       </div>
                     </div>
                     <br />
-
+                    <div class="table-responsive">
                     <table class="table table-borded">
                       <thead>
                         <tr>
@@ -48,24 +48,24 @@
                           <td>{{ auto.user_name }} </td>
                           <td>{{ auto.numTel }}</td>
                           <td>{{ auto.email }}</td>
-                          <td>
-                            <a href="" style="
+                          <td style="display: flex; justify-content: space-between;">
+                              <a href="" style="
                                 background-color: #9dcd5a;
                                 border-color: #9dcd5a;
                                 margin-right: 5px;
-                              " class="btn btn-success">Modifier
-                            </a>
-                            <a href="" style="
+                                " class="btn btn-success">Modifier
+                              </a>
+                              <a href="" style="
                                 background-color: orangered;
                                 border-color: orangered;
                                 margin-left: 5px;
-                              " class="btn btn-danger">Supprimer
-                            </a>
-                          </td>
+                                " class="btn btn-danger">Supprimer
+                              </a>
+                            </td>
                         </tr>
                       </tbody>
                     </table>
-                    
+                    </div>
                   </div>
                 </div>
               </div>

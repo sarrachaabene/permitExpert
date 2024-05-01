@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Seance;
 use App\Models\User;
 use App\Models\Vehicule;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Schema(
@@ -244,6 +245,33 @@ class SeanceController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }    
+
+    //Affichage pour candidat
+
+    public function ShowSeanceForCandidat($date) 
+{
+    try {
+        if (!Auth::check()) {
+            return response()->json(["error" => "Utilisateur non authentifié."], 401);
+        }
+        
+        $candidatId = Auth::id();
+        $seances = Seance::where('candidat_id', $candidatId)
+            ->whereDate('dateS', $date)
+            ->get();
+
+        if ($seances->isEmpty()) {
+            return response()->json(["error" => "Aucune séance trouvée pour le candidat spécifié à cette date."], 404);
+        }
+        
+        return response()->json($seances, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
+     
       /**
  * @OA\Get(
  *      path="/api/seance/ShowSeanceByvehiculeId/{id}",
@@ -329,6 +357,30 @@ class SeanceController extends Controller
             if ($seances->isEmpty()) {
                 return response()->json(["error" => "Aucune séance trouvée pour le moniteur spécifié."], 404);
             }
+            return response()->json($seances, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
+
+//Affichage pour Moniteur
+    public function ShowSeanceForMoniteur($date) // Utilisez le même nom pour le paramètre que celui défini dans la route
+    {
+        try {
+            if (!Auth::check()) {
+                return response()->json(["error" => "Utilisateur non authentifié."], 401);
+            }
+            
+            $moniteurId = Auth::id();
+            $seances = Seance::where('moniteur_id', $moniteurId)
+                ->whereDate('dateS', $date) // Utilisation de whereDate pour comparer uniquement les parties de date
+                ->get();
+    
+            if ($seances->isEmpty()) {
+                return response()->json(["error" => "Aucune séance trouvée pour le candidat spécifié à cette date."], 404);
+            }
+            
             return response()->json($seances, 200);
         } catch (\Exception $e) {
             $error = "Erreur lors de la récupération des séances: " . $e->getMessage();

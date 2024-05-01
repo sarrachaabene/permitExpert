@@ -36,15 +36,17 @@ use App\Models\Notification;
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 
+Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
+
 Route::middleware('auth:api','role:superAdmin')->group(function () { 
   Route::get('/user/showForSuperAdmin/{id}', [ApiController::class, 'showForSuperAdmin']);
   Route::get('/user/indexForSuper', [ApiController::class, 'indexForSuper']);
-  Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
+  Route::get('/autoEcole/countAutoEcoles',[AutoEcoleController::class,'countAutoEcoles']);
+Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::put('/user/updateForSuperAdmin/{id}',[ApiController::class,'updateForSuperAdmin']);
   Route::delete('/user/deleteForSuperAdmin/{id}',[ApiController::class,'deleteForSuperAdmin']);
   Route::post('/user/storeForSuperAdmin',[ApiController::class,'storeForSuperAdmin']);
   Route::get('/autoEcole/findAutoEcoleByUserId/{id}',[AutoEcoleController::class,'showAutoEcoleByUserId']); 
-  Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::get('/autoEcole/user',[AutoEcoleController::class,'getUsersAutoEcole']);
   Route::get('/autoEcole/show/{id}',[AutoEcoleController::class,'show']);
   Route::put('/autoEcole/update/{id}',[AutoEcoleController::class,'update']);
@@ -66,6 +68,7 @@ Route::middleware('auth:api','role:superAdmin')->group(function () {
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
   Route::get('/user/index', [ApiController::class, 'index']);
+  Route::get('/user/CountUser', [ApiController::class, 'CountUser']);
   Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
   Route::get('/seance/index',[SeanceController::class,'index']);
   Route::get('/seance/show/{id}',[SeanceController::class,'show']);
@@ -92,6 +95,7 @@ Route::middleware('auth:api','role:superAdmin')->group(function () {
   Route::get('/transaction/ShowTransactionByautoecoleId/{id}',[TransactionController::class,'ShowTransactionByautoecoleId']);
   Route::get('/transaction/ShowTransactionByvehiculeId/{id}',[TransactionController::class,'ShowTransactionByvehiculeId']);
   Route::get('/vehicule/index',[VehiculeController::class,'index']);
+  Route::get('/vehicule/CountVehicule',[VehiculeController::class,'CountVehicule']);
   Route::get('/vehicule/show/{id}',[VehiculeController::class,'show']);
   Route::post('/vehicule/store',[vehiculeController::class,'store']);
   Route::put('/vehicule/update/{id}',[vehiculeController::class,'update']);
@@ -99,49 +103,48 @@ Route::middleware('auth:api','role:superAdmin')->group(function () {
 
   });
  
-// Gestion d'erreur pour l'authentification
 Route::fallback(function () {
   return response()->json(['error' => 'Unauthorized. Please authenticate.'], 401);
 });
-// Gestion d'erreur pour le rôle
 Route::macro('role', function () {
   return function () {
       return response()->json(['error' => 'Unauthorized. Insufficient role.'], 403);
   };
 });
 
-/* Route::middleware('auth:api','role:candidat')->group(function () { 
+  Route::middleware('auth:api','role:candidat')->group(function () { 
   Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
   Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
-  Route::get('/Examen/index',[ExamenController::class,'index']);
-  Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
-  Route::get('/seance/index',[SeanceController::class,'index']);
-  Route::get('/seance/show/{id}',[SeanceController::class,'show']);
   Route::post('/seance/AccepterPourCandidat/{id}',[SeanceController::class,'AccepterPourCandidat']);
   Route::post('/seance/RefuserPourCandidat/{id}',[SeanceController::class,'RefuserPourCandidat']);
 
-}); */
+});
+ 
 
-
-Route::group(["auth:api" => ['moniteur']], function () {
+Route::middleware('auth:api','role:moniteur')->group(function () { 
   Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
   Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
-  Route::get('/Examen/index',[ExamenController::class,'index']);
-  Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
-  Route::get('/seance/index',[SeanceController::class,'index']);
-  Route::get('/seance/show/{id}',[SeanceController::class,'show']);
   Route::post('/seance/AccepterPourMoniteur/{id}',[SeanceController::class,'AccepterPourMoniteur']);
   Route::post('/seance/RefuserPourMoniteur/{id}',[SeanceController::class,'RefuserPourMoniteur']);
 
 });
-Route::group(["auth:api" => ['moniteur', 'candidat','admin','secretaire']], function () {
+Route::middleware(['auth:api'])->group(function () {
   Route::get('/Notification/index', [NotificationController::class, 'index']);
   Route::get('/Notification/show/{id}', [NotificationController::class, 'show']);
-  Route::get('/Notification/ShowNotificationsByReceptientId/{id}', [NotificationController::class, 'ShowNotificationsByReceptientId']);
+  Route::get('/Notification/ShowNotificationsByReceptientId', [NotificationController::class, 'ShowNotificationsByReceptientId']);
   Route::get('/message/index', [MessageController::class, 'index']);
   Route::get('/message/show/{id}', [MessageController::class, 'show']);
   Route::post('/message/store', [MessageController::class, 'store']);
+  Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
+  Route::get('/seance/show/{id}',[SeanceController::class,'show']);
+  Route::get('/transaction/showTransactionForMoniteurAndCandidat',[TransactionController::class,'showTransactionByUserIdForMoniteurAndCandidat']);
+  Route::get('/seance/ShowSeanceForCandidat/{date}',[SeanceController::class,'ShowSeanceForCandidat']);
+  Route::get('/seance/ShowSeanceForMoniteur /{date}',[SeanceController::class,'ShowSeanceForMoniteur']);
+  Route::get('/Examen/showExamensForCandidat/{date}',[ExamenController::class,'showExamensForCandidat']);
+
+
 });
+
 
 
 

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Examen;
 use App\Models\User;
 use App\Models\Vehicule;
+use Illuminate\Support\Facades\Auth;
+
 /**
  * @OA\Schema(
  *     schema="Examen",
@@ -240,6 +242,27 @@ public function showExamensByCandidatId($candidatId)
         if ($examens->isEmpty()) {
             $msg = "Aucun examen trouvé pour le candidat avec l'ID spécifié.";
             return response()->json(["error" => $msg], 404);
+        }
+        return response()->json($examens, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des examens pour le candidat: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+//Affichage pour candidat
+
+public function showExamensForCandidat($date)
+{
+    try {
+      if (!Auth::check()) {
+        return response()->json(["error" => "Utilisateur non authentifié."], 401);
+    }
+    $candidatId = Auth::id();
+        $examens = Examen::where('user_id', $candidatId)
+        ->whereDate('dateE', $date)
+        ->get();
+        if ($examens->isEmpty()) {
+            return response()->json(["error" => "Aucun examen trouvée pour le candidat spécifié à cette date."], 404);
         }
         return response()->json($examens, 200);
     } catch (\Exception $e) {

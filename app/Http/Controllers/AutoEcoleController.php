@@ -72,6 +72,21 @@ class AutoEcoleController extends Controller
       }
   }
 
+
+  public function countAutoEcoles()
+  {
+      try {
+          $count = AutoEcole::count(); // Calculer le nombre d'auto-écoles
+          if ($count === 0) {
+              return response()->json("Aucune auto-école n'a été trouvée", 404);
+          }
+          return response()->json([
+              'count' => $count // Retourner le nombre d'auto-écoles
+          ], 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur interne du serveur", 500);
+      }
+  }
     /**
  * @OA\Get(
  *      path="/api/autoEcole/user",
