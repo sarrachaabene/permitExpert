@@ -10,8 +10,9 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
-
-
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\VerificationCodeNotification;
 /**
  * @OA\Schema(
  *     schema="User",
@@ -157,7 +158,7 @@ class ApiController extends Controller {
          $validatedData = $request->validate([
              'user_name' => 'required|string|max:255',
              'email' => 'required|string|email|max:255|unique:users',
-             'password' => 'required|string|min:8',
+             'password' => 'string|min:8',
              'role' => 'required|string|in:candidat,moniteur,secretaire',
              'cin' => 'required|string|max:255',
              'numTel' => 'required|string|max:255',
@@ -183,7 +184,7 @@ public function storeForSuperAdmin(Request $request)
         $validatedData = $request->validate([
             'user_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => 'string|min:8',
             'role' => 'required|string|in:admin',
             'cin' => 'required|string|max:255',
             'numTel' => 'required|string|max:255',
@@ -560,4 +561,40 @@ public function registerClient(Request $request, $email)
                                 'email'=>Auth::user()->email,
                                 'role'=>Auth::user()->role]);
   }
+
+
+  
+  public function checkEmail($email)
+  {
+      $user = User::where('email', $email)->first();
+      if (!$user) {
+          return response()->json(['error' => 'Cet email n\'existe pas.'], 404);
+      }
+  
+      $verificationCode = rand(1000, 9999); // Générer un code de vérification
+      $user->verification_code = $verificationCode;
+      $user->save();
+      $user->notify(new VerificationCodeNotification($verificationCode));
+
+      // Envoyer le code de vérification par email en utilisant la classe Mail de Laravel
+      //Mail::to($user->email)->send(new VerificationCodeNotification ($verificationCode));
+  
+      return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
+  }
+  
+  
+/* // Vérifier le code de vérification
+public function verifyCode(Request $request)
+{
+    $code = $request->input('code');
+    $user = Auth::user();
+    if ($user->verification_code == $code) {
+        // Code de vérification correct, enregistrez l'utilisateur
+        $user->verification_code = null;
+        $user->save();
+        return redirect()->route('dashboard')->with('success', 'Inscription réussie.');
+    }
+    return redirect()->back()->with('error', 'Code de vérification incorrect.');
+} */
+  
 }

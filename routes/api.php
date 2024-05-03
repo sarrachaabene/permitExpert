@@ -35,6 +35,7 @@ use App\Models\Notification;
 
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
+Route::get('/checkEmail/{email}', [ApiController::class, 'checkEmail']);
 
 Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
 
