@@ -48,10 +48,8 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -62,7 +60,12 @@ export default {
     };
   },
   mounted() {
-    if (localStorage.getItem('token')) window.location.href = '/welcome';
+    let isSuperAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin";
+    if (isSuperAdmin){
+      window.location.href = '/dashbord_Super_Admin';
+    }else {
+      window.location.href = '/dashbord';
+    }
   },
   computed: {
     isSuccess() {
@@ -76,7 +79,7 @@ export default {
           email: this.email,
           password: this.password
         }).then(res => {
-          if (res.data.role === "candidat" || res.data.role === "candidat") {
+          if (res.data.role === "candidat" || res.data.role === "moniteur") {
             this.message = "user  doesn't have access";
             // Afficher le message
             this.showMessage = true;
@@ -93,21 +96,22 @@ export default {
             var users = JSON.parse(localStorage.getItem('users')) || []; //get the existing users array from localStorage, or initialize it as an empty array if it doesn't exist
             users.push(user); //add the new user object to the array
             localStorage.setItem('users', JSON.stringify(users)); //store the updated users array in localStorage
-            console.log(users);
             axios.defaults.headers.common['Authorization'] = `${res.data.access_token}`;
             this.message = "Connexion réussie !";
             this.showMessage = true;
             setTimeout(() => {
               this.showMessage = false;
-if(res.data.role=="superAdmin"){
-  window.location.href = '/dashbord_Super_Admin';
+              if (res.data.role == "superAdmin") {
+                window.location.href = '/dashbord_Super_Admin';
 
-}else if ((res.data.role=="admin"))
-{  window.location.href = '/dashbord';
-}else{      this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';
-        // Afficher le message
-        this.showMessage = true;}
-          }, 1000);
+              } else if ((res.data.role == "admin")) {
+                window.location.href = '/dashbord';
+              } else {
+                this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';
+                // Afficher le message
+                this.showMessage = true;
+              }
+            }, 1000);
 
           }
         });

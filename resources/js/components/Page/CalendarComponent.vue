@@ -31,6 +31,15 @@ import '../../../../node_modules/@syncfusion/ej2-popups/styles/material.css';
 import '../../../../node_modules/@syncfusion/ej2-vue-schedule/styles/material.css';
 
 export default {
+
+  mounted() {
+    let isSuperAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin";
+    if (isSuperAdmin){
+      window.location.href = '/dashbord_Super_Admin';
+    }
+    console.log("Component mounted.");
+    this.fetchData();
+  },
   name: "App",
   // Declaring component and its directives
   components: {
@@ -86,4 +95,5 @@ export default {
     schedule: [Day, Week, WorkWeek, Month, Agenda, DragAndDrop, Resize]
   }
 };
+
 </script>

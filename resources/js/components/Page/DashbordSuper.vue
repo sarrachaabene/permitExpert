@@ -80,6 +80,10 @@ export default {
     };
   },
   mounted() {
+    let isAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "admin";
+    if (isAdmin){
+      window.location.href = '/dashbord';
+    }
     console.log("Component mounted.");
     this.fetchNumberOfAutoEcoles();
   },

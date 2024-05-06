@@ -570,16 +570,16 @@ public function registerClient(Request $request, $email)
       if (!$user) {
           return response()->json(['error' => 'Cet email n\'existe pas.'], 404);
       }
-  
+      if($user->password==null){
       $verificationCode = rand(1000, 9999); // Générer un code de vérification
       $user->verification_code = $verificationCode;
       $user->save();
       $user->notify(new VerificationCodeNotification($verificationCode));
-
+      return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
+     }
       // Envoyer le code de vérification par email en utilisant la classe Mail de Laravel
       //Mail::to($user->email)->send(new VerificationCodeNotification ($verificationCode));
-  
-      return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
+      return response()->json(['error' => 'you have aslo password']);  
   }
   
   

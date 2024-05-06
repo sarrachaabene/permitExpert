@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
       Schema::table('users', function (Blueprint $table) {
-        // Supprimer la contrainte étrangère
         $table->dropForeign(['transaction_id']);
-        // Supprimer la colonne
         $table->dropColumn('transaction_id'); 
     });
     }
@@ -22,9 +20,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Recreate the column
             $table->unsignedBigInteger('transaction_id');
-            // Recreate the foreign key constraint
             $table->foreign('transaction_id')->references('id')->on('transactions');
         });
     }

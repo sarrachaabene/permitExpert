@@ -145,6 +145,10 @@ export default {
     };
   },
   mounted() {
+    let isSuperAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin";
+    if (isSuperAdmin){
+      window.location.href = '/dashbord_Super_Admin';
+    }
     console.log("Component mounted.");
     this.fetchUserCounts();
     this.fetchVehiculeCount();

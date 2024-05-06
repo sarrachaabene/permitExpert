@@ -47,6 +47,6 @@ class VerificationCodeNotification extends Notification
             ->subject('Code de vérification')
             ->line('Votre code de vérification est : ' . $this->verificationCode)
             ->line('Ce code est valide pendant une courte période. Ne le partagez pas avec d\'autres personnes.')
-            ->action('Vérifier maintenant', url('/'));
+            ->action('Vérifier maintenant', url('/code'));
     }
 }

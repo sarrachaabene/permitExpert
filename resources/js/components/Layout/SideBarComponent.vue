@@ -140,7 +140,7 @@
 export default {
   data() {
         return {
-          userRole: JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin"
+          userRole: localStorage.getItem('users') && JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin"
         }
     },
   mounted() {},

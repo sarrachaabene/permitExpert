@@ -17,11 +17,20 @@ Route::get('/', function () {
   //if(Auth::check())
   return view('auth.login');
 });
+Route::get('/code', function () {
+  //if(Auth::check())
+  return view('code');
+});Route::get('/registerf', function () {
+  //if(Auth::check())
+  return view('registerfinal');
+});
 
 Route::get('/dashbord', function () {
   return view('welcome'); 
 });
-
+Route::get('/dashbord_Super_Admin', function () {
+  return view('welcome'); 
+});
 
 /* Route::middleware(['auth'])->group(function () {
 }); */
@@ -33,14 +42,15 @@ Route::get('/autoEcole', function () {
 Route::get('/demande', function () {
   return view('welcome'); 
 });//->middleware('auth');
-
+Route::get('/admin', function () {
+  return view('welcome'); 
+});//->middleware('auth');
 Route::get('/utilisateur', function () {
   return view('welcome'); 
 });//->middleware('auth');
 Route::get('/Calendar', function () {
   return view('welcome'); 
 });//->middleware('auth');
-
 Route::get('/transaction', function () {
   return view('welcome'); 
 });//->middleware('auth');
@@ -50,11 +60,14 @@ Route::get('/vehicule', function () {
 Route::get('/profile', function () {
   return view('welcome'); 
 });//->middleware('auth');
-Route::get('/parametre', function () {
+/* Route::get('/parametre', function () {
   return view('welcome'); 
-})->middleware('auth');
+})->middleware('auth'); */
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/{any}', function () {
-  return view('welcome');
-})->where('any', '.*');
+/* Route::get('/{any}', function () {
+  return view('notfound');
+})->where('any', '.*'); */
 
+/* Route::get('/notfound', function () {
+  return view('notfound'); 
+}); */
