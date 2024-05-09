@@ -14,7 +14,6 @@
                 <h5 style="text-align: center; font-weight: bold;">Connection</h5>
                 <h6 style="text-align: center;">Bienvenue sur PermitExpert</h6>
                 <br><br>
-                <!-- Affichage du message de succès ou d'erreur -->
                 <div v-if="message" class="alert" :class="{ 'alert-success': isSuccess, 'alert-danger': !isSuccess }">
                   {{ message }}
                 </div>
@@ -25,11 +24,11 @@
                       aria-describedby="emailHelp" placeholder="Email">
                   </div>
                   <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Mot de passe</label>
-                    <input v-model="password" type="password" class="form-control" id="exampleInputPassword1"
-                      placeholder="Mot de passe">
-                  </div>
-
+  <label for="exampleInputPassword1" class="form-label">Mot de passe</label>
+  <input v-model="password" type="password" class="form-control" id="exampleInputPassword1"
+    placeholder="Mot de passe">
+    <a style="color: green; display: block; margin-top: 5px; text-decoration: underline;" href="/Veriforcode">Mot de passe oublié?</a>
+</div>
                   <div class="text-center">
                     <button type="submit" style="background-color: #FA7F35; border-color: #FA7F35; margin-left: 5px;"
                       class="btn btn-danger">Se connecter</button>
@@ -82,9 +81,7 @@ export default {
         }).then(res => {
           if (res.data.role === "candidat" || res.data.role === "moniteur") {
             this.message = "user  doesn't have access";
-            // Afficher le message
             this.showMessage = true;
-            // Effacer le message après 5 secondes
             setTimeout(() => {
               this.showMessage = false;
             }, 5000);
@@ -94,9 +91,9 @@ export default {
               'email': res.data.email,
               'role': res.data.role
             };
-            var users = JSON.parse(localStorage.getItem('users')) || []; //get the existing users array from localStorage, or initialize it as an empty array if it doesn't exist
-            users.push(user); //add the new user object to the array
-            localStorage.setItem('users', JSON.stringify(users)); //store the updated users array in localStorage
+            var users = JSON.parse(localStorage.getItem('users')) || []; 
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users)); 
             axios.defaults.headers.common['Authorization'] = `${res.data.access_token}`;
             this.message = "Connexion réussie !";
             this.showMessage = true;
@@ -109,24 +106,18 @@ export default {
                 window.location.href = '/dashbord';
               } else {
                 this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';
-                // Afficher le message
                 this.showMessage = true;
               }
             }, 1000);
-
           }
         });
       } catch (error) {
         console.error('Login failed:', error);
-        // Mettre à jour le message d'erreur
         this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';
-        // Afficher le message
         this.showMessage = true;
-        // Effacer le message après 5 secondes
         setTimeout(() => {
           this.showMessage = false;
         }, 5000);
-        // Gérer l'échec de la connexion, afficher le message d'erreur à l'utilisateur
       }
     }
   }

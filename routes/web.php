@@ -12,7 +12,6 @@ use Spatie\Permission\Models\Role;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 Route::get('/', function () {
   //if(Auth::check())
   return view('auth.login');
@@ -20,9 +19,24 @@ Route::get('/', function () {
 Route::get('/code', function () {
   //if(Auth::check())
   return view('code');
-});Route::get('/registerf', function () {
+});
+
+Route::get('/registerf', function () {
   //if(Auth::check())
   return view('registerfinal');
+});
+Route::get('/changepassword', function () {
+  //if(Auth::check())
+  return view('changepassword');
+});
+
+Route::get('/codeforpassword', function () {
+  return view('codeforpassword'); 
+});
+
+
+Route::get('/Veriforcode', function () {
+  return view('emailforcode'); 
 });
 
 Route::get('/dashbord', function () {

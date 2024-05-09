@@ -36,10 +36,13 @@ use App\Models\Notification;
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 Route::get('/checkEmail/{email}', [ApiController::class, 'checkEmail']);
+Route::get('/checkEmailForPassword/{email}', [ApiController::class, 'checkEmailForPassword']);
+Route::get('/verifyCode/{email}/{code}', [ApiController::class, 'verifyCode']);
+Route::put('/updatePassword/{email}', [ApiController::class, 'updatePassword']);
 
-Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
 
 Route::middleware('auth:api','role:superAdmin')->group(function () { 
+  Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
   Route::get('/user/showForSuperAdmin/{id}', [ApiController::class, 'showForSuperAdmin']);
   Route::get('/user/indexForSuper', [ApiController::class, 'indexForSuper']);
   Route::get('/autoEcole/countAutoEcoles',[AutoEcoleController::class,'countAutoEcoles']);
@@ -64,8 +67,10 @@ Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
 });
 
 //  Route::middleware('auth:api','role:admin')->group(function () { 
-    Route::group(["auth:api" => ['admin','secretaire']], function () {
-    Route::post('/user/store',[ApiController::class,'store']);
+  Route::middleware('auth:api')->group(function () { 
+    Route::post('/showProfile', [ApiController::class, 'showProfile']);
+    Route::put('/updateProfile', [ApiController::class, 'updateProfile']);
+  Route::post('/user/store',[ApiController::class,'store']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
   Route::get('/user/index', [ApiController::class, 'index']);

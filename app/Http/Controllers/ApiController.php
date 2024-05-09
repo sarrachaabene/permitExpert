@@ -13,6 +13,7 @@ use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerificationCodeNotification;
+
 /**
  * @OA\Schema(
  *     schema="User",
@@ -461,34 +462,110 @@ public function updateForSuperAdmin(Request $request, $id)
  * )
  */
 
-public function registerClient(Request $request, $email)
+ public function registerClient($email)
+ {
+     $user = User::where('email', $email)->first();
+     if ($user) {
+         $validator = Validator::make(request()->all(), [
+             'user_name' => ['required', 'string', 'max:255'],
+             'password' => ['required', 'string', 'min:8', 'confirmed'],
+             'numTel' => ['required', 'string', 'max:8']
+         ]);
+         if ($validator->fails()) {
+             return response()->json($validator->errors(), 402);
+         }
+          $user->user_name = request()->user_name;
+         $user->password = Hash::make(request()->password);
+         $user->numTel = request()->numTel;
+         $user->save();
+ 
+         $msg = 'Informations de l\'utilisateur mises à jour avec succès';
+         return response()->json(['Message' => $msg, 'user' => $user], 200);
+     } else {
+         $error = 'L\'utilisateur avec cet email n\'existe pas';
+         return response()->json(['error' => $error], 404);
+     }
+ }
+
+ public function updatePassword($email)
+ {
+     $user = User::where('email', $email)->first();
+      if ($user) {
+         $validator = Validator::make(request()->all(), [
+             'password' => ['required', 'string', 'min:8', 'confirmed'],
+         ]);
+          if ($validator->fails()) {
+             return response()->json($validator->errors(), 402);
+         }
+          if (empty(request()->password)) {
+             $error = 'Le champ de mot de passe ne peut pas être vide';
+             return response()->json(['error' => $error], 400);
+         }
+          $user->password = Hash::make(request()->password);
+         $user->save();
+          $msg = 'Mot de passe mis à jour avec succès';
+         return response()->json(['message' => $msg], 200);
+     } else {
+         $error = "L'utilisateur avec cet e-mail n'existe pas";
+         return response()->json(['error' => $error], 404);
+     }
+ }
+ 
+
+
+ public function showProfile()
+ {
+   try {
+     if (!Auth::check()) {
+       return response()->json(["error" => "Utilisateur non authentifié."], 401);
+     } 
+     $userId = Auth::id();
+     $user = User::where('id', $userId)->first(); 
+     if (!$user) {
+       return response()->json(["error" => "Utilisateur introuvable."], 404); 
+     }
+      $userData = [
+       "user_name" => $user->user_name,
+       "dateNaissance" => $user->dateNaissance,
+       "numTel" => $user->numTel,
+       "email" => $user->email
+     ];
+     return response()->json($userData, 200);
+   } catch (\Exception $e) {
+     return response()->json(["error" => "Une erreur s'est produite lors de la récupération des détails de l'utilisateur."], 500);
+   }
+ }
+
+ public function updateProfile()
 {
-    $user = User::where('email', $email)->first();
-    if ($user) {
-        $validator = Validator::make($request->all(), [
-            'user_name' => [
-                'required', 
-                'string', 
-                'max:255'
-            ],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'numTel' => ['required', 'string', 'max:8']
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 402);
+    try {
+        if (!Auth::check()) {
+            return response()->json(["error" => "Utilisateur non authentifié."], 401);
         }
-        $user->user_name = $request->user_name;
-        $user->password = Hash::make($request->password);
-        $user->numTel = $request->numTel;
+
+        $userId = Auth::id();
+        $user = User::findOrFail($userId);
+
+        $validator = Validator::make(request()->all(), [
+          'user_name' => 'required|string|max:255',
+          'dateNaissance' => 'required|date',
+          'numTel' => 'required|string|max:20',
+          'email' => 'required|email|max:255',
+      ]);
+      
+
+        if ($validator->fails()) {
+            return response()->json(["error" => "Données de mise à jour invalides.", "errors" => $validator->errors()], 400);
+        }
+
+        $user->fill(request()->only(['user_name', 'dateNaissance', 'numTel', 'email']));
         $user->save();
-        $msg = 'Informations de l\'utilisateur mises à jour avec succès';
-        return response()->json(['Message' => $msg, 'user' => $user], 200);
-    } else {
-        $error = 'L\'utilisateur avec cet email n\'existe pas';
-        return response()->json(['error' => $error], 404);
+
+        return response()->json(["message" => "Informations de l'utilisateur mises à jour avec succès."], 200);
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Une erreur s'est produite lors de la mise à jour des détails de l'utilisateur."], 500);
     }
 }
-
   /**
  * @OA\Get(
  *     path="/api/login",
@@ -555,7 +632,6 @@ public function registerClient(Request $request, $email)
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
       
       $msg="welcome";
-      // Return the token as a response
       return response()->json([ 'Message'=>$msg ,
                                 'access_token' => $accessToken,
                                 'email'=>Auth::user()->email,
@@ -571,17 +647,44 @@ public function registerClient(Request $request, $email)
           return response()->json(['error' => 'Cet email n\'existe pas.'], 404);
       }
       if($user->password==null){
-      $verificationCode = rand(1000, 9999); // Générer un code de vérification
+      $verificationCode = rand(1000, 9999); 
       $user->verification_code = $verificationCode;
       $user->save();
       $user->notify(new VerificationCodeNotification($verificationCode));
       return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
-     }
-      // Envoyer le code de vérification par email en utilisant la classe Mail de Laravel
-      //Mail::to($user->email)->send(new VerificationCodeNotification ($verificationCode));
+           }
       return response()->json(['error' => 'you have aslo password']);  
   }
+
+
+  public function verifyCode($email, $code)
+  {
+      if (empty($email) || empty($code)) {
+          return response()->json(['error' => 'Les paramètres sont vides.'], 400);
+      }      $user = User::where('email', $email)->first();
+      if (!$user) {
+          return response()->json(['error' => 'Cet email n\'existe pas.'], 404);
+      }      
+      if ($user->verification_code !== $code) {
+          return response()->json(['error' => 'Le code de vérification est incorrect.'], 400);
+      }  
+      return response()->json(['success' => 'Le code de vérification est correct.']);
+  }
   
+
+
+    public function checkEmailForPassword($email)
+  {
+      $user = User::where('email', $email)->first();
+      if (!$user) {
+          return response()->json(['error' => 'Cet email n\'existe pas.'], 404);
+      }
+      $verificationCode = rand(1000, 9999); 
+      $user->verification_code = $verificationCode;
+      $user->save();
+      $user->notify(new VerificationCodeNotification($verificationCode));
+      return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
+             }
   
 /* // Vérifier le code de vérification
 public function verifyCode(Request $request)

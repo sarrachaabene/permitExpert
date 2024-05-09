@@ -63,13 +63,12 @@ export default {
       allFieldsEmpty: false,
       invalidCodeMessage: '',
       successMessage: ''
+      
     };
   },
   mounted() {
-    // Récupération de l'e-mail depuis le stockage local
     const userEmail = localStorage.getItem('userEmail');
     console.log('Email récupéré:', userEmail);
-    // Vous pouvez ensuite utiliser userEmail comme nécessaire dans cette page
   },
   methods: {
     moveToNext(event, boxNumber) {
@@ -108,12 +107,11 @@ export default {
         axios.get(`/verifyCode/${email}/${code}`)
           .then(response => {
             if (response.data.success) {
-              // Stocker l'e-mail dans le stockage local pour la prochaine page
               localStorage.setItem('userEmail', email);
               
               this.successMessage = 'Le code de vérification est correct.';
               setTimeout(() => {
-                window.location.href = '/registerf';
+                window.location.href = '/changepassword';
               }, 5000);
             } else {
               this.invalidCodeMessage = 'Le code de vérification est incorrect.';

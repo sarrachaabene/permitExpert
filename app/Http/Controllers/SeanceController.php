@@ -271,6 +271,7 @@ class SeanceController extends Controller
     }
 }
 
+
      
       /**
  * @OA\Get(

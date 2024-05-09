@@ -14,11 +14,15 @@ import PageNotFound from './components/Page/PageNotFound.component.vue';
 import Profile from './components//Page/ProfilComponent.vue';
 import Code from './components//Page/CodeComponent.vue';
 import Verif from './components//Page/verifComponent.vue';
-
+import Veriforcode from './components//Page/VerifForCodeComponent.vue';
+import codeforpass from './components//Page/codeForPassword.vue'
 const routes = [
+
   { path: '/'        , component: LoginComponent },
   { path: '/dashbord', component: DashbordComponent },
   { path: '/verif', component: Verif },
+  { path: '/Veriforcode', component: Veriforcode },
+  { path: '/Veriforcodeforpass', component: codeforpass },
   { path: '/email', component: Code },
   { path: '/dashbord_Super_Admin', component: DashbordComponentS },
   { path: '/autoEcole', component: AutoEcoleComponent },

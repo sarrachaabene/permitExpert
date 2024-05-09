@@ -60,7 +60,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.get(`/checkEmail/${this.email}`);
+        const response = await axios.get(`/checkEmailForPassword/${this.email}`);
         if (response.data.error) {
           this.errorMessage = response.data.error;
           this.successMessage = '';
@@ -72,7 +72,7 @@ export default {
           // Stockage de l'e-mail dans le stockage local
           localStorage.setItem('userEmail', this.email);
           // Redirection vers la page /code
-          window.location.href = '/code';
+          window.location.href = '/codeforpassword';
         }
       } catch (error) {
         if (error.response.status === 404) {

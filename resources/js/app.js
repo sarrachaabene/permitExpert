@@ -12,6 +12,9 @@ import '@mdi/font/css/materialdesignicons.css';
 import VueApexCharts from "vue3-apexcharts";
 import CodeComponent from './components/Page/CodeComponent.vue';
 import VerifComponent from './components/Page/verifComponent.vue';
+import VerifforcodeComponent from './components/Page/VerifForCodeComponent.vue';
+import codeforpass from './components//Page/codeForPassword.vue'
+import password from './components//Page/ChangeComponent.vue'
 // Set up axios globally:
 window.axios = axios;
 // Configure the default headers for axios:
@@ -26,7 +29,6 @@ if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-// Create Vuetify instance
 const vuetify = createVuetify({
   components,
   directives
@@ -40,18 +42,16 @@ app.component('login-component', LoginComponent);
 app.component('register-component', RegisterComponent);
 app.component('code-component', CodeComponent);
 app.component('verif-component', VerifComponent);
-
+app.component('verif-for-code-component', VerifforcodeComponent);
+app.component('code-for-password-component', codeforpass);
+app.component('change-component', password);
 app.use(VueApexCharts);
-// Handle token expiration or invalid tokens:
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
       if (error.response?.status === 401) {
-          // Remove the token from local storage:
           localStorage.removeItem('token');
-          // Reset the axios Authorization header:
           axios.defaults.headers.common['Authorization'] = 'Bearer';
-          // Redirect the user to the login page:
           router.push({ name: 'login' });
       }
       return Promise.reject(error);
