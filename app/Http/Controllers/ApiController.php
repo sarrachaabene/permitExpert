@@ -671,18 +671,25 @@ public function updateForSuperAdmin(Request $request, $id)
   
 
 
-    public function checkEmailForPassword($email)
+  public function checkEmailForPassword($email)
   {
       $user = User::where('email', $email)->first();
       if (!$user) {
           return response()->json(['error' => 'Cet email n\'existe pas.'], 404);
       }
-      $verificationCode = rand(1000, 9999); 
+        $password = $user->password;
+  
+      if (empty($password)) {
+          return response()->json(['error' => 'Vous n\'avez pas de mot de passe.'], 400);
+      }
+  
+      $verificationCode = rand(1000, 9999);
       $user->verification_code = $verificationCode;
       $user->save();
       $user->notify(new VerificationCodeNotification($verificationCode));
       return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
-             }
+  }
+  
   
 /* // Vérifier le code de vérification
 public function verifyCode(Request $request)
