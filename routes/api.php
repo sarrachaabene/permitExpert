@@ -38,6 +38,7 @@ Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 Route::get('/checkEmail/{email}', [ApiController::class, 'checkEmail']);
 Route::get('/verifyCode/{email}/{code}', [ApiController::class, 'verifyCode']);
 Route::put('/updatePassword/{email}', [ApiController::class, 'updatePassword']);
+Route::get('/checkEmailForPassword/{email}', [ApiController::class, 'checkEmailForPassword']);
 
 
 Route::middleware('auth:api','role:superAdmin')->group(function () { 
