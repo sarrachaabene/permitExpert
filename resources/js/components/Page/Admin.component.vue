@@ -14,7 +14,7 @@
                   <div class="col">
                     <div class="row mt-4">
                       <div class="col-lg-4 order-lg-last">
-                        <input type="text" class="form-control" v-model="searchQuery" placeholder="Rechercher..." />
+                        <input type="text" class="form-control" v-model="searchQuery" placeholder="Rechercher par nom d'utilisateur..." />
                       </div>
                       <div class="col-lg-4 text-right">
                         <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" style="
@@ -28,29 +28,28 @@
                     </div>
                     <br />
                     <div class="table-responsive">
-                    <table class="table table-borded">
-                      <thead>
-                        <tr>
-                          <th scope="col">nom</th>
-                          <th scope="col">Numéro de téléphone</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(use) in user" :key="use.id">
-                          <td>{{ use.user_name }}</td>
-                          <td>{{ use.numTel }}</td>
-                          <td>{{ use.email }}</td>
-                          <td class="d-flex justify-content-center">
-  <a href="" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-success">Modifier</a>
-  <a href="" style="background-color: orangered; border-color: orangered; margin-left: 5px;" class="btn btn-danger">Supprimer</a>
-</td>
-                        </tr>
-
-                      </tbody>
-                    </table>
-</div>
+                      <table class="table table-borded">
+                        <thead>
+                          <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Numéro de téléphone</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(user) in filteredUsers" :key="user.id">
+                            <td>{{ user.user_name }}</td>
+                            <td>{{ user.numTel }}</td>
+                            <td>{{ user.email }}</td>
+                            <td class="d-flex justify-content-center">
+                              <a href="#" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-success" @click="showEditModal(user)">Modifier</a>
+                              <a href="#" @click="showDeleteConfirmation(user.id)" style="background-color: orangered; border-color: orangered; margin-left: 5px;" class="btn btn-danger">Supprimer</a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -60,51 +59,115 @@
       </div>
     </div>
   </div>
-  <!-- modal Ajouter auto ecole -->
-  <button type="button"></button>
 
+  <!-- Modal Ajout d'administrateur -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
+        <br>
         <div class="modal-header">
-          <h5 class="modal-title mx-auto" id="exampleModalLabel" style="font-weight: bold; margin-top: 30px">
-            Ajouter administrateur
-          </h5>
-          <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close">
-            <span class="fas fa-times fs--1"></span>
-          </button>
+          <h5 class="modal-title mx-auto" id="exampleModalLabel" style="font-weight: bold; margin-top: 30px">Ajouter un administrateur</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <br />
         <div class="modal-body">
-          <form action="" method="post">
-            <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1">Nom d'admin:</label>
-              <input name="nom auto ecole" class="form-control" id="exampleFormControlInput1" type="text"
-                placeholder="Nom d'auto école" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Numéro de telephone:</label>
-              <input name="adresse" class="form-control" id="exampleTextarea" placeholder="Adresse" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Email:</label>
-              <input name="nom admin" class="form-control" id="exampleTextarea" placeholder="Nom d'admin" />
-            </div>
-          </form>
+          <div class="form-group">
+            <label for="user_name">Nom d'utilisateur:</label>
+            <input type="text" class="form-control" id="user_name" v-model="newAdmin.user_name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" v-model="newAdmin.email">
+          </div>
+          <div class="form-group">
+            <label for="cin">CIN:</label>
+            <input type="text" class="form-control" id="cin" v-model="newAdmin.cin">
+          </div>
+          <div class="form-group">
+            <label for="numTel">Numéro de téléphone:</label>
+            <input type="text" class="form-control" id="numTel" v-model="newAdmin.numTel">
+          </div>
+          <div class="form-group">
+            <label for="dateNaissance">Date de naissance:</label>
+            <input type="date" class="form-control" id="dateNaissance" v-model="newAdmin.dateNaissance">
+          </div>
+          <!-- Affichage du message d'erreur -->
+          <div v-if="!isFormValid() && formSubmitted" class="alert alert-danger" role="alert">
+            Veuillez remplir tous les champs correctement.
+          </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="button" style="background-color: #9dcd5a; border-color: #9dcd5a">
-            Ajouter
-          </button>
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal"
-            style="background-color: #fa7f35; border-color: #fa7f35">
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35">
             Annuler
           </button>
+          <button type="button" class="btn btn-primary" @click="addAdmin" style="background-color: #9dcd5a; border-color: #9dcd5a">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Modification d'administrateur -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <br>
+          <h5 class="modal-title mx-auto" id="editModalLabel" style="font-weight: bold; margin-top: 30px ;text-align: center;">Modifier les informations de l'administrateur</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit_user_name">Nom d'utilisateur:</label>
+            <input type="text" class="form-control" id="edit_user_name" v-model="editedUser.user_name">
+          </div>
+          <div class="form-group">
+            <label for="edit_email">Email:</label>
+            <input type="email" class="form-control" id="edit_email" v-model="editedUser.email">
+          </div>
+          <div class="form-group">
+            <label for="edit_cin">CIN:</label>
+            <input type="text" class="form-control" id="edit_cin" v-model="editedUser.cin">
+          </div>
+          <div class="form-group">
+            <label for="edit_numTel">Numéro de téléphone:</label>
+            <input type="text" class="form-control" id="edit_numTel" v-model="editedUser.numTel">
+          </div>
+          <div class="form-group">
+            <label for="edit_dateNaissance">Date de naissance:</label>
+            <input type="date" class="form-control" id="edit_dateNaissance" v-model="editedUser.dateNaissance">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" style="background-color: #9dcd5a; border-color: #9dcd5a" class="btn btn-primary" @click="updateAdmin">Enregistrer </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmation de suppression -->
+  <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmation de suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer cet administrateur ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" style="
+            background-color: #9dcd5a;
+            border-color: #9dcd5a;
+            margin-right: 5px;
+          " @click="confirmDeleteUser">Supprimer</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 const USER_API_BASE_URL = "http://localhost:8000/api/user";
@@ -112,7 +175,24 @@ const USER_API_BASE_URL = "http://localhost:8000/api/user";
 export default {
   data() {
     return {
-      user: [],
+      users: [],
+      newAdmin: {
+        user_name: '',
+        numTel: '',
+        email: '',
+        cin: '',
+        dateNaissance: ''
+      },
+      editedUser: {
+        user_name: '',
+        numTel: '',
+        email: '',
+        cin: '',
+        dateNaissance: ''
+      },
+      searchQuery: '',
+      selectedUserId: null,
+      formSubmitted: false
     };
   },
   mounted() {
@@ -134,13 +214,87 @@ export default {
     },
     handleSuccess(data) {
       console.log("Data fetched successfully:", data);
-      this.user = data;
-      console.log("Data fetched successfully:", this.use);
-
+      this.users = data;
+      console.log("Data fetched successfully:", this.users);
     },
     handleError(error) {
       console.error("Error fetching data from the backend:", error);
     },
+    async addAdmin() {
+      this.formSubmitted = true;
+      if (this.isFormValid()) {
+        try {
+          const response = await axios.post(`${USER_API_BASE_URL}/storeForSuperAdmin`, this.newAdmin);
+          console.log(response.data); 
+          this.fetchData(); 
+          this.newAdmin = { user_name: '', numTel: '', email: '', cin: '', dateNaissance: '' };
+          $('#exampleModal').modal('hide'); 
+          $('body').removeClass('modal-open'); 
+          $('.modal-backdrop').remove(); 
+        } catch (error) {
+          console.error("Error adding admin:", error);
+        }
+      }
+    },
+    async showEditModal(user) {
+      this.editedUser = { ...user };
+      $('#editModal').modal('show');
+    },
+    async updateAdmin() {
+      try {
+        const response = await axios.put(`${USER_API_BASE_URL}/updateForSuperAdmin/${this.editedUser.id}`, this.editedUser);
+        console.log(response.data);
+        this.fetchData();
+        $('#editModal').modal('hide');
+      } catch (error) {
+        console.error("Error updating admin:", error);
+      }
+    },
+    isFormValid() {
+      return (
+        this.newAdmin.user_name.trim() !== '' &&
+        this.newAdmin.email.trim() !== '' &&
+        this.isValidEmail(this.newAdmin.email) &&
+        this.newAdmin.cin.trim() !== '' &&
+        this.newAdmin.numTel.trim() !== '' &&
+        this.newAdmin.dateNaissance.trim() !== ''
+      );
+    },
+    isValidEmail(email) {
+      const emailRegex = /\S+@\S+\.\S+/;
+      return emailRegex.test(email);
+    },
+    async showDeleteConfirmation(id) {
+      this.selectedUserId = id;
+      $('#deleteConfirmationModal').modal('show');
+    },
+    async confirmDeleteUser() {
+      try {
+        const response = await axios.delete(`${USER_API_BASE_URL}/deleteForSuperAdmin/${this.selectedUserId}`);
+        console.log(response.data); 
+        this.fetchData(); 
+        $('#deleteConfirmationModal').modal('hide');
+      } catch (error) {
+        console.error("Error deleting user:", error);
+      }
+    }
   },
+  computed: {
+    filteredUsers() {
+      return this.users.filter(user => {
+        return user.user_name.toLowerCase().includes(this.searchQuery.toLowerCase());
+      });
+    }
+  },
+  watch: {
+    formSubmitted(value) {
+      if (value) {
+        setTimeout(() => {
+          this.formSubmitted = false;
+        }, 3000);
+      }
+    }
+  }
 };
 </script>
+

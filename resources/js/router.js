@@ -16,6 +16,7 @@ import Code from './components//Page/CodeComponent.vue';
 import Verif from './components//Page/verifComponent.vue';
 import Veriforcode from './components//Page/VerifForCodeComponent.vue';
 import codeforpass from './components//Page/codeForPassword.vue'
+import ressource from './components//Page/Ressource.vue'
 const routes = [
 
   { path: '/'        , component: LoginComponent },
@@ -36,6 +37,7 @@ const routes = [
   { path: '/admin', component: Administrateur },
   { path: '/:pathMatch(.*)*', component: PageNotFound },
   { path: '/utilisateur', component: UtilisateurComponent },
+  { path: '/ressource', component: ressource },
 ];
 const router = createRouter({
   history: createWebHistory(),

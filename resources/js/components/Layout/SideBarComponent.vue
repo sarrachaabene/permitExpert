@@ -62,7 +62,14 @@
               <span class="hide-menu">Demandes inscriptions</span>
             </router-link>
           </li>
-
+          <li class="sidebar-item"  v-if="userRole">
+            <router-link class="sidebar-link" to="/ressource" aria-expanded="false">
+              <span>
+                <i class="fas fa-graduation-cap"></i>
+              </span>
+              <span class="hide-menu">Ressources educatives</span>
+            </router-link>
+          </li>
           <li class="sidebar-item" v-if="!userRole">
             <router-link class="sidebar-link" to="/utilisateur" aria-expanded="false">
               <span>
@@ -103,7 +110,7 @@
           <li class="sidebar-item">
             <router-link class="sidebar-link" to="/profile" aria-expanded="false">
               <span>
-                <i class="ti ti-id-badge"></i>
+                <i class="ti ti-settings"></i>
               </span>
               <span class="hide-menu">Paramétres</span>
             </router-link>

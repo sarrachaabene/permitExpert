@@ -186,11 +186,12 @@ public function storeForSuperAdmin(Request $request)
             'user_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'string|min:8',
-            'role' => 'required|string|in:admin',
             'cin' => 'required|string|max:255',
             'numTel' => 'required|string|max:255',
             'dateNaissance' => 'required|date',
         ]);
+
+        $validatedData['role'] = $request->input('role', 'admin');
         $user = User::create($validatedData);
         $defaultRole = $validatedData['role']; 
         $user->assignRole($defaultRole);
@@ -334,12 +335,9 @@ public function updateForSuperAdmin(Request $request, $id)
         $validatedData = $request->validate([
             'user_name' => 'string|max:255',
             'email' => 'string|email|max:255|unique:users,email,' . $id,
-            'password' => 'string|min:8',
-            'role' => 'string|in:admin,candidat,moniteur,secretaire',
             'cin' => 'string|max:255',
             'numTel' => 'string|max:255',
             'dateNaissance' => 'date',
-            'cat_permis' => ($request->role === 'candidat') ? 'required|string|in:Permis_A1,Permis_A,Permis_B,Permis_B_E,Permis_C,Permis_C_E,Permis_D,Permis_D_E,Permis_D1,Permis_H' : 'nullable', // Validation conditionnelle pour cat_permis
         ]);
         $user = User::find($id);
         if (!$user) {
@@ -653,7 +651,7 @@ public function updateForSuperAdmin(Request $request, $id)
       $user->notify(new VerificationCodeNotification($verificationCode));
       return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
            }
-      return response()->json(['error' => 'you have aslo password']);  
+      return response()->json(['error' => 'vous avez deja un mot de passe'],400);  
   }
 
 

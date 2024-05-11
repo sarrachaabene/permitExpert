@@ -113,12 +113,10 @@ class RessourceEducativeController extends Controller
              $validatedData = $request->validate([
                  'titreR' => 'required|string',
                  'descriptionR' => 'required|string',
-                 'typeR' => 'required|string',
-                 'dateD' => 'date',
+                 'link'=>'required|string',
              ]);
-                  $existingRessource = RessourceEducative::where('titreR', $validatedData['titreR'])
-                 ->where('descriptionR', $validatedData['descriptionR'])
-                 ->where('typeR', $validatedData['typeR'])
+                  $existingRessource = RessourceEducative::where('link', $validatedData['link'])
+            
                  ->first();
              if ($existingRessource) {
                  return response()->json(["error" => "Une ressource éducative similaire existe déjà."], 400);
@@ -126,7 +124,7 @@ class RessourceEducativeController extends Controller
                   $ressourceEducative = RessourceEducative::create([
                  'titreR' => $validatedData['titreR'],
                  'descriptionR' => $validatedData['descriptionR'],
-                 'typeR' => $validatedData['typeR'],
+                 'link' => $validatedData['link'],
                  'dateD' => isset($validatedData['dateD']) ? $validatedData['dateD'] : now(),
              ]);
              return response()->json($ressourceEducative, 200);
@@ -222,10 +220,9 @@ class RessourceEducativeController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'titreR' => 'string',
-                'descriptionR' => 'string',
-                'typeR' => 'string',
-                'dateD' => 'date',
+              'titreR' => 'required|string',
+              'descriptionR' => 'required|string',
+              'link'=>'required|string',
             ]);
                 $ressourceEducative = RessourceEducative::find($id);
                 if ($ressourceEducative) {

@@ -21,6 +21,11 @@ Route::get('/code', function () {
   return view('code');
 });
 
+Route::get('/ressource', function () {
+  //if(Auth::check())
+  return view('welcome');
+});
+
 Route::get('/registerf', function () {
   //if(Auth::check())
   return view('registerfinal');

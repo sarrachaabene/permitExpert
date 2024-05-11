@@ -13,6 +13,7 @@ class RessourceEducative extends Model
       'descriptionR',
       'typeR',
       'dateD',
+      'link',
 ];
 
 public function users()

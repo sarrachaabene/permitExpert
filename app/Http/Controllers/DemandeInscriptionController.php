@@ -88,7 +88,19 @@ class DemandeInscriptionController extends Controller
             return response()->json("Erreur lors de la récupération des demandes d'inscription: " . $e->getMessage(), 500);
         }
     }
-    
+
+    public function show($id)
+{
+    try {
+        if (!DemandeInscription::where('id', $id)->exists()) {
+            return response()->json("La demande d'inscription n'existe pas", 404);
+        }
+                $demandeInscription = DemandeInscription::findOrFail($id);
+        return response()->json($demandeInscription, 200);
+    } catch (\Exception $e) {
+        return response()->json("Erreur lors de la récupération de la demande d'inscription: " . $e->getMessage(), 500);
+    }
+}  
 /**
  * @OA\Post(
  *      path="/api/demandeInscript/store",
@@ -137,6 +149,8 @@ class DemandeInscriptionController extends Controller
          return response()->json("Erreur lors de la création de la demande d'inscription: " . $e->getMessage(), 500);
      }
  }
+
+
 public function accepteDemande($idDemande){
   $demande = DemandeInscription::find($idDemande);
   if (!$demande) {
@@ -186,5 +200,4 @@ public function accepteDemande($idDemande){
     //  changes status to false ;
     // send email to inform
   }
-  public function register($request){}
 }

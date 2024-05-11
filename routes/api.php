@@ -36,7 +36,6 @@ use App\Models\Notification;
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 Route::get('/checkEmail/{email}', [ApiController::class, 'checkEmail']);
-Route::get('/checkEmailForPassword/{email}', [ApiController::class, 'checkEmailForPassword']);
 Route::get('/verifyCode/{email}/{code}', [ApiController::class, 'verifyCode']);
 Route::put('/updatePassword/{email}', [ApiController::class, 'updatePassword']);
 

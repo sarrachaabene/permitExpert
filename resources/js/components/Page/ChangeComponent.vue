@@ -25,11 +25,11 @@
                       placeholder="Confirmer le mot de passe" autocomplete="new-password">
                   </div>
                   <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
-                  {{ errorMessage }}
-                </div>
-                <div v-if="successMessage" class="alert alert-success mt-3" role="alert">
-                  {{ successMessage }}
-                </div>
+                    {{ errorMessage }}
+                  </div>
+                  <div v-if="successMessage" class="alert alert-success mt-3" role="alert">
+                    {{ successMessage }}
+                  </div>
                   <br><br>
                   <div class="text-center">
                     <button type="submit"
@@ -37,7 +37,6 @@
                       class="btn btn-danger">Continuer</button>
                   </div>
                 </form>
-
               </div>
             </div>
           </div>
@@ -66,12 +65,27 @@ export default {
   methods: {
     updatePassword() {
       if (!this.newPassword || !this.confirmPassword) {
-        this.errorMessage = 'Veuillez remplir tous les champs';
+  this.errorMessage = 'Veuillez remplir tous les champs';
+  setTimeout(() => {
+    this.errorMessage = '';
+  }, 3000);
+  return;
+}
+
+      
+      if (this.newPassword.length < 8) {
+        this.errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 3000); 
         return;
       }
       
       if (this.newPassword !== this.confirmPassword) {
         this.errorMessage = 'Les mots de passe ne correspondent pas';
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 3000); 
         return;
       }
 
@@ -85,7 +99,8 @@ export default {
           this.successMessage = response.data.message;
           setTimeout(() => {
             this.successMessage = '';
-          }, 5000); // Efface le message après 5 secondes
+            window.location.href = '/';
+          }, 3000); 
         })
         .catch(error => {
           if (error.response) {
@@ -95,7 +110,7 @@ export default {
           }
           setTimeout(() => {
             this.errorMessage = '';
-          }, 5000); // Efface le message après 5 secondes
+          }, 3000); 
         });
     }
   }
