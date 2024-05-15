@@ -23,9 +23,7 @@ return new class extends Migration
     public function down(): void
     {
       Schema::table('users', function (Blueprint $table) {
-        // Drop the foreign key constraint
         $table->dropForeign(['notification_id']);
-        // Drop the auto_ecole_id column
         $table->dropColumn('notification_id');
     });
     }

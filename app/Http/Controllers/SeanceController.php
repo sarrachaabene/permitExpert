@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Seance;
 use App\Models\User;
@@ -84,17 +82,22 @@ class SeanceController extends Controller
 
       public function index()
       {
+          $adminId = Auth::id(); 
+          $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+          
           try {
-              $seances = Seance::all();
-                    if ($seances->isEmpty()) {
-                  return response()->json(["error" => "Aucune séance trouvée."], 404);
+              $seances = Seance::where('auto_ecole_id', $adminAutoEcoleId)->get();
+      
+              if ($seances->isEmpty()) {
+                  return response()->json(["error" => "Aucune séance trouvée pour cette auto-école."], 404);
               }
-                    return response()->json($seances, 200);
+      
+              return response()->json($seances, 200);
           } catch (\Exception $e) {
               $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
               return response()->json(["error" => $error], 500);
           }
-      }  
+      }
 /**
  * @OA\Post(
  *      path="/api/seance/store",
@@ -120,15 +123,18 @@ class SeanceController extends Controller
     // TODO: Add validation and error handling verify they  are in the database and all in the same autoecoles
     public function store(Request $request)
     {
+        $adminId = Auth::id(); 
+        $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+    
         try {
             $validatedData = $request->validate([
                 'type' => 'required|string|in:code,circuit,parc',
                 'heureD' => 'required|date_format:H:i',
                 'heureF' => 'required|date_format:H:i|after:heureD',
                 'dateS' => 'required|date',
-                'moniteur_id' => 'required|exists:users,id,role,moniteur',
-                'candidat_id' => 'required|exists:users,id,role,candidat',
-                'vehicule_id' => 'required|exists:vehicules,id',
+                'moniteur_id' => 'required|exists:users,id,role,moniteur,auto_ecole_id,'.$adminAutoEcoleId,
+                'candidat_id' => 'required|exists:users,id,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
+                'vehicule_id' => 'required|exists:vehicules,id,auto_ecole_id,'.$adminAutoEcoleId,
             ]);
                 $existingSeance = Seance::where('moniteur_id', $validatedData['moniteur_id'])
                 ->where('candidat_id', $validatedData['candidat_id'])
@@ -139,6 +145,7 @@ class SeanceController extends Controller
                         ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
                 })
                 ->exists();
+    
             if ($existingSeance) {
                 return response()->json(["error" => "Il existe déjà une séance planifiée pour ce moniteur, candidat et véhicule à ce moment."], 400);
             }
@@ -150,13 +157,16 @@ class SeanceController extends Controller
                 'moniteur_id' => $validatedData['moniteur_id'],
                 'candidat_id' => $validatedData['candidat_id'],
                 'vehicule_id' => $validatedData['vehicule_id'],
+                'auto_ecole_id' => $adminAutoEcoleId,
             ]);
+    
             return response()->json($seance, 200);
         } catch (\Exception $e) {
             $error = "Erreur lors de la création de la séance: " . $e->getMessage();
             return response()->json(["error" => $error], 500);
         }
     }
+    
   /**
  * @OA\Get(
  *      path="/api/seance/show/{id}",
@@ -188,6 +198,7 @@ class SeanceController extends Controller
     // TODO: 404 not found
     public function show($id)
     {
+      
         try {
             $seance = Seance::find($id);
                 if (!$seance) {
@@ -366,7 +377,7 @@ class SeanceController extends Controller
     }
 
 //Affichage pour Moniteur
-    public function ShowSeanceForMoniteur($date) // Utilisez le même nom pour le paramètre que celui défini dans la route
+    public function ShowSeanceForMoniteur($date) 
     {
         try {
             if (!Auth::check()) {
@@ -375,7 +386,7 @@ class SeanceController extends Controller
             
             $moniteurId = Auth::id();
             $seances = Seance::where('moniteur_id', $moniteurId)
-                ->whereDate('dateS', $date) // Utilisation de whereDate pour comparer uniquement les parties de date
+                ->whereDate('dateS', $date) 
                 ->get();
     
             if ($seances->isEmpty()) {

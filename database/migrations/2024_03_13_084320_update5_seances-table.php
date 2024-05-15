@@ -13,13 +13,10 @@ return new class extends Migration
     {
       Schema::table('seances', function (Blueprint $table) {
 
-           // Add the candidat_id column
            $table->unsignedBigInteger('candidat_id');
            $table->unsignedBigInteger('moniteur_id');
-           // Add foreign key constraint
            $table->foreign('candidat_id')->references('id')->on('users');
    
-           // Add foreign key constraint for moniteur_id
            $table->foreign('moniteur_id')->references('id')->on('users');
       });
     }

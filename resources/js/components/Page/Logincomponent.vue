@@ -102,7 +102,7 @@ export default {
               if (res.data.role == "superAdmin") {
                 window.location.href = '/dashbord_Super_Admin';
 
-              } else if ((res.data.role == "admin")) {
+              } else if (res.data.role === "admin" || res.data.role === "secretaire"){
                 window.location.href = '/dashbord';
               } else {
                 this.message = 'Échec de la connexion. Veuillez vérifier vos informations d\'identification.';

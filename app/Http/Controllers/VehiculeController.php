@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Vehicule;
+use App\Models\User;
+
  /**
      * @OA\Schema(
      *     schema="Vehicule",
@@ -51,36 +53,43 @@ class VehiculeController extends Controller
     // TODO: error handling
     public function index()
     {
+        $adminId = Auth::id(); 
+        $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+        
         try {
-            $vehicules = Vehicule::get();
+            $vehicules = Vehicule::where('auto_ecole_id', $adminAutoEcoleId)->get();
     
             if ($vehicules->isEmpty()) {
-                return response()->json("Aucun véhicule trouvé.", 404);
+                return response()->json("Aucun véhicule trouvé pour cette auto-école.", 404);
             } 
+    
             return response()->json($vehicules, 200);
         } catch (\Exception $e) {
             $error = "Erreur lors de la récupération des véhicules: " . $e->getMessage();
             return response()->json(["error" => $error], 500);
         }
-    }   
-    public function CountVehicule()
-{
-    try {
-        $nombreDeVehicules = Vehicule::count();
-
-        if ($nombreDeVehicules === 0) {
-            return response()->json("Aucun véhicule trouvé.", 404);
-        } 
-
-        return response()->json([
-            "nombre_de_vehicules" => $nombreDeVehicules
-        ], 200);
-    } catch (\Exception $e) {
-        $error = "Erreur lors de la récupération des véhicules: " . $e->getMessage();
-        return response()->json(["error" => $error], 500);
     }
-}  
-
+    
+    public function CountVehicule()
+    {
+        $adminId = Auth::id(); 
+        $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+        
+        try {
+            $nombreDeVehicules = Vehicule::where('auto_ecole_id', $adminAutoEcoleId)->count();
+    
+            if ($nombreDeVehicules === 0) {
+                return response()->json("Aucun véhicule trouvé pour cette auto-école.", 404);
+            } 
+    
+            return response()->json([
+                "nombre_de_vehicules" => $nombreDeVehicules
+            ], 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des véhicules: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
 
   /**
  * @OA\Post(
@@ -116,6 +125,8 @@ class VehiculeController extends Controller
      // TODO: Add validation and error handling
      public function store(Request $request)
      {
+      $adminId = Auth::id(); 
+      $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
          try {
              $validatedData = $request->validate([
                  'immatricule' => 'required|unique:vehicules',
@@ -123,6 +134,8 @@ class VehiculeController extends Controller
                  'marque' => 'required',
                  'typeV' => ['required', \Illuminate\Validation\Rule::in(['voiture', 'moto', 'camion'])],
              ]);
+
+             $validatedData['auto_ecole_id'] = $adminAutoEcoleId; 
                   $vehicule = Vehicule::create($validatedData);
              if ($vehicule) {
                  return response()->json($vehicule, 200);

@@ -1,13 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Examen;
 use App\Models\User;
 use App\Models\Vehicule;
 use Illuminate\Support\Facades\Auth;
-
 /**
  * @OA\Schema(
  *     schema="Examen",
@@ -62,19 +59,22 @@ class ExamenController extends Controller
  *      ),
  * )
  */
+
 public function index()
-{
+{    $adminId = Auth::id(); 
+
     try {
-        $examens = Examen::get();
-        
+        $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+                $examens = Examen::where('auto_ecole_id', $adminAutoEcoleId)->get();
         if ($examens->isEmpty()) {
-            return response()->json(["message" => "Aucun examen trouvé"], 404);
+            return response()->json(["message" => "Aucun examen trouvé pour cette auto-école"], 404);
         }      
         return response()->json($examens, 200);
     } catch (\Exception $e) {
         return response()->json(["error" => "Erreur lors de la récupération des examens: " . $e->getMessage()], 500);
     }
 }
+
 
 /**
  * @OA\Post(
@@ -107,16 +107,20 @@ public function index()
  *      ),
  * )
  */
+
 public function store(Request $request)
 {
+    $adminId = Auth::id(); 
+    $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+    
     try {
         $validatedData = $request->validate([
             'type' => 'required|string',
             'heureD' => 'required|date_format:H:i',
             'heureF' => 'required|date_format:H:i|after:heureD',
             'dateE' => 'required|date',
-            'user_id' => 'required|exists:users,id',
-            'vehicule_id' => 'required|exists:vehicules,id',
+            'user_id' => 'required|exists:users,id,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
+            'vehicule_id' => 'required|exists:vehicules,id,auto_ecole_id,'.$adminAutoEcoleId,
         ]);
         $existingExamen = Examen::where('user_id', $validatedData['user_id'])
                                 ->where('dateE', $validatedData['dateE'])
@@ -125,6 +129,7 @@ public function store(Request $request)
                                           ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
                                 })
                                 ->exists();
+
         if ($existingExamen) {
             return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
         }
@@ -135,6 +140,7 @@ public function store(Request $request)
                                                   ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
                                         })
                                         ->exists();
+
         if ($existingExamenVehicule) {
             return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
         }
@@ -145,13 +151,16 @@ public function store(Request $request)
             'dateE' => $validatedData['dateE'],
             'user_id' => $validatedData['user_id'],
             'vehicule_id' => $validatedData['vehicule_id'],
+            'auto_ecole_id' => $adminAutoEcoleId,
         ]);
+
         return response()->json($examen, 200);
         
     } catch (\Exception $e) {
         return response()->json(["error" => "Erreur lors de la création de l'examen: " . $e->getMessage()], 500);
     }
 }
+
   /**
  * @OA\Get(
  *      path="/api/Examen/show/{id}",

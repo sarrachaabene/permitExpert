@@ -38,7 +38,7 @@ export default {
       window.location.href = '/dashbord_Super_Admin';
     }
     console.log("Component mounted.");
-    this.fetchData();
+    //this.fetchData();
   },
   name: "App",
   // Declaring component and its directives

@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DemandeInscription;
+use App\Models\User;
+use App\Models\Role; 
+use App\Models\AutoEcole;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\AccepterDemande;
+use App\Notifications\RefuserDemande;
 
 /**
  * @OA\Schema(
@@ -125,79 +131,83 @@ class DemandeInscriptionController extends Controller
  */
 
  public function store(Request $request)
- {
-     $validatedData = $request->validate([
-         'nomEcole' => 'required|string',
-         'adresseEcole' => 'required|string',
-         'descriptionEcole' => 'required|string',
-         'nomA' => 'required|string',
-         'prenomA' => 'required|string',
-         'emailA' => 'required|email',
-         'cin' => 'required|string',
-         'numTel' => 'required|string',
-         'dateNaissance' => 'required|date',
-         'status' => 'string',
-     ]);
-     try {
-         $demandeInscription = DemandeInscription::create($validatedData);
-          if ($demandeInscription) {
-             return response()->json($demandeInscription, 200);
-         } else {
-             return response()->json("La demande d'inscription n'a pas été créée", 400);
-         }
-     } catch (\Exception $e) {
-         return response()->json("Erreur lors de la création de la demande d'inscription: " . $e->getMessage(), 500);
-     }
- }
+{
+    $validatedData = $request->validate([
+        'nomEcole' => 'required|string',
+        'aderesseEcole' => 'required|string',
+        'descriptionEcole' => 'required|string',
+        'user_nameA' => 'required|string',
+        'emailA' => 'required|email',
+        'cin' => 'required|string',
+        'numTel' => 'required|string',
+        'dateNaissance' => 'required|date',
+        'status' => 'string',
+    ]);
+
+    try {
+        $demandeInscription = DemandeInscription::create($validatedData);
+        if ($demandeInscription) {
+            return response()->json($demandeInscription, 201); // Utiliser le code de statut 201 pour "Created"
+        } else {
+            return response()->json("La demande d'inscription n'a pas été créée", 400);
+        }
+    } catch (\Exception $e) {
+        return response()->json("Erreur lors de la création de la demande d'inscription: " . $e->getMessage(), 500);
+    }
+}
 
 
-public function accepteDemande($idDemande){
+ public function accepteDemande($idDemande, Request $request) {
+  $demande = DemandeInscription::find($idDemande);
+    if (!$demande) {
+      return response()->json("Demande not found", 404);
+  }
+    $demande->status = 'confirmee';
+  $demande->save();
+    $admin = User::create([
+      'user_name' => $demande->user_nameA,
+      'email' => $demande->emailA,
+      'cin' => $demande->cin,
+      'numTel' => $demande->numTel,
+      'dateNaissance' => $demande->dateNaissance,
+      'role' => 'admin'
+  ]);
+  $defaultRole = $request->input('role', 'admin'); 
+  $admin->assignRole($defaultRole);
+    $autoEcole = AutoEcole::create([
+      'nom' => $demande->nomEcole,
+      'adresse' => $demande->aderesseEcole,
+      'description' => $demande->descriptionEcole,
+  ]);
+    $admin->autoEcole()->associate($autoEcole);
+  $admin->save();
+    $admin->notify(new AccepterDemande('Votre demande a été acceptée.'));
+    $demande->delete();
+    return response()->json("Demande accepted successfully", 200);
+}
+
+
+
+public function refuseDemande($idDemande) {
   $demande = DemandeInscription::find($idDemande);
   if (!$demande) {
       return response()->json("Demande not found", 404);
   }
-  $demande->status = true;
-  $demande->save();
-  $admin = User::create([
-       'user_name'=>$demande->nomA,
-      'email' => $demande->emailA,
-      'cin' => $demande->cin,
-      'numTel'=>$demande->numTel,
-      'dateNaissance'=>$demande->dateNaissance,
-  ]);
-  $autoEcole = AutoEcole::create([
-      'nom' => $demande->nomEcole,
-      'adresse' => $demande->adresseEcole,
-      'description' => $demande->descriptionEcole,
-  ]);
-  $admin->autoEcole()->associate($autoEcole);
-  $admin->save();
-  return response()->json("Demande accepted successfully", 200);
+  $user = User::create([
+    'user_name' => $demande->user_nameA,
+    'email' => $demande->emailA,
+    'cin' => $demande->cin,
+    'numTel' => $demande->numTel,
+    'dateNaissance' => $demande->dateNaissance,
+]);
+$demande->status = 'refusee';
+
+
+   $demande->save();
+  $user->save();
+  $user->notify(new RefuserDemande('Votre demande a été refusée.'));
+  return response()->json("Demande refusée successfully", 200);
 }
-       
-    public function Refuser($id) {
-  /*  $seance = Seance::find($id);
-          if (!$seance) {
-        $msg = "seance not found";
-        return response()->json($msg, 404);
-    }
-
-    if ($seance->delete()) {
-        return response()->json("seance deleted successfully", 200);
-    } else {
-        return response()->json("seance to delete permis", 500);*/
-        //refuser fait rien juste les donneé reste 
-    }
 
 
-  public function accepterDemande($idDemande) {
-    // find and accept demande
-    //  changes status to true ;
-    // send email to inform
-  }
-  public function refuseDemande($idDemande) {
-    // find and refuse demande
-    //  changes status to false ;
-    // send email to inform
-  }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
@@ -97,19 +97,30 @@ public function showNotificationsByReceptientId()
     try {
         if (!Auth::check()) {
             return response()->json(["error" => "Utilisateur non authentifié."], 401);
-        }
+        }  
         $userId = Auth::id();
-        $notifications = Notification::where('receptient_msg', $userId)->get();
-        
+        $notifications = Notification::where('receptient_msg', $userId)->get();    
         if ($notifications->isEmpty()) {
             return response()->json(["error" => "Aucune notification trouvée pour le destinataire spécifié."], 404);
-        }        
-        return response()->json($notifications, 200);
+        }
+                $notificationsDetails = [];
+        foreach ($notifications as $notification) {
+            $senderDetails = User::find($notification->sender_msg);
+            $notificationDetails = [
+                "id" => $notification->id,
+                "id_user"=>$notification->sender_msg,
+                "message_description" => $notification->message_description,
+                "sender_name" => $senderDetails ? $senderDetails->user_name : "Utilisateur supprimé",
+            ];
+            $notificationsDetails[] = $notificationDetails;
+        }  
+        return response()->json($notificationsDetails, 200);
     } catch (\Exception $e) {
         $error = "Erreur lors de la récupération des notifications: " . $e->getMessage();
         return response()->json(["error" => $error], 500);
     }
 }
+
 /**
  * @OA\Get(
  *      path="/api/Notification/show/{id}",

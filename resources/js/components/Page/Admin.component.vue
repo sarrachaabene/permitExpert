@@ -59,7 +59,6 @@
       </div>
     </div>
   </div>
-
   <!-- Modal Ajout d'administrateur -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -71,7 +70,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="user_name">Nom d'utilisateur:</label>
+            <label for="user_name">Nom d'administrateur:</label>
             <input type="text" class="form-control" id="user_name" v-model="newAdmin.user_name">
           </div>
           <div class="form-group">
@@ -90,7 +89,6 @@
             <label for="dateNaissance">Date de naissance:</label>
             <input type="date" class="form-control" id="dateNaissance" v-model="newAdmin.dateNaissance">
           </div>
-          <!-- Affichage du message d'erreur -->
           <div v-if="!isFormValid() && formSubmitted" class="alert alert-danger" role="alert">
             Veuillez remplir tous les champs correctement.
           </div>
@@ -119,10 +117,11 @@
             <label for="edit_user_name">Nom d'utilisateur:</label>
             <input type="text" class="form-control" id="edit_user_name" v-model="editedUser.user_name">
           </div>
-          <div class="form-group">
-            <label for="edit_email">Email:</label>
-            <input type="email" class="form-control" id="edit_email" v-model="editedUser.email">
-          </div>
+          <div class="form-group" v-if="showEmailField">
+  <label for="email">Email:</label>
+  <input type="email" class="form-control" id="email" v-model="newAdmin.email">
+</div>
+
           <div class="form-group">
             <label for="edit_cin">CIN:</label>
             <input type="text" class="form-control" id="edit_cin" v-model="editedUser.cin">
@@ -284,6 +283,7 @@ export default {
       return this.users.filter(user => {
         return user.user_name.toLowerCase().includes(this.searchQuery.toLowerCase());
       });
+  
     }
   },
   watch: {

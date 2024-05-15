@@ -19,6 +19,7 @@ class Seance extends Model
       'moniteur_id',
       'candidat_status',
       'moniteur_status',
+      'auto_ecole_id',
 
 ];
   public function user()

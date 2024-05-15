@@ -39,6 +39,7 @@ Route::get('/checkEmail/{email}', [ApiController::class, 'checkEmail']);
 Route::get('/verifyCode/{email}/{code}', [ApiController::class, 'verifyCode']);
 Route::put('/updatePassword/{email}', [ApiController::class, 'updatePassword']);
 Route::get('/checkEmailForPassword/{email}', [ApiController::class, 'checkEmailForPassword']);
+Route::post('/demandeInscript/store',[DemandeInscriptionController::class,'store']);
 
 
 Route::middleware('auth:api','role:superAdmin')->group(function () { 
@@ -62,14 +63,14 @@ Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::delete('/ressourceeducative/delete/{id}',[RessourceEducativeController::class,'delete']);
   Route::get('/demandeInscript/index',[DemandeInscriptionController::class,'index']);
   Route::get('/demandeInscript/show/{id}',[DemandeInscriptionController::class,'show']);
-  Route::post('/demandeInscript/store',[DemandeInscriptionController::class,'store']);
-  Route::post('/demandeInscript/accepter{idDemande}',[DemandeInscriptionController::class,'  accepteDemande']);
+  Route::post('/demandeInscript/accepter/{idDemande}', [DemandeInscriptionController::class, 'accepteDemande']);
+  Route::post('/demandeInscript/refuseDemande/{idDemande}', [DemandeInscriptionController::class, 'refuseDemande']);
 });
 
 //  Route::middleware('auth:api','role:admin')->group(function () { 
   Route::middleware('auth:api')->group(function () { 
     Route::post('/showProfile', [ApiController::class, 'showProfile']);
-    Route::put('/updateProfile', [ApiController::class, 'updateProfile']);
+    Route::post('/updateProfile', [ApiController::class, 'updateProfile']);
   Route::post('/user/store',[ApiController::class,'store']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
@@ -141,6 +142,7 @@ Route::middleware(['auth:api'])->group(function () {
   Route::get('/message/index', [MessageController::class, 'index']);
   Route::get('/message/show/{id}', [MessageController::class, 'show']);
   Route::post('/message/store', [MessageController::class, 'store']);
+  Route::post('/message/storeForMobile', [MessageController::class, 'storeForMobile']);
   Route::get('/Examen/show/{id}',[ExamenController::class,'show']);
   Route::get('/seance/show/{id}',[SeanceController::class,'show']);
   Route::get('/transaction/showTransactionForMoniteurAndCandidat',[TransactionController::class,'showTransactionByUserIdForMoniteurAndCandidat']);

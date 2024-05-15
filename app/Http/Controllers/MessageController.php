@@ -5,7 +5,7 @@ namespace App\Http\Controllers; // Déplacez le namespace ici
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -102,18 +102,22 @@ public function store(Request $request)
     try {
         $validatedData = $request->validate([
             'message_description' => 'required|string',
-            'sender_msg' => 'required|exists:users,id',
             'recipient_id' => 'required|exists:users,id|different:sender_msg',
         ]);
-        if ($validatedData['sender_msg'] === $validatedData['recipient_id']) {
+
+        $sender_id = auth()->id(); 
+
+        if ($validatedData['recipient_id'] === $sender_id) {
             return response()->json(["error" => "Le destinataire et l'expéditeur ne peuvent pas être les mêmes."], 400);
         }
+
         $message = Message::create([
             'description' => $validatedData['message_description'],
-            'sender_id' => $validatedData['sender_msg'],
+            'sender_id' => $sender_id, 
             'recipient_id' => $validatedData['recipient_id'],
             'dateM' => now(), 
         ]);
+
         Notification::create([
             'message_id' => $message->id,
             'message_description' => $message->description,
@@ -127,6 +131,7 @@ public function store(Request $request)
         return response()->json(["error" => $error], 500);
     }
 }
+
 
 
 /**
@@ -176,4 +181,40 @@ public function show($id)
     }
 }
 
+
+public function storeForMobile(Request $request)
+{
+    try {
+        $sender_id = auth()->id(); 
+        $userAutoEcoleId = User::findOrFail($sender_id)->auto_ecole_id;
+        $recipients = DB::table('users')
+            ->where('auto_ecole_id', $userAutoEcoleId)
+            ->where(function($query) {
+                $query->where('role', 'admin')
+                      ->orWhere('role', 'secretaire');
+            })
+            ->get();
+        if ($recipients->isEmpty()) {
+            return response()->json(["error" => "Aucun administrateur ou secrétaire trouvé pour cette auto-école."], 404);
+        }
+        foreach ($recipients as $recipient) {
+            $message = Message::create([
+                'description' => $request->message_description,
+                'sender_id' => $sender_id, 
+                'recipient_id' => $recipient->id,
+                'dateM' => now(), 
+            ]);
+            Notification::create([
+                'message_id' => $message->id,
+                'message_description' => $message->description,
+                'sender_msg' => $message->sender_id,
+                'receptient_msg' => $message->recipient_id,
+            ]);
+        }
+        return response()->json(["success" => "Message envoyé avec succès à l'administrateur et au secrétaire."], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de l'envoi du message: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
 }

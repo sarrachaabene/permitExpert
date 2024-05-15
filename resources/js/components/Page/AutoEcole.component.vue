@@ -28,43 +28,33 @@
                     </div>
                     <br />
                     <div class="table-responsive">
-                    <table class="table table-borded">
-                      <thead>
-                        <tr>
-                          <th scope="col">id</th>
-                          <th scope="col">auto école</th>
-                          <th scope="col">Adresse</th>
-                          <th scope="col">nom d'admin</th>
-                          <th scope="col">Numéro de téléphone</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(auto) in autoEcole" :key="auto.id">
-                          <th scope="row">#</th>
-                          <td>{{ auto.auto_ecole.nom }}</td>
-                          <td>{{ auto.auto_ecole.adresse }}</td>
-                          <td>{{ auto.user_name }} </td>
-                          <td>{{ auto.numTel }}</td>
-                          <td>{{ auto.email }}</td>
-                          <td style="display: flex; justify-content: space-between;">
-                              <a href="" style="
-                                background-color: #9dcd5a;
-                                border-color: #9dcd5a;
-                                margin-right: 5px;
-                                " class="btn btn-success">Modifier
-                              </a>
-                              <a href="" style="
-                                background-color: orangered;
-                                border-color: orangered;
-                                margin-left: 5px;
-                                " class="btn btn-danger">Supprimer
-                              </a>
+                      <table class="table table-borded">
+                        <thead>
+                          <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">auto école</th>
+                            <th scope="col">Adresse</th>
+                            <th scope="col">nom d'admin</th>
+                            <th scope="col">Numéro de téléphone</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(auto, index) in filteredAutoEcole" :key="index">
+                            <th scope="row">{{ auto.id }}</th>
+                            <td>{{ auto.auto_ecole.nom }}</td>
+                            <td>{{ auto.auto_ecole.adresse }}</td>
+                            <td>{{ auto.user_name }}</td>
+                            <td>{{ auto.numTel }}</td>
+                            <td>{{ auto.email }}</td>
+                            <td style="display: flex; justify-content: space-between;">
+                              <a href="#" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-success">Modifier</a>
+                              <a href="#" @click="confirmDelete(auto.id)" style="background-color: orangered; border-color: orangered; margin-left: 5px;" class="btn btn-danger">Supprimer</a>
                             </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -91,44 +81,58 @@
         </div>
         <br />
         <div class="modal-body">
-          <form action="" method="post">
+          <form @submit.prevent="addAutoEcole">
             <div class="mb-3">
-              <label class="form-label" for="exampleFormControlInput1">Nom d'auto école:</label>
-              <input name="nom auto ecole" class="form-control" id="exampleFormControlInput1" type="text"
-                placeholder="Nom d'auto école" />
+              <label class="form-label" for="nomAdmin">Nom d'admin:</label>
+              <input v-model="nomAdmin" name="nomAdmin" class="form-control" id="nomAdmin" placeholder="Nom d'admin" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Adresse:</label>
-              <input name="adresse" class="form-control" id="exampleTextarea" placeholder="Adresse" />
+              <label class="form-label" for="nomAutoEcole">Nom d'auto école:</label>
+              <input v-model="nomAutoEcole" name="nomAutoEcole" class="form-control" id="nomAutoEcole" type="text" placeholder="Nom d'auto école" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="exampleTextarea">Nom d'admin:</label>
-              <input name="nom admin" class="form-control" id="exampleTextarea" placeholder="Nom d'admin" />
+              <label class="form-label" for="adresse">Adresse:</label>
+              <input v-model="adresse" name="adresse" class="form-control" id="adresse" placeholder="Adresse" />
             </div>
             <div class="mb-3">
-              <label class="form-label" for="telephone">Numéro de téléphone:</label>
-              <input name="telephone" type="tel" class="form-control" id="telephone"
-                placeholder="Numéro de téléphone" />
+              <label class="form-label" for="description">Description:</label>
+              <input v-model="description" name="description" class="form-control" id="description" placeholder="Description" />
             </div>
-            <div class="mb-3">
-              <label class="form-label" for="email">E-mail:</label>
-              <input name="email" type="email" class="form-control" id="email" placeholder="E-mail" />
+            <div class="modal-footer">
+              <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
+                Ajouter
+              </button>
+              <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35">
+                Annuler
+              </button>
             </div>
+            <div id="errorMessage" v-if="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
           </form>
         </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de confirmation de suppression -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer cette auto-école ?
+        </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="button" style="background-color: #9dcd5a; border-color: #9dcd5a">
-            Ajouter
-          </button>
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal"
-            style="background-color: #fa7f35; border-color: #fa7f35">
-            Annuler
-          </button>
+          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35"  data-bs-dismiss="modal">Annuler</button>
+          <button type="button" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-danger" @click="deleteAutoEcole">Supprimer</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 const AUTOECOLE_API_BASE_URL = "http://localhost:8000/api/autoEcole";
@@ -137,7 +141,20 @@ export default {
   data() {
     return {
       autoEcole: [],
+      searchQuery: '', 
+      autoEcoleToDeleteId: null,
+      nomAdmin: '',
+      nomAutoEcole: '',
+      adresse: '',
+      description: '',
     };
+  },
+  computed: {
+    filteredAutoEcole() {
+      return this.autoEcole.filter(auto => {
+        return auto.auto_ecole.nom.toLowerCase().includes(this.searchQuery.toLowerCase());
+      });
+    }
   },
   mounted() {
     let isAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "admin";
@@ -160,13 +177,46 @@ export default {
       console.log("Data fetched successfully:", data);
       this.autoEcole = data;
       console.log("Data fetched successfully:", this.autoEcole);
-      // Do something with the data, like assigning it to a variable
-      // this.messages = data;
     },
     handleError(error) {
       console.error("Error fetching data from the backend:", error);
-      // Handle error, show error message to user, etc.
     },
-  },
+    confirmDelete(autoEcoleId) {
+      this.autoEcoleToDeleteId = autoEcoleId;
+      $('#deleteModal').modal('show'); // Show delete confirmation modal
+    },
+    async deleteAutoEcole() {
+      try {
+        const response = await axios.delete(`${AUTOECOLE_API_BASE_URL}/delete/${this.autoEcoleToDeleteId}`);
+        console.log("Auto-école supprimée avec succès:", response.data);
+        // Rafraîchir les données après suppression
+        this.fetchData();
+        $('#deleteModal').modal('hide'); // Masquer le modal après la suppression
+      } catch (error) {
+        console.error("Erreur lors de la suppression de l'auto-école:", error.response.data);
+        // Afficher un message d'erreur à l'utilisateur
+        this.errorMessage = "Une erreur s'est produite lors de la suppression de l'auto-école.";
+      }
+    },
+    async addAutoEcole() {
+      try {
+        const formData = {
+          nom_admin: this.nomAdmin,
+          nom_auto_ecole: this.nomAutoEcole,
+          adresse: this.adresse,
+          description: this.description
+        };
+        const response = await axios.post(`${AUTOECOLE_API_BASE_URL}/store`, formData);
+        console.log("Auto-école ajoutée avec succès:", response.data);
+        // Rafraîchir les données après ajout
+        this.fetchData();
+        $('#exampleModal').modal('hide'); // Masquer le modal après l'ajout
+      } catch (error) {
+        console.error("Erreur lors de l'ajout de l'auto-école:", error.response.data);
+        // Afficher un message d'erreur à l'utilisateur
+        this.errorMessage = "Une erreur s'est produite lors de l'ajout de l'auto-école.";
+      }
+    },
+  }
 };
 </script>

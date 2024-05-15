@@ -1,84 +1,87 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <ul class="navbar-nav">
-            <li class="nav-item d-block d-xl-none">
-                <a
-                    class="nav-link sidebartoggler nav-icon-hover"
-                    id="headerCollapse"
-                    href="javascript:void(0)"
-                >
-                    <i class="ti ti-menu-2"></i>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)">
-                    <i class="ti ti-bell-ringing"></i>
-                    <div class="notification bg-primary rounded-circle"></div>
-                </a>
-            </li>
-        </ul>
-        <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-            <ul
-                class="navbar-nav flex-row ms-auto align-items-center justify-content-end"
-            >
-                <li class="nav-item dropdown">
-                    <a
-                        class="nav-link nav-icon-hover"
-                        href="javascript:void(0)"
-                        id="drop2"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        <img
-                            src="../../../../public/assets/images/profile/user-1.jpg"
-                            alt=""
-                            width="35"
-                            height="35"
-                            class="rounded-circle"
-                        />
-                    </a>
-                    <div
-                        class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
-                        aria-labelledby="drop2"
-                    >
-                        <div class="message-body">
-                            <a
-                                href="javascript:void(0)"
-                                class="d-flex align-items-center gap-2 dropdown-item"
-                            >
-                                <i class="ti ti-user fs-6"></i>
-                                <p class="mb-0 fs-3">My Profile</p>
-                            </a>
-                            <a
-                                href="javascript:void(0)"
-                                class="d-flex align-items-center gap-2 dropdown-item"
-                            >
-                                <i class="ti ti-mail fs-6"></i>
-                                <p class="mb-0 fs-3">My Account</p>
-                            </a>
-                            <a
-                                href="javascript:void(0)"
-                                class="d-flex align-items-center gap-2 dropdown-item"
-                            >
-                                <i class="ti ti-list-check fs-6"></i>
-                                <p class="mb-0 fs-3">My Task</p>
-                            </a>
-                            <a
-                                href="./authentication-login.html"
-                                class="btn btn-outline-primary mx-3 mt-2 d-block"
-                                >Logout</a
-                            >
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+  <nav class="navbar navbar-expand-lg navbar-light">
+      <ul class="navbar-nav">
+          <li class="nav-item d-block d-xl-none">
+              <a
+                  class="nav-link sidebartoggler nav-icon-hover"
+                  id="headerCollapse"
+                  href="javascript:void(0)"
+              >
+                  <i class="ti ti-menu-2"></i>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                  <i class="ti ti-bell-ringing"></i>
+                  <div class="notification bg-primary rounded-circle"></div>
+              </a>
+          </li>
+      </ul>
+      <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+          <ul
+              class="navbar-nav flex-row ms-auto align-items-center justify-content-end"
+          >
+              <li class="nav-item dropdown">
+                <div  class="d-flex align-items-center">
+                  <span style="margin-right: 5px;">{{ userRole }}</span> ,
+                  <span>{{ user.user_name }}</span> 
+                  <img style="margin-right: 55px;" class="rounded-circle mt-2 mb-2 ml-2 image-left image-right" width="50px" :src="getImageUrl">
+                </div>
+              </li>
+          </ul>
+      </div>
+  </nav>
 </template>
+
+<style>
+.image-left {
+  margin-left: 50px; 
+}
+.image-right {
+  margin-left: 5px; 
+}
+</style>
+
 <script>
+import axios from "axios";
+const showProfile_API_BASE_URL = "http://localhost:8000/api/showProfile";
+
 export default {
-    mounted() {
-        console.log("Component mounted.");
+  data() {
+    return {
+      user: {
+        user_name: '',
+        user_image: ''
+      },
+      userRole: '' // Add user role property
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  methods:{
+    fetchData() {
+      axios.post(`${showProfile_API_BASE_URL}`)
+        .then(response => {
+          this.handleSuccess(response.data);
+        })
+        .catch(error => {
+          this.handleError(error);
+        });
     },
+    handleSuccess(data) {
+      this.user = data; // Set the fetched user data
+      this.userRole = data.role; // Set the user role
+    },
+    handleError(error) {
+      console.error("Error fetching user data:", error);
+    }
+  },
+  computed: {
+    getImageUrl() {
+      const baseUrl = 'http://localhost:8000/storage/images/';
+      return baseUrl + this.user.user_image;
+    }
+  }
 };
 </script>

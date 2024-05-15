@@ -68,11 +68,14 @@ class TransactionController extends Controller
      // TODO: error handling
      public function index()
      {
+         $adminId = Auth::id(); 
+         $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+         
          try {
-             $transactions = Transaction::get();
+             $transactions = Transaction::where('auto_ecole_id', $adminAutoEcoleId)->get();
      
              if ($transactions->isEmpty()) {
-                 return response()->json("Aucune transaction trouvée.", 404);
+                 return response()->json("Aucune transaction trouvée pour cette auto-école.", 404);
              } 
              return response()->json($transactions, 200);
          } catch (\Exception $e) {
@@ -80,6 +83,7 @@ class TransactionController extends Controller
              return response()->json(["error" => $error], 500);
          }
      }
+     
 /**
  * @OA\Post(
  *     path="/api/transaction/store",
@@ -125,6 +129,9 @@ class TransactionController extends Controller
       public function store(Request $request)
       {
           try {
+              $adminId = Auth::id(); 
+              $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+              
               $validatedData = $request->validate([
                   'Type_T' => 'required|in:vehicule,utilisateur,general',
                   'Type_Transaction' => 'required|in:flux entrant,flux sortant',
@@ -134,12 +141,16 @@ class TransactionController extends Controller
                   'user_id' => 'required_without:vehicule_id|exists:users,id',
                   'vehicule_id' => 'required_without:user_id|exists:vehicules,id',
               ]);
-                    if (($validatedData['Type_T'] === 'vehicule' && !Vehicule::find($validatedData['vehicule_id'])) ||
+      
+              $validatedData['auto_ecole_id'] = $adminAutoEcoleId; 
+      
+              if (($validatedData['Type_T'] === 'vehicule' && !Vehicule::find($validatedData['vehicule_id'])) ||
                   ($validatedData['Type_T'] === 'utilisateur' && !User::find($validatedData['user_id']))) {
                   $msg = "L'utilisateur ou le véhicule spécifié n'a pas été trouvé.";
                   return response()->json(["error" => $msg], 404);
               }
-                    $transaction = Transaction::create([
+      
+              $transaction = Transaction::create([
                   'Type_T' => $validatedData['Type_T'],
                   'montantT' => $validatedData['montantT'],
                   'dateT' => $validatedData['dateT'],
@@ -147,14 +158,16 @@ class TransactionController extends Controller
                   'description' => $validatedData['description'],
                   'user_id' => $validatedData['user_id'] ?? null,
                   'vehicule_id' => $validatedData['vehicule_id'] ?? null,
+                  'auto_ecole_id' => $adminAutoEcoleId, // Ajout de l'auto_ecole_id à la transaction
               ]);
-              $transaction->save();
+      
               return response()->json($transaction, 200);
           } catch (\Exception $e) {
               $error = "Erreur lors de la création de la transaction : " . $e->getMessage();
               return response()->json(["error" => $error], 500);
           }
-      }  
+      }
+      
   /**
  * @OA\Get(
  *      path="/api/transaction/show/{id}",

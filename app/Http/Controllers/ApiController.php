@@ -13,6 +13,8 @@ use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerificationCodeNotification;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 /**
  * @OA\Schema(
@@ -70,29 +72,41 @@ class ApiController extends Controller {
  * )
  */
 //Affichage pour admin
-  public function index()
-  {
-      try {
-          $roles = ['candidat', 'moniteur', 'secretaire'];
-                    $users = User::whereIn('role', $roles)->get();
-                    if ($users->isEmpty()) {
-              return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés", 404);
-          }
-          return response()->json($users, 200);
-      } catch (\Exception $e) {
-          return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
-      }
-  }
-  
+public function index()
+{
+    $adminId = Auth::id(); 
+    $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+
+    try {
+        $roles = ['candidat', 'moniteur', 'secretaire'];
+        $users = User::whereIn('role', $roles)
+                     ->where('auto_ecole_id', $adminAutoEcoleId)
+                     ->get();
+
+        if ($users->isEmpty()) {
+            return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés et l'auto-école de l'administrateur", 404);
+        }
+
+        return response()->json($users, 200);
+    } catch (\Exception $e) {
+        return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+    }
+}
+
   //afficher le nombre des utilisateurs
   public function CountUser()
   {
+      $adminId = Auth::id(); 
+      $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+      
       try {
           $roles = ['candidat', 'moniteur', 'secretaire'];
-          $users = User::whereIn('role', $roles)->get();
+          $users = User::whereIn('role', $roles)
+                       ->where('auto_ecole_id', $adminAutoEcoleId)
+                       ->get();
   
           if ($users->isEmpty()) {
-              return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés", 404);
+              return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés et l'auto-école de l'administrateur", 404);
           }
   
           $countByRole = [
@@ -100,7 +114,8 @@ class ApiController extends Controller {
               'moniteur' => 0,
               'secretaire' => 0,
           ];
-            foreach ($users as $user) {
+  
+          foreach ($users as $user) {
               $countByRole[$user->role]++;
           }
   
@@ -113,6 +128,7 @@ class ApiController extends Controller {
           return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
       }
   }
+  
 
 
 //Affichage pour superAdmin
@@ -156,6 +172,8 @@ class ApiController extends Controller {
  public function store(Request $request)
  {
      try {
+         $adminId = Auth::id(); 
+          $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
          $validatedData = $request->validate([
              'user_name' => 'required|string|max:255',
              'email' => 'required|string|email|max:255|unique:users',
@@ -166,18 +184,24 @@ class ApiController extends Controller {
              'dateNaissance' => 'required|date',
              'cat_permis' => ($request->role === 'candidat') ? 'required|string|in:Permis_A1,Permis_A,Permis_B,Permis_B_E,Permis_C,Permis_C_E,Permis_D,Permis_D_E,Permis_D1,Permis_H' : '', // Validation conditionnelle pour cat_permis
          ]);
-          $user = User::create($validatedData);
-          $defaultRole = $validatedData['role']; 
+ 
+         $validatedData['auto_ecole_id'] = $adminAutoEcoleId; 
+ 
+         $user = User::create($validatedData);
+         $defaultRole = $validatedData['role'];
          $user->assignRole($defaultRole);
-          if ($defaultRole === 'candidat') {
+ 
+         if ($defaultRole === 'candidat') {
              $user->cat_permis = $validatedData['cat_permis'];
              $user->save();
          }
-          return response()->json(["user" => $user], 200); 
+ 
+         return response()->json(["user" => $user], 200);
      } catch (\Exception $e) {
          return response()->json(["error" => "Failed to create user: " . $e->getMessage()], 500);
      }
  }
+ 
 //store pour SuperAdmin
 public function storeForSuperAdmin(Request $request)
 {
@@ -526,7 +550,9 @@ public function updateForSuperAdmin(Request $request, $id)
        "user_name" => $user->user_name,
        "dateNaissance" => $user->dateNaissance,
        "numTel" => $user->numTel,
-       "email" => $user->email
+       "email" => $user->email,
+       "user_image"=> $user->user_image,
+       "role"=>$user->role,
      ];
      return response()->json($userData, 200);
    } catch (\Exception $e) {
@@ -534,36 +560,47 @@ public function updateForSuperAdmin(Request $request, $id)
    }
  }
 
- public function updateProfile()
-{
-    try {
-        if (!Auth::check()) {
-            return response()->json(["error" => "Utilisateur non authentifié."], 401);
-        }
-
-        $userId = Auth::id();
-        $user = User::findOrFail($userId);
-
-        $validator = Validator::make(request()->all(), [
-          'user_name' => 'required|string|max:255',
-          'dateNaissance' => 'required|date',
-          'numTel' => 'required|string|max:20',
-          'email' => 'required|email|max:255',
+ public function updateProfile(Request $request)
+ {
+     try {
+         if (!$request->user()) {
+             return response()->json(["error" => "Utilisateur non authentifié."], 401);
+         }
+ 
+         $user = $request->user();
+ 
+         $validator = Validator::make($request->all(), [
+          'user_name' => 'string|max:255',
+          'dateNaissance' => 'date',
+          'numTel' => 'string|max:20',
+          'email' => 'email|max:255',
+          'user_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
       ]);
-      
-
-        if ($validator->fails()) {
-            return response()->json(["error" => "Données de mise à jour invalides.", "errors" => $validator->errors()], 400);
-        }
-
-        $user->fill(request()->only(['user_name', 'dateNaissance', 'numTel', 'email']));
-        $user->save();
-
-        return response()->json(["message" => "Informations de l'utilisateur mises à jour avec succès."], 200);
-    } catch (\Exception $e) {
-        return response()->json(["error" => "Une erreur s'est produite lors de la mise à jour des détails de l'utilisateur."], 500);
-    }
-}
+ 
+         if ($validator->fails()) {
+             return response()->json(["error" => "Données de mise à jour invalides.", "errors" => $validator->errors()], 400);
+         }
+ 
+         if ($request->hasFile('user_image')) {
+             $image = $request->file('user_image');
+             $imageName = time() . '.' . $image->getClientOriginalExtension();
+             $image->storeAs('public/images', $imageName);
+             $user->user_image = $imageName;
+         }
+ 
+         $user->fill($request->except('user_image'));
+ 
+         $user->save();
+ 
+         $imageUrl = asset('storage/images/' . $user->user_image);
+ 
+         return response()->json(["message" => "Informations de l'utilisateur mises à jour avec succès.", "user" => $user, "image_url" => $imageUrl], 200);
+         
+     } catch (\Exception $e) {
+         return response()->json(["error" => "Une erreur s'est produite lors de la mise à jour des détails de l'utilisateur."], 500);
+     }
+ }
+ 
   /**
  * @OA\Get(
  *     path="/api/login",

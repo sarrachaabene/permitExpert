@@ -1,25 +1,26 @@
 <?php
 namespace App\Notifications;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class VerificationCodeNotification extends Notification
+class RefuserDemande extends Notification
 {
     use Queueable;
 
-    protected $verificationCode;
+    protected $message;
 
     /**
      * Create a new notification instance.
      *
-     * @param string $verificationCode
+     * @param string $message
      * @return void
      */
-    public function __construct($verificationCode)
+    public function __construct($message)
     {
-        $this->verificationCode = $verificationCode;
+        $this->message = $message;
     }
 
     /**
@@ -42,9 +43,7 @@ class VerificationCodeNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Code de vérification')
-            ->line('Votre code de vérification est : ' . $this->verificationCode)
-            ->line('Ce code est valide pendant une courte période. Ne le partagez pas avec d\'autres personnes.')
-            ->action('Vérifier maintenant', url('/code'));
+            ->subject('Demande refusée')
+            ->line($this->message);
     }
 }

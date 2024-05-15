@@ -11,7 +11,8 @@ class Vehicule extends Model
     use SoftDeletes;
 
     protected $fillable = [
-      "immatricule" ,"kilometrage","marque","typeV"
+      "immatricule" ,"kilometrage","marque","typeV",'auto_ecole_id',
+
 ];
 public function transaction(): BelongsTo
 {

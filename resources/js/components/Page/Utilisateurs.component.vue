@@ -49,8 +49,6 @@
                               <th scope="col" v-if="selectedRole !== 'secretaire' && selectedRole !== 'moniteur'"
                                 style="font-size: 14px;">Catégorie permis</th>
                               <th scope="col" style="font-size: 14px;">Historique de paiement</th>
-                              <th scope="col" v-if="selectedRole !== 'secretaire' && selectedRole !== 'moniteur'"
-                                style="font-size: 14px;">Résultat</th>
                               <th scope="col">Action</th>
                             </tr>
                           </thead>
@@ -64,9 +62,6 @@
                               <td v-if="selectedRole !== 'secretaire' && selectedRole !== 'moniteur'">{{ user.cat_permis }}</td>
                               <td>
                                 <button @click="showTransactionDetails(user.id)" style="background-color: #9dcd5a; border-color: #9dcd5a;"  class="btn btn-success">Consulter</button>
-                              </td>
-                              <td v-if="selectedRole !== 'secretaire' && selectedRole !== 'moniteur'">
-                                <a href="" style="background-color: #9dcd5a; border-color: #9dcd5a;" class="btn btn-success">Consulter</a>
                               </td>
                               <td class="d-flex justify-content-between">
                                 <a href="" style="background-color: #9dcd5a; border-color: #9dcd5a;" class="btn btn-success">Modifier</a>
