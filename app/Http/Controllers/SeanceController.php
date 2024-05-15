@@ -5,6 +5,7 @@ use App\Models\Seance;
 use App\Models\User;
 use App\Models\Vehicule;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Examen;
 
 /**
  * @OA\Schema(
@@ -283,7 +284,40 @@ class SeanceController extends Controller
 }
 
 
-     
+
+//index examen and seance by date
+public function showSeancesAndExams($date)
+{
+    try {
+        if (!Auth::check()) {
+            return response()->json(["error" => "Utilisateur non authentifié."], 401);
+        }
+        $user = Auth::user(); 
+        if ($user->role === 'candidat') {
+            $seances = Seance::where('candidat_id', $user->id)
+                ->whereDate('dateS', $date)
+                ->get();
+            $examens = Examen::where('user_id', $user->id)
+                ->whereDate('dateE', $date)
+                ->get();
+        } elseif ($user->role === 'moniteur') {
+            $seances = Seance::where('moniteur_id', $user->id)
+                ->whereDate('dateS', $date)
+                ->get();
+            $examens = collect();
+        } else {
+            return response()->json(["error" => "L'utilisateur n'est pas autorisé à accéder à cette ressource."], 403);
+        }
+
+        if ($seances->isEmpty() && $examens->isEmpty()) {
+            return response()->json(["error" => "Aucune séance ou examen trouvé pour l'utilisateur spécifié à cette date."], 404);
+        }
+        return response()->json(["seances" => $seances, "examens" => $examens], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des séances et des examens: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}   
       /**
  * @OA\Get(
  *      path="/api/seance/ShowSeanceByvehiculeId/{id}",
@@ -375,7 +409,29 @@ class SeanceController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }
-
+//Affichage de tous les evennement
+public function indexForMobile()
+{
+    $user = Auth::user(); 
+    try {
+        if ($user->role === 'candidat') {
+            $seances = Seance::where('candidat_id', $user->id)->get();
+            $examens = Examen::where('user_id', $user->id)->get();
+        } elseif ($user->role === 'moniteur') {
+            $seances = Seance::where('moniteur_id', $user->id)->get();
+            $examens = null;
+        } else {
+            return response()->json(["error" => "L'utilisateur n'est pas autorisé à accéder à cette ressource."], 403);
+        }
+        if ($seances->isEmpty() && (!$examens || $examens->isEmpty())) {
+            return response()->json(["error" => "Aucune séance ou examen trouvé pour cet utilisateur."], 404);
+        }
+        return response()->json(["seances" => $seances, "examens" => $examens], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la récupération des séances et des examens: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
 //Affichage pour Moniteur
     public function ShowSeanceForMoniteur($date) 
     {
@@ -399,6 +455,9 @@ class SeanceController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }
+
+
+
       /**
  * @OA\Put(
  *      path="/api/seance/update/{id}",

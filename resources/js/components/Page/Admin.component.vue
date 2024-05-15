@@ -94,9 +94,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35">
-            Annuler
-          </button>
+          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
+
           <button type="button" class="btn btn-primary" @click="addAdmin" style="background-color: #9dcd5a; border-color: #9dcd5a">Ajouter</button>
         </div>
       </div>

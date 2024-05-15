@@ -111,6 +111,7 @@ public function showNotificationsByReceptientId()
                 "id_user"=>$notification->sender_msg,
                 "message_description" => $notification->message_description,
                 "sender_name" => $senderDetails ? $senderDetails->user_name : "Utilisateur supprimé",
+                "created_at"=>$notification->created_at,
             ];
             $notificationsDetails[] = $notificationDetails;
         }  

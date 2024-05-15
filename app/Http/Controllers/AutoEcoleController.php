@@ -303,7 +303,7 @@ if ($autoEcole) {
       {
           try {
               $request->validate([
-                  'user_id' => 'sometimes|exists:users,id',
+                  'user_name' => 'required|exists:users,user_name',
                   'nom' => [
                       'sometimes',
                       'string',
@@ -318,23 +318,33 @@ if ($autoEcole) {
                   'adresse' => 'sometimes|string|max:255',
                   'description' => 'sometimes|string|max:255',
               ]);
-                    $autoEcole = AutoEcole::find($id);
-                    if (!$autoEcole) {
+      
+              $user = User::where('user_name', $request->user_name)->first();
+              if (!$user) {
+                  return response()->json(["error" => "L'utilisateur avec le nom d'utilisateur spécifié n'existe pas."], 404);
+              }
+      
+              if ($user->role !== "admin") {
+                  return response()->json(["error" => "L'utilisateur n'est pas un administrateur."], 403);
+              }
+      
+              $autoEcole = AutoEcole::find($id);
+              if (!$autoEcole) {
                   return response()->json(["error" => "L'auto-école avec l'ID spécifié n'existe pas."], 404);
               }
-                    if ($request->user_id) {
-                  $user = User::find($request->user_id);
-                  if ($user && $user->auto_ecole_id && $user->auto_ecole_id != $id) {
-                      return response()->json(["error" => "L'administrateur a déjà une auto-école."], 400);
-                  }
+      
+              if ($user->auto_ecole_id && $user->auto_ecole_id != $id) {
+                  return response()->json(["error" => "L'administrateur a déjà une auto-école."], 400);
               }
-                    $autoEcole->update($request->all());
+      
+              $autoEcole->update($request->all());
       
               return response()->json($autoEcole, 200);
           } catch (\Exception $e) {
               return response()->json(["error" => "Erreur lors de la mise à jour de l'auto-école : " . $e->getMessage()], 500);
           }
       }
+      
       
   /**
  * @OA\Delete(

@@ -149,8 +149,10 @@ Route::middleware(['auth:api'])->group(function () {
   Route::get('/seance/ShowSeanceForCandidat/{date}',[SeanceController::class,'ShowSeanceForCandidat']);
   Route::get('/seance/ShowSeanceForMoniteur /{date}',[SeanceController::class,'ShowSeanceForMoniteur']);
   Route::get('/Examen/showExamensForCandidat/{date}',[ExamenController::class,'showExamensForCandidat']);
+  Route::get('/seance/indexForMobile',[SeanceController::class,'indexForMobile']);
+  Route::get('/seance/showSeancesAndExams /{date}',[SeanceController::class,'showSeancesAndExams']);
 
-
+  
 });
 
 
