@@ -140,7 +140,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="editAutoEcole(editAutoEcoleId)">
+          <form @submit.prevent="editAutoEcole" >
             <div class="mb-3">
               <label class="form-label" for="editNomAdmin">Nom d'admin:</label>
               <input v-model="editNomAdmin" name="editNomAdmin" class="form-control" id="editNomAdmin" placeholder="Nom d'admin" />
@@ -158,7 +158,7 @@
               <input v-model="editDescription" name="editDescription" class="form-control" id="editDescription" placeholder="Description" />
             </div>      
             <div class="modal-footer">
-              <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
+              <button class="btn btn-primary" type="submit"  style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Enregistrer
               </button>
               <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
@@ -239,7 +239,7 @@ export default {
         this.errorMessage = "Une erreur s'est produite lors de la suppression de l'auto-école.";
       }
     },
-    async editAutoEcole(autoEcoleId) {
+    async editAutoEcole() {
   try {
     const formData = {
       user_name: this.editNomAdmin,
@@ -247,17 +247,16 @@ export default {
       adresse: this.editAdresse,
       description: this.editDescription
     };
-    const response = await axios.put(`${AUTOECOLE_API_BASE_URL}/update/${autoEcoleId}`, formData);
+    const response = await axios.put(`${AUTOECOLE_API_BASE_URL}/update/${this.editAutoEcoleId}`, formData);
     console.log("Auto-école modifiée avec succès:", response.data);
-    // Rafraîchir les données après modification
     this.fetchData();
     $('#editModal').modal('hide');
   } catch (error) {
     console.error("Erreur lors de la modification de l'auto-école:", error.response.data);
-    // Afficher un message d'erreur à l'utilisateur
     this.errorMessage = "Une erreur s'est produite lors de la modification de l'auto-école.";
   }
 },
+
 
 
     openEditModal(autoEcoleId) {

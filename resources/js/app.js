@@ -15,6 +15,7 @@ import VerifComponent from './components/Page/verifComponent.vue';
 import VerifforcodeComponent from './components/Page/VerifForCodeComponent.vue';
 import codeforpass from './components//Page/codeForPassword.vue'
 import password from './components//Page/ChangeComponent.vue'
+import permit from './components//Page/PermitComponent.vue'
 // Set up axios globally:
 window.axios = axios;
 // Configure the default headers for axios:
@@ -45,6 +46,7 @@ app.component('verif-component', VerifComponent);
 app.component('verif-for-code-component', VerifforcodeComponent);
 app.component('code-for-password-component', codeforpass);
 app.component('change-component', password);
+app.component('permit-component', permit);
 app.use(VueApexCharts);
 axios.interceptors.response.use(
   (response) => response,

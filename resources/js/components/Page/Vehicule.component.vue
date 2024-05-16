@@ -100,7 +100,7 @@
           <form @submit.prevent="addVehicle" method="post">
             <div class="mb-3">
               <label class="form-label" for="Immatriculation">Immatriculation:</label>
-              <input v-model="newVehicle.Immatriculation" class="form-control" id="Immatriculation" type="text" placeholder="Immatriculation" />
+              <input v-model="newVehicle.immatricule" class="form-control" id="Immatriculation" type="text" placeholder="Immatriculation" />
             </div>
             <div class="mb-3">
               <label class="form-label" for="kilometrage">Kilométrage:</label>
@@ -113,10 +113,10 @@
             <div class="mb-3">
               <label class="form-label" for="typeV">Type:</label>
               <select v-model="newVehicle.typeV" class="form-select" id="typeV">
-                <option value="Moto">Moto</option>
-                <option value="Voiture">Voiture</option>
-                <option value="Camion">Camion</option>
-                <option value="Bus">Bus</option>
+                <option value="Moto">moto</option>
+                <option value="Voiture">voiture</option>
+                <option value="Camion">camion</option>
+                <option value="Bus">bus</option>
               </select>
             </div>
             <div class="modal-footer">
@@ -246,9 +246,9 @@ export default {
       searchQuery: '',
       selectedVehicle: {},
       transactions: [],
-      newVehicle: { Immatriculation: '', kilometrage: '', marque: '', typeV: '' },
-      selectedVehicleId: null, // Variable pour stocker l'ID du véhicule sélectionné pour la suppression
-      editedVehicle: {}, // Objet pour stocker les modifications dans le modal de modification
+      newVehicle: { immatricule: '', kilometrage: '', marque: '', typeV: '' },
+      selectedVehicleId: null,
+      editedVehicle: {}, 
     };
   },
   mounted() {
@@ -302,25 +302,20 @@ export default {
       }
     },
     deleteVehicle(id) {
-      // Stockez l'ID du véhicule à supprimer dans une variable pour référence ultérieure
       this.selectedVehicleId = id;
-      // Affichez le modal de confirmation
       $('#deleteConfirmationModal').modal('show');
     },
     async deleteConfirmed() {
       try {
-        // Exécutez la suppression du véhicule avec l'ID stocké
         const response = await axios.delete(`${VEHICULE_API_BASE_URL}/delete/${this.selectedVehicleId}`);
-        console.log(response.data); // Afficher la réponse de l'API
-        this.fetchData(); // Rafraîchir la liste des véhicules après la suppression
-        // Cachez le modal de confirmation après la suppression réussie
+        console.log(response.data);
+        this.fetchData(); 
         $('#deleteConfirmationModal').modal('hide');
       } catch (error) {
         console.error("Error deleting vehicle:", error);
       }
     },
     openEditModal(veh) {
-      // Créez une copie profonde de l'objet veh pour éviter les références partagées
       this.editedVehicle = JSON.parse(JSON.stringify(veh));
       $('#editModal').modal('show');
     },

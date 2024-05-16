@@ -17,9 +17,12 @@ import Verif from './components//Page/verifComponent.vue';
 import Veriforcode from './components//Page/VerifForCodeComponent.vue';
 import codeforpass from './components//Page/codeForPassword.vue'
 import ressource from './components//Page/Ressource.vue'
+import permit from './components//Page/PermitComponent.vue'
+
 const routes = [
 
-  { path: '/'        , component: LoginComponent },
+  { path: '/'        , component: permit },
+  { path: '/permit'        , component: LoginComponent },
   { path: '/dashbord', component: DashbordComponent },
   { path: '/verif', component: Verif },
   { path: '/Veriforcode', component: Veriforcode },

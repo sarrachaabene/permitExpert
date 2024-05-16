@@ -20,7 +20,10 @@ Route::get('/code', function () {
   //if(Auth::check())
   return view('code');
 });
-
+Route::get('/permit', function () {
+  //if(Auth::check())
+  return view('permitexpert');
+});
 Route::get('/ressource', function () {
   //if(Auth::check())
   return view('welcome');
