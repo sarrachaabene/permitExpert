@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
         'email' => 'johndoe@example.com',
         'password' => Hash::make('123456789'),
         'role' => 'superAdmin',
-        'cin' => '123456789',
+
+        'cin' => '1234567895',
         'numTel' => '+1234567890',
         'dateNaissance' => '1990-01-01',
     ]);

@@ -179,66 +179,71 @@
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item position-relative">
                         <div class="position-relative">
-                            <img class="img-fluid" src="../../../../public/assets/images/backgrounds/user.jpg" alt="">
+                            <img class="img-fluid" src="../../../../public/assets/images/backgrounds/can.jpg" alt="">
                             <div class="team-social text-center">
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
+                  <br><br>
                         <div class="bg-light text-center p-4">
                             <h5 class="mt-2">Gestion des candidats
-  </h5>
-                            <span>Trainer</span>
+  </h5>                            <span>permet une gestion complète des candidats , plannings , examens, paiements.</span>
+
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item position-relative">
                         <div class="position-relative">
-                            <img class="img-fluid   fas fa-user-plus fa-4x" src="../../../../public/assets/images/backgrounds/voiture.jpg" alt="">
+                            <img class="img-fluid " src="../../../../public/assets/images/backgrounds/voituree.jpg" alt="">
                             <div class="team-social text-center">
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
+                          <br>
                         <div class="bg-light text-center p-4">
+                        
                             <h5 class="mt-2">Gestion des véhicules
-  </h5>
-                            <span>Trainer</span>
+  </h5>                            <span>permet une gestion complète de vos véhicules, ravitaillements en carburant, entretiens, dépenses............</span>
+
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item position-relative">
                         <div class="position-relative">
-                            <img class="img-fluid" src="../../../../public/assets/images/backgrounds/transaction.jpg" alt="">
+                            <img class="img-fluid" src="../../../../public/assets/images/backgrounds/transactione.jpg" alt="">
                             <div class="team-social text-center">
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
+                              <br>
                         <div class="bg-light text-center p-4">
-                            <h5 class="mt-2">Gestion des transactions</h5>
-                            <span>Trainer</span>
+                            <h5 class="mt-2">Gestion des statistiques </h5>
+                            <span>permet une gestion complète des Recettes/Dépenses , des statistiques des examens , des moniteurs et des véhicules..</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="team-item position-relative">
                         <div class="position-relative">
-                            <img class="img-fluid" src="../../../../public/assets/images/backgrounds/about-1.jpg" alt="">
+                            <img class="img-fluid" src="../../../../public/assets/images/backgrounds/money.jpg" alt="">
                             <div class="team-social text-center">
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
                                 <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
+                        <br><br>
                         <div class="bg-light text-center p-4">
-                            <h5 class="mt-2">Full Name</h5>
-                            <span>Trainer</span>
+                            <h5 class="mt-2">Gestion des transactions</h5>
+                            <span>Facilite une gestion efficace des transactions en automatisant le suivi des paiements et des dépenses.</span>
                         </div>
                     </div>
                 </div>
@@ -254,7 +259,7 @@
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-white mb-4">Contactez-nous</h4>
-                    <h2 class="text-primary mb-4"><i class="fa fa-car text-white me-2"></i>Drivin</h2>
+                    <h2 class="text-primary mb-2"><i class="fa fa-car text-white me-2"></i>PermitExpert</h2>
                     <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>RUE MOHAMED SHIM RBAT MONASTIR-5000 TUNISIE
 
   </p>
