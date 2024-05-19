@@ -113,19 +113,17 @@
             <div class="mb-3">
               <label class="form-label" for="typeV">Type:</label>
               <select v-model="newVehicle.typeV" class="form-select" id="typeV">
-                <option value="Moto">moto</option>
-                <option value="Voiture">voiture</option>
-                <option value="Camion">camion</option>
-                <option value="Bus">bus</option>
+                <option value="moto">moto</option>
+                <option value="voiture">voiture</option>
+                <option value="camion">camion</option>
+                <option value="bus">bus</option>
               </select>
             </div>
             <div class="modal-footer">
               <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Ajouter
               </button>
-              <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal"  style="background-color: #fa7f35; border-color: #fa7f35"  >
-                Annuler
-              </button>
+              <button type="button"   style="background-color: #fa7f35; border-color: #fa7f35" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             </div>
           </form>
         </div>
@@ -191,19 +189,18 @@
             <div class="mb-3">
               <label class="form-label" for="EditType">Type:</label>
               <select v-model="editedVehicle.typeV" class="form-select" id="EditType">
-                <option value="Moto">Moto</option>
-                <option value="Voiture">Voiture</option>
-                <option value="Camion">Camion</option>
-                <option value="Bus">Bus</option>
+                <option value="moto">Moto</option>
+                <option value="voiture">Voiture</option>
+                <option value="camion">Camion</option>
+                <option value="bus">Bus</option>
               </select>
             </div>
             <div class="modal-footer">
               <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Modifier
               </button>
-              <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal"  style="background-color: #fa7f35; border-color: #fa7f35"  >
-                Annuler
-              </button>
+              <button type="button"   style="background-color: #fa7f35; border-color: #fa7f35" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
             </div>
           </form>
         </div>
@@ -296,7 +293,9 @@ export default {
         const response = await axios.post(`${VEHICULE_API_BASE_URL}/store`, this.newVehicle);
         console.log("Vehicle added successfully:", response.data);
         this.fetchData();
-        $('#exampleModal').modal('hide');
+        $('#exampleModal').modal('hide'); 
+          $('body').removeClass('modal-open'); 
+          $('.modal-backdrop').remove();
       } catch (error) {
         console.error("Error adding vehicle:", error);
       }

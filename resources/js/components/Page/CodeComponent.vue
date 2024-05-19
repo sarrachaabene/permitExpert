@@ -67,11 +67,8 @@ export default {
         } else {
           this.successMessage = response.data.success; 
           this.errorMessage = '';
-          // Affichage de l'e-mail dans la console
           console.log('E-mail validé:', this.email);
-          // Stockage de l'e-mail dans le stockage local
           localStorage.setItem('userEmail', this.email);
-          // Redirection vers la page /code
           window.location.href = '/code';
         }
       } catch (error) {

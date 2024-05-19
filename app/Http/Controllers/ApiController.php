@@ -706,8 +706,6 @@ public function updateForSuperAdmin(Request $request, $id)
       return response()->json(['success' => 'Le code de vérification est correct.']);
   }
   
-
-
   public function checkEmailForPassword($email)
   {
       $user = User::where('email', $email)->first();
@@ -727,7 +725,32 @@ public function updateForSuperAdmin(Request $request, $id)
       return response()->json(['success' => 'Le code de vérification a été envoyé à votre email.']);
   }
   
+
+  public function ModifierPassword(Request $request)
+  {
+      try {
+          if (!$request->user()) {
+              return response()->json(["error" => "Utilisateur non authentifié."], 401);
+          }
+          $user = $request->user();
+            $validator = Validator::make($request->all(), [
+              'old_password' => 'required|string',
+              'new_password' => 'required|string|min:8|confirmed', 
+          ]);
   
+          if ($validator->fails()) {
+              return response()->json(["error" => "Données de mise à jour invalides.", "errors" => $validator->errors()], 400);
+          }
+            if (!Hash::check($request->old_password, $user->password)) {
+              return response()->json(["error" => "L'ancien mot de passe est incorrect."], 400);
+          }
+            $user->password = Hash::make($request->new_password);
+          $user->save();
+          return response()->json(["message" => "Mot de passe mis à jour avec succès."], 200);      
+      } catch (\Exception $e) {
+          return response()->json(["error" => "Une erreur s'est produite lors de la mise à jour du mot de passe."], 500);
+      }
+  }
 /* // Vérifier le code de vérification
 public function verifyCode(Request $request)
 {
