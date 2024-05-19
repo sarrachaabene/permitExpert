@@ -241,7 +241,7 @@
                               </ol>
                           </div>
                           <div class="position-relative mt-auto">
-                              <img class="img-fluid" src="img/courses-3.jpg" alt="">
+                              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/courses-3.jpg" alt="">
                               <div class="courses-overlay">
                                   <a class="btn btn-outline-primary border-2" href="">Read More</a>
                               </div>

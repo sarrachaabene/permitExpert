@@ -101,193 +101,140 @@
   <!-- Page Header End -->
 
 
-  <!-- About Start -->
-  <div class="container-xxl py-6 margin-top">
-    <div class="container">
-      <div class="row g-5">
-        <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-          <h1><img class="viba"></h1>
-          <div class="position-relative overflow-hidden ps-5 pt-5 h-100" style="min-height: 300px;">
-            <img class="position-absolute w-100 h-100" src="../../../../public/assets/images/backgrounds/about-1.jpg"
-              alt="" style="object-fit: cover;">
-            <img class="position-absolute top-0 start-0 bg-white pe-3 pb-3"
-              src="../../../../public/assets/images/backgrounds/position.jpg" alt="" style="width: 200px; height: 200px;">
+   <!-- Contact Start -->
+      <div class="container-xxl py-6">
+          <div class="container">
+              <div class="row g-5">
+                  <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 450px;">
+                      <div class="position-relative h-100">
+                        <a  href="https://www.google.com/maps/place/ELYOS+DIGITAL/@35.7744943,10.8277122,18z/data=!4m6!3m5!1s0x13026d33430d29d1:0xfde13a73a419ddfb!8m2!3d35.7744921!4d10.8289997!16s%2Fg%2F11f15mjxsr?entry=ttu">
+                        <img src="../../../../public/assets/images/backgrounds/elyos map.jpg"></a>
+                      </div>
+                  </div>
+                  <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                      <h6 class="text-primary text-uppercase mb-2">Soumettre une demande à une auto-école</h6>
+                      <h1 class="display-6 mb-4">contactez-nous</h1>
+                      <p class="mb-4">Veuillez remplir le formulaire ci-dessous pour soumettre votre demande à une auto-école.
+
+
+
+
+
+
+
+   <a href="https://htmlcodex.com/contact-form"></a>.</p>
+                      <form>
+                          <div class="row g-3">
+                              <div class="col-md-6">
+                                  <div class="form-floating">
+                                      <input type="text" class="form-control border-0 bg-light" id="name" placeholder="Your Name">
+                                      <label for="name">Nom d'utilisateur</label>
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                  <div class="form-floating">
+                                      <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
+                                      <label for="email">adresse émail</label>
+                                  </div>
+                              </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
+                                        <label for="email">Numéro du téléphone</label>
+                                    </div>
+                                </div>
+                                    <div class="col-md-6">
+                                      <div class="form-floating">
+                                          <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
+                                          <label for="email">Cin</label>
+                                      </div>
+                                  </div>
+                                  
+                              <div class="col-6">
+                                  <div class="form-floating">
+                                      <input type="date" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
+                                      <label for="subject">Date du naissance</label>
+                                  </div>
+                              </div> 
+                              
+                                <div class="col-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
+                                        <label for="subject">Nom de l'autoécole</label>
+                                    </div>
+                                </div>
+                              <div class="col-12">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
+                                        <label for="subject">adresse autoécole</label>
+                                    </div>
+                                </div>
+                              <div class="col-12">
+                                  <div class="form-floating">
+                                      <textarea class="form-control border-0 bg-light" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
+                                      <label for="message">description</label>
+                                  </div>
+                              </div>
+                              <div class="col-12">
+                                  <button class="btn btn-primary py-3 px-5" type="submit">Send Message</button>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
           </div>
-        </div>
-        <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-          <div class="h-100">
-            <h6 class="text-primary text-uppercase mb-2">Contact</h6>
-            <h1 class="display-6 mb-4">PermitExpert!Outil de gestion pour Auto-école.</h1>
-            <p>Notre mission est de fournir aux auto-écoles une solution innovante et complète pour gérer tous les aspects
-              de leur fonctionnement. Nous proposons une plateforme intuitive qui facilite la gestion des candidats, des
-              moniteurs, des secrétaires et des véhicules. En centralisant toutes ces informations, notre site permet aux
-              auto-écoles d'optimiser leur organisation, de gagner du temps.</p>
-            <p class="mb-4"></p>
-            <div class="row g-2 mb-4 pb-2">
-              <div class="col-sm-6">
-                <i class="fa fa-check text-primary me-2"></i>Organisée
-              </div>
-              <div class="col-sm-6">
-                <i class="fa fa-check text-primary me-2"></i>Efficace
-              </div>
-              <div class="col-sm-6">
-                <i class="fa fa-check text-primary me-2"></i>Plateforme performante
-              </div>
-              <div class="col-sm-6">
-                <i class="fa fa-check text-primary me-2"></i>Plateforme facile
-              </div>
-            </div>
-            <div class="row g-4">
-              <div class="col-sm-6">
-                <a class="btn btn-primary py-3 px-5" href="">En savoir plus</a>
-              </div>
-              <div class="col-sm-6">
-                <a class="d-inline-flex align-items-center btn btn-outline-primary border-2 p-2" href="tel:+0123456789">
-                  <span class="flex-shrink-0 btn-square bg-primary">
-                    <i class="fa fa-phone-alt text-white"></i>
-                  </span>
-                  <span class="px-3">(+216) 73 449 596</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-  </div>
-  <!-- About End -->
-  <br><br>
+      <!-- Contact End -->
 
-  <!-- Team Start -->
-  <div class="container-xxl py-5">
-    <div class="container">
-      <div class="text-center mx-auto mb-4 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-        <h6 class="text-primary text-uppercase mb-2">PermitExpert :</h6>
-        <h1 class="display-6 mb-4"> Des fonctionnalités conçues pour vous.</h1>
+
+      <!-- Footer Start -->
+      <div class="container-fluid bg-dark text-light footer my-6 mb-0 py-6 wow fadeIn" data-wow-delay="0.1s">
+          <div class="container">
+              <div class="row g-5">
+                  <div class="col-lg-3 col-md-6">
+                      <h4 class="text-white mb-4">Get In Touch</h4>
+                      <h2 class="text-primary mb-4"><i class="fa fa-car text-white me-2"></i>Drivin</h2>
+                      <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                      <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                      <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                  </div>
+                  <div class="col-lg-3 col-md-6">
+                      <h4 class="text-light mb-4">Quick Links</h4>
+                      <a class="btn btn-link" href="">About Us</a>
+                      <a class="btn btn-link" href="">Contact Us</a>
+                      <a class="btn btn-link" href="">Our Services</a>
+                      <a class="btn btn-link" href="">Terms & Condition</a>
+                      <a class="btn btn-link" href="">Support</a>
+                  </div>
+                  <div class="col-lg-3 col-md-6">
+                      <h4 class="text-light mb-4">Popular Links</h4>
+                      <a class="btn btn-link" href="">About Us</a>
+                      <a class="btn btn-link" href="">Contact Us</a>
+                      <a class="btn btn-link" href="">Our Services</a>
+                      <a class="btn btn-link" href="">Terms & Condition</a>
+                      <a class="btn btn-link" href="">Support</a>
+                  </div>
+                  <div class="col-lg-3 col-md-6">
+                      <h4 class="text-light mb-4">Newsletter</h4>
+                      <form action="">
+                          <div class="input-group">
+                              <input type="text" class="form-control p-3 border-0" placeholder="Your Email Address">
+                              <button class="btn btn-primary">Sign Up</button>
+                          </div>
+                      </form>
+                      <h6 class="text-white mt-4 mb-3">Follow Us</h6>
+                      <div class="d-flex pt-2">
+                          <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-twitter"></i></a>
+                          <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-facebook-f"></i></a>
+                          <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-youtube"></i></a>
+                          <a class="btn btn-square btn-outline-light me-0" href=""><i class="fab fa-linkedin-in"></i></a>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
-      <div class="row g-0 team-items">
-        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-          <div class="team-item position-relative">
-            <div class="position-relative">
-              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/can.jpg" alt="">
-              <div class="team-social text-center">
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-              </div>
-            </div>
-            <div class="bg-light text-center p-4">
-              <h5 class="mt-2">Gestion des candidats</h5>
-              <span>Permet une gestion complète des candidats, plannings, examens, paiements et séances.</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-          <div class="team-item position-relative">
-            <div class="position-relative">
-              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/voituree.jpg" alt="">
-              <div class="team-social text-center">
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-              </div>
-            </div>
-            <div class="bg-light text-center p-4">
-              <h5 class="mt-2">Gestion des véhicules</h5>
-              <span>Permet une gestion complète de vos véhicules, ravitaillements en carburant, entretiens,
-                dépenses.</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-          <div class="team-item position-relative">
-            <div class="position-relative">
-              <img class="img-fluid mb-6" src="../../../../public/assets/images/backgrounds/transactione.jpg" alt="">
-              <div class="team-social text-center">
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-              </div>
-            </div>
-            <div class="bg-light text-center p-3">
-              <h5 class="mt-2 mb-15">Gestion des statistiques</h5>
-              <span>Permet une gestion complète des Recettes/Dépenses, des statistiques des examens, des moniteurs et des
-                véhicules.</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-          <div class="team-item position-relative">
-            <div class="position-relative">
-              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/money.jpg" alt="">
-              <div class="team-social text-center">
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-              </div>
-            </div>
-            <div class="bg-light text-center p-4">
-              <h5 class="mt-2">Gestion des transactions</h5>
-              <span>Facilite une gestion efficace des transactions en automatisant le suivi des paiements et des
-                dépenses.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Team End -->
 
 
-  <!-- Footer Start -->
-  <div class="container-fluid bg-dark text-light footer my-6 mb-0 py-6 wow fadeIn" data-wow-delay="0.1s">
-    <div class="container">
-      <div class="row g-5">
-        <div class="col-lg-3 col-md-6">
-          <h4 class="text-white mb-4">Contactez-nous</h4>
-          <h2 class="text-primary mb-2"><i class=" text-white me-1"></i>PermitExpert</h2>
-          <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>RUE MOHAMED SHIM RBAT MONASTIR-5000 TUNISIE
-
-          </p>
-          <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>(+216) 73 449 596 </p>
-          <p class="mb-2"><i class="fa fa-envelope me-3"></i>ELYOSDIGITAL@.COM
-
-          </p>
-        </div>
-        <div class="col-lg-3 col-md-6">
-          <h4 class="text-light mb-4">Quick Links</h4>
-          <a class="btn btn-link" href="">Apropos De nous</a>
-          <a class="btn btn-link" href="">Contactez-nous</a>
-          <a class="btn btn-link" href="">notres services</a>
-        </div>
-        <div class="col-lg-3 col-md-6">
-          <h4 class="text-light mb-4">Popular Links</h4>
-          <a class="btn btn-link" href="">About Us</a>
-          <a class="btn btn-link" href="">Contact Us</a>
-          <a class="btn btn-link" href="">Our Services</a>
-          <a class="btn btn-link" href="">Terms & Condition</a>
-          <a class="btn btn-link" href="">Support</a>
-        </div>
-        <div class="col-lg-3 col-md-6">
-          <h4 class="text-light mb-4">Newsletter</h4>
-          <form action="">
-            <div class="input-group">
-              <input type="text" class="form-control p-3 border-0" placeholder="Your Email Address">
-              <button class="btn btn-primary">Sign Up</button>
-            </div>
-          </form>
-          <h6 class="text-white mt-4 mb-3">Suivez-nous</h6>
-          <div class="d-flex pt-2">
-            <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-twitter"></i></a>
-            <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-facebook-f"></i></a>
-            <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-youtube"></i></a>
-            <a class="btn btn-square btn-outline-light me-0" href=""><i class="fab fa-linkedin-in"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Footer End -->
 
 
   <!-- Copyright Start -->
