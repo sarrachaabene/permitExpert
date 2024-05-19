@@ -210,7 +210,7 @@
                           <div class="position-relative">
                               <img class="img-fluid" src="../../../../public/assets/images/backgrounds/money.jpg" alt="">
                               <div class="team-social text-center">
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
+ <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
                                   <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
                                   <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
                               </div>
