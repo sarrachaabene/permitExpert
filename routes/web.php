@@ -20,6 +20,15 @@ Route::get('/code', function () {
   //if(Auth::check())
   return view('code');
 });
+Route::get('/index', function () {
+  //if(Auth::check())
+  return view('index');
+});
+Route::get('/contact', function () {
+  //if(Auth::check())
+  return view('contact');
+});
+
 Route::get('/permit', function () {
   //if(Auth::check())
   return view('permitexpert');
