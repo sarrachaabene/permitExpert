@@ -123,106 +123,69 @@
 
 
    <a href="https://htmlcodex.com/contact-form"></a>.</p>
-                      <form>
-                          <div class="row g-3">
-                              <div class="col-md-6">
-                                  <div class="form-floating">
-                                      <input type="text" class="form-control border-0 bg-light" id="name" placeholder="Your Name">
-                                      <label for="name">Nom d'utilisateur</label>
-                                  </div>
-                              </div>
-                              <div class="col-md-6">
-                                  <div class="form-floating">
-                                      <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
-                                      <label for="email">adresse émail</label>
-                                  </div>
-                              </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
-                                        <label for="email">Numéro du téléphone</label>
-                                    </div>
-                                </div>
-                                    <div class="col-md-6">
-                                      <div class="form-floating">
-                                          <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
-                                          <label for="email">Cin</label>
-                                      </div>
-                                  </div>
-                                  
-                              <div class="col-6">
-                                  <div class="form-floating">
-                                      <input type="date" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
-                                      <label for="subject">Date du naissance</label>
-                                  </div>
-                              </div>
-                                <div class="col-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
-                                        <label for="subject">Nom de l'autoécole</label>
-                                    </div>
-                                </div>
-                              <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
-                                        <label for="subject">adresse autoécole</label>
-                                    </div>
-                                </div>
-                              <div class="col-12">
-                                  <div class="form-floating">
-                                      <textarea class="form-control border-0 bg-light" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
-                                      <label for="message">description</label>
-                                  </div>
-                              </div>
-                              <div class="col-12">
-                                  <button class="btn btn-primary py-3 px-5" type="submit">Envoyer</button>
-                              </div>
-                          </div>
-                      </form>
-                  </div>
-              </div>
+   <form @submit.prevent="submitForm">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.user_nameA" type="text" class="form-control border-0 bg-light" id="name" name="user_nameA" placeholder="Your Name">
+            <label for="name">Nom d'utilisateur</label>
           </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.emailA" type="email" class="form-control border-0 bg-light" id="email" name="emailA" placeholder="Your Email">
+            <label for="email">Adresse email</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.numTel" type="text" class="form-control border-0 bg-light" id="phone" name="numTel" placeholder="Your Phone">
+            <label for="phone">Numéro du téléphone</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.cin" type="text" class="form-control border-0 bg-light" id="cin" name="cin" placeholder="Your CIN">
+            <label for="cin">Cin</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input v-model="form.dateNaissance" type="date" class="form-control border-0 bg-light" id="birthdate" name="dateNaissance" placeholder="Your Birthdate">
+            <label for="birthdate">Date de naissance</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input v-model="form.nomEcole" type="text" class="form-control border-0 bg-light" id="schoolName" name="nomEcole" placeholder="School Name">
+            <label for="schoolName">Nom de l'autoécole</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input v-model="form.aderesseEcole" type="text" class="form-control border-0 bg-light" id="schoolAddress" name="aderesseEcole" placeholder="School Address">
+            <label for="schoolAddress">Adresse autoécole</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea v-model="form.descriptionEcole" class="form-control border-0 bg-light" id="description" name="descriptionEcole" placeholder="Leave a message here" style="height: 150px"></textarea>
+            <label for="description">Description</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary py-3 px-5" type="submit">Envoyer</button>
+        </div>
       </div>
-      <!-- Contact End -->
 
-    <!-- Footer Start -->
-      <div class="container-fluid bg-dark text-light footer my-6 mb-0 py-6 wow fadeIn" data-wow-delay="0.1s">
-          <div class="container">
-              <div class="row g-5">
-                  <div class="col-lg-3 col-md-6">
-                      <h4 class="text-white mb-4">Contactez-nous</h4>
-                      <h2 class="text-primary mb-2"><i class=" text-white me-1"></i>PermitExpert</h2>
-                      <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>RUE MOHAMED SHIM RBAT MONASTIR-5000 TUNISIE
-
-    </p>
-                      <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>(+216) 73 449 596  </p>
-                      <p class="mb-2"><i class="fa fa-envelope me-3"></i>ELYOSDIGITAL@.COM
-
-    </p>
-                  </div>
-                  <div class="col-lg-3 col-md-6">
-                      <h4 class="text-light mb-4">Quick Links</h4>
-                      <a class="btn btn-link" href="">Apropos De nous</a>
-                      <a class="btn btn-link" href="">Contactez-nous</a>
-                      <a class="btn btn-link" href="">notres services</a>
-                  </div>
-                  <div class="col-lg-3 col-md-6">
-                      <h4 class="text-light mb-4">Popular Links</h4>
-                      <a class="btn btn-link" href="">About Us</a>
-                      <a class="btn btn-link" href="">Contact Us</a>
-                      <a class="btn btn-link" href="">Our Services</a>
-                      <a class="btn btn-link" href="">Terms & Condition</a>
-                      <a class="btn btn-link" href="">Support</a>
-                  </div>
-                  <div class="col-lg-3 col-md-6">
-                      <h4 class="text-light mb-4">Newsletter</h4>
-                      <form action="">
-                          <div class="input-group">
-                              <input type="text" class="form-control p-3 border-0" placeholder="Your Email Address">
-                              <button class="btn btn-primary">Sign Up</button>
-                          </div>
-                      </form>
-                      <h6 class="text-white mt-4 mb-3">Suivez-nous</h6>
+      <div v-if="successMessage" class="alert alert-success" role="alert">
+        {{ successMessage }}
+      </div>
+      <div v-if="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+    </form>
+                      <h6 class="text-white mt-4 mb-3">Follow Us</h6>
                       <div class="d-flex pt-2">
                           <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-twitter"></i></a>
                           <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-facebook-f"></i></a>
@@ -261,9 +224,84 @@
 
 
 <script>
-export default {
+import axios from 'axios';
 
-}
+export default {
+  data() {
+    return {
+      form: {
+        user_nameA: '',
+        emailA: '',
+        numTel: '',
+        cin: '',
+        dateNaissance: '',
+        nomEcole: '',
+        aderesseEcole: '',
+        descriptionEcole: ''
+      },
+      successMessage: '',
+      errorMessage: ''
+    };
+  },
+  methods: {
+    validateForm() {
+      if (!this.form.user_nameA ||
+          !this.form.emailA ||
+          !this.form.numTel ||
+          !this.form.cin ||
+          !this.form.dateNaissance ||
+          !this.form.nomEcole ||
+          !this.form.aderesseEcole ||
+          !this.form.descriptionEcole) {
+        return "Tous les champs sont requis.";
+      }
+
+      if (!this.validEmail(this.form.emailA)) {
+        return "Adresse email invalide.";
+      }
+
+      return null;
+    },
+    validEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    },
+    async submitForm() {
+      const error = this.validateForm();
+
+      if (error) {
+        this.showMessage('error', error);
+        return;
+      }
+
+      try {
+        const response = await axios.post('/demandeInscript/store', this.form);
+        if (response.status === 201) {
+          this.showMessage('success', 'Demande d\'inscription créée avec succès!');
+        } else {
+          this.showMessage('error', 'Échec de la création de la demande d\'inscription.');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création de la demande d\'inscription:', error);
+        this.showMessage('error', 'Erreur lors de la création de la demande d\'inscription.');
+      }
+    },
+    showMessage(type, message) {
+      if (type === 'success') {
+        this.successMessage = message;
+        this.errorMessage = '';
+      } else {
+        this.errorMessage = message;
+        this.successMessage = '';
+      }
+
+      setTimeout(() => {
+        this.successMessage = '';
+        this.errorMessage = '';
+      }, 5000); 
+    }
+  }
+};
 </script>
 
 <style scoped>
