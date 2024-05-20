@@ -74,12 +74,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <div class="navbar-nav ms-auto p-4 p-lg-0">
-        <a href="/index" class="nav-item nav-link">Home</a>
-        <a href="/permit" class="nav-item nav-link active">About</a>
+        <a href="/index" class="nav-item nav-link">Accueil</a>
+        <a href="/permit" class="nav-item nav-link active">A propos de nous</a>
         <a href="/contact" class="nav-item nav-link">Contact</a>
       </div>
       <a href="" style="background-color:#F3BD00;   height: 90px; "
-        class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Get Started<i class="fa fa-arrow-right ms-3"></i></a>
+        class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Commencer<i class="fa fa-arrow-right ms-3"></i></a>
     </div>
   </nav>
   <!-- Navbar End -->
@@ -91,9 +91,9 @@
       <h1 class="display-4 text-white animated slideInDown mb-4">Contact</h1>
       <nav aria-label="breadcrumb animated slideInDown">
         <ol class="breadcrumb justify-content-center mb-0">
-          <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-          <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-          <li class="breadcrumb-item text-primary active" aria-current="page">About</li>
+          <li class="breadcrumb-item"><a class="text-white" href="#">Accueil</a></li>
+          <li class="breadcrumb-item"><a class="text-white" href="#">A propos de nous</a></li>
+          <li class="breadcrumb-item text-primary active" aria-current="page">Cantact</li>
         </ol>
       </nav>
     </div>
@@ -102,7 +102,7 @@
 
 
    <!-- Contact Start -->
-      <div class="container-xxl py-6">
+      <div class="container-xxl py-6 ">
           <div class="container">
               <div class="row g-5">
                   <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 450px;">
@@ -155,8 +155,7 @@
                                       <input type="date" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
                                       <label for="subject">Date du naissance</label>
                                   </div>
-                              </div> 
-                              
+                              </div>
                                 <div class="col-6">
                                     <div class="form-floating">
                                         <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
@@ -176,7 +175,7 @@
                                   </div>
                               </div>
                               <div class="col-12">
-                                  <button class="btn btn-primary py-3 px-5" type="submit">Send Message</button>
+                                  <button class="btn btn-primary py-3 px-5" type="submit">Envoyer</button>
                               </div>
                           </div>
                       </form>
@@ -186,25 +185,26 @@
       </div>
       <!-- Contact End -->
 
-
-      <!-- Footer Start -->
+    <!-- Footer Start -->
       <div class="container-fluid bg-dark text-light footer my-6 mb-0 py-6 wow fadeIn" data-wow-delay="0.1s">
           <div class="container">
               <div class="row g-5">
                   <div class="col-lg-3 col-md-6">
-                      <h4 class="text-white mb-4">Get In Touch</h4>
-                      <h2 class="text-primary mb-4"><i class="fa fa-car text-white me-2"></i>Drivin</h2>
-                      <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                      <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                      <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                      <h4 class="text-white mb-4">Contactez-nous</h4>
+                      <h2 class="text-primary mb-2"><i class=" text-white me-1"></i>PermitExpert</h2>
+                      <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>RUE MOHAMED SHIM RBAT MONASTIR-5000 TUNISIE
+
+    </p>
+                      <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>(+216) 73 449 596  </p>
+                      <p class="mb-2"><i class="fa fa-envelope me-3"></i>ELYOSDIGITAL@.COM
+
+    </p>
                   </div>
                   <div class="col-lg-3 col-md-6">
                       <h4 class="text-light mb-4">Quick Links</h4>
-                      <a class="btn btn-link" href="">About Us</a>
-                      <a class="btn btn-link" href="">Contact Us</a>
-                      <a class="btn btn-link" href="">Our Services</a>
-                      <a class="btn btn-link" href="">Terms & Condition</a>
-                      <a class="btn btn-link" href="">Support</a>
+                      <a class="btn btn-link" href="">Apropos De nous</a>
+                      <a class="btn btn-link" href="">Contactez-nous</a>
+                      <a class="btn btn-link" href="">notres services</a>
                   </div>
                   <div class="col-lg-3 col-md-6">
                       <h4 class="text-light mb-4">Popular Links</h4>
@@ -222,7 +222,7 @@
                               <button class="btn btn-primary">Sign Up</button>
                           </div>
                       </form>
-                      <h6 class="text-white mt-4 mb-3">Follow Us</h6>
+                      <h6 class="text-white mt-4 mb-3">Suivez-nous</h6>
                       <div class="d-flex pt-2">
                           <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-twitter"></i></a>
                           <a class="btn btn-square btn-outline-light me-1" href=""><i class="fab fa-facebook-f"></i></a>
@@ -233,6 +233,7 @@
               </div>
           </div>
       </div>
+      <!-- Footer End -->
 
 
 

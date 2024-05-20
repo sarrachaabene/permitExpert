@@ -71,11 +71,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="/index" class="nav-item nav-link">Home</a>
-                <a href="/permit" class="nav-item nav-link active">About</a> 
+                <a href="/index" class="nav-item nav-link">Acceuil</a>
+                <a href="/permit" class="nav-item nav-link active">A propos de nous</a> 
                 <a href="/contact" class="nav-item nav-link">Contact</a>
             </div>
-            <a href=""  style="background-color:#F3BD00;   height: 90px; " class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Get Started<i class="fa fa-arrow-right ms-3"></i></a>
+            <a href=""  style="background-color:#F3BD00;   height: 80px; " class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Get Started<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
     <!-- Navbar End -->
@@ -87,9 +87,9 @@
             <h1 class="display-4 text-white animated slideInDown mb-4">A PROPOS DE NOUS</h1>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb justify-content-center mb-0">
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">About</li>
+                    <li class="breadcrumb-item"><a class="text-white" href="#">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a class="text-white" href="#">A propos de nous</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Cantact</li>
                 </ol>
             </nav>
         </div>

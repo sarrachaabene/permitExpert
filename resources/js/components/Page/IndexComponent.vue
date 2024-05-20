@@ -74,12 +74,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <div class="navbar-nav ms-auto p-4 p-lg-0">
-        <a href="/index" class="nav-item nav-link">Home</a>
-        <a href="/permit" class="nav-item nav-link active">About</a>
+        <a href="/index" class="nav-item nav-link">Acceuil</a>
+        <a href="/permit" class="nav-item nav-link active">A propos de nous</a>
         <a href="/contact" class="nav-item nav-link">Contact</a>
       </div>
       <a href="/login" style="background-color:#F3BD00;   height: 90px; "
-        class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Get Started<i class="fa fa-arrow-right ms-3"></i></a>
+        class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Commencer<i class="fa fa-arrow-right ms-3"></i></a>
     </div>
   </nav>
   <!-- Navbar End -->
@@ -94,9 +94,10 @@
                           <div class="container">
                               <div class="row justify-content-center">
                                   <div class="col-lg-7">
-                                      <h1 class="display-2 text-light mb-5 animated slideInDown">Apprenez à guider en toute confiance</h1>
-                                      <a href="" class="btn btn-primary py-sm-3 px-sm-5">Learn More</a>
-                                      <a href="" class="btn btn-light py-sm-3 px-sm-5 ms-3">Our Courses</a>
+                                      <h1 class="display-2 text-light mb-5 animated slideInDown"> "Gérez mieux, conduisez plus."
+  </h1>
+                                      <a href="" class="btn btn-primary py-sm-3 px-sm-5">En savoir plus</a>
+                                      <a href="" class="btn btn-light py-sm-3 px-sm-5 ms-3">Nos offres</a>
                                   </div>
                               </div>
                           </div>
@@ -108,9 +109,9 @@
                           <div class="container">
                               <div class="row justify-content-center">
                                   <div class="col-lg-7">
-                                      <h1 class="display-2 text-light mb-5 animated slideInDown">Safe Driving Is Our Top Priority</h1>
-                                      <a href="" class="btn btn-primary py-sm-3 px-sm-5">Learn More</a>
-                                      <a href="" class="btn btn-light py-sm-3 px-sm-5 ms-3">Our Courses</a>
+                                      <h1 class="display-2 text-light mb-2 animated slideInDown">" optimisez la performance."</h1>
+                                      <a href="" class="btn btn-primary py-sm-3 px-sm-5">En savoir plus</a>
+                                      <a href="" class="btn btn-light py-sm-3 px-sm-5 ms-3 ">Nos offres</a>
                                   </div>
                               </div>
                           </div>
@@ -143,8 +144,8 @@
                                   <i class="fa fa-car text-white"></i>
                               </div>
                               <div class="ps-4">
-                                  <h5>Plateforme performante </h5>
-                                  <span>Clita erat ipsum lorem sit sed stet duo justo erat amet</span>
+                                  <h5>Gestion des véhicules</h5>
+                                  <span> Permet une gestion complète de vos véhicules, ravitaillements en carburant, entretiens, dépenses. </span>
                               </div>
                           </div>
                       </div>
@@ -156,8 +157,8 @@
                                   <i class="fa fa-users text-white"></i>
                               </div>
                               <div class="ps-4">
-                                  <h5>National Instructor</h5>
-                                  <span>Clita erat ipsum lorem sit sed stet duo justo erat amet</span>
+                                  <h5>Gestion candidats</h5>
+                                  <span>centraliser les informations sur vos candidats et simplifie leur gestion</span>
                               </div>
                           </div>
                       </div>
@@ -169,8 +170,8 @@
                                   <i class="fa fa-file-alt text-white"></i>
                               </div>
                               <div class="ps-4">
-                                  <h5>Get licence</h5>
-                                  <span>Clita erat ipsum lorem sit sed stet duo justo erat amet</span>
+                                  <h5>Gestion des transactions</h5>
+                                  <span>Facilite une gestion efficace des transactions en automatisant le suivi des paiements et des dépenses.</span>
                               </div>
                           </div>
                       </div>
@@ -187,25 +188,23 @@
       <div class="container-xxl courses my-6 py-6 pb-0">
           <div class="container">
               <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                  <h6 class="text-primary text-uppercase mb-2">Tranding Courses</h6>
-                  <h1 class="display-6 mb-4">Our Courses Upskill You With Driving Training</h1>
+                  <h6 class="text-primary text-uppercase mb-2 bb">Nos offres</h6>
+                  <h1 class="display-6 mb-4">Consulter Nos Offres!</h1>
               </div>
               <div class="row g-4 justify-content-center">
                   <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                       <div class="courses-item d-flex flex-column bg-white overflow-hidden h-100">
                           <div class="text-center p-4 pt-0">
-                              <div class="d-inline-block bg-primary text-white fs-5 py-1 px-4 mb-4">$99</div>
-                              <h5 class="mb-3">Automatic Car Lessons</h5>
-                              <p>Tempor erat elitr rebum at clita dolor diam ipsum sit diam amet diam et eos</p>
+                              <div class="d-inline-block bg-primary text-white fs-5 py-1 px-4 mb-4">50%</div>
+                              <h5 class="mb-3">Abonnement Annuel</h5>
+                              <p>Réduction de 50% sur les Abonnements Annuels   </p>
                               <ol class="breadcrumb justify-content-center mb-0">
-                                  <li class="breadcrumb-item small"><i class="fa fa-signal text-primary me-2"></i>Beginner</li>
-                                  <li class="breadcrumb-item small"><i class="fa fa-calendar-alt text-primary me-2"></i>3 Week</li>
+                                  <li class="breadcrumb-item small"><i class="fa fa-calendar-alt text-primary me-2"></i>Année</li>
                               </ol>
                           </div>
                           <div class="position-relative mt-auto">
                               <img class="img-fluid" src="../../../../public/assets/images/backgrounds/courses-1.jpg" alt="">
                               <div class="courses-overlay">
-                                  <a class="btn btn-outline-primary border-2" href="">Read More</a>
                               </div>
                           </div>
                       </div>
@@ -213,18 +212,16 @@
                   <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                       <div class="courses-item d-flex flex-column bg-white overflow-hidden h-100">
                           <div class="text-center p-4 pt-0">
-                              <div class="d-inline-block bg-primary text-white fs-5 py-1 px-4 mb-4">$99</div>
-                              <h5 class="mb-3">Highway Driving Lesson</h5>
-                              <p>Tempor erat elitr rebum at clita dolor diam ipsum sit diam amet diam et eos</p>
+                              <div class="d-inline-block bg-primary text-white fs-5 py-1 px-4 mb-4">20%</div>
+                              <h5 class="mb-3">Abonnement de 3 mois</h5>
+                              <p>Réduction de 20% sur les Abonnements du 3 mois </p>
                               <ol class="breadcrumb justify-content-center mb-0">
-                                  <li class="breadcrumb-item small"><i class="fa fa-signal text-primary me-2"></i>Beginner</li>
-                                  <li class="breadcrumb-item small"><i class="fa fa-calendar-alt text-primary me-2"></i>3 Week</li>
+                                  <li class="breadcrumb-item small"><i class="fa fa-calendar-alt text-primary me-2"></i>3 Mois</li>
                               </ol>
                           </div>
                           <div class="position-relative mt-auto">
                               <img class="img-fluid" src="../../../../public/assets/images/backgrounds/courses-2.jpg" alt="">
                               <div class="courses-overlay">
-                                  <a class="btn btn-outline-primary border-2" href="">Read More</a>
                               </div>
                           </div>
                       </div>
@@ -232,18 +229,16 @@
                   <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                       <div class="courses-item d-flex flex-column bg-white overflow-hidden h-100">
                           <div class="text-center p-4 pt-0">
-                              <div class="d-inline-block bg-primary text-white fs-5 py-1 px-4 mb-4">$99</div>
-                              <h5 class="mb-3">International Driving</h5>
-                              <p>Tempor erat elitr rebum at clita dolor diam ipsum sit diam amet diam et eos</p>
+                              <div class="d-inline-block bg-primary text-white fs-5 py-1 px-4 mb-4">10%</div>
+                              <h5 class="mb-3">Abonnement Mensuel</h5>
+                              <p>Réduction de 10% sur les Abonnements du mois</p>
                               <ol class="breadcrumb justify-content-center mb-0">
-                                  <li class="breadcrumb-item small"><i class="fa fa-signal text-primary me-2"></i>Beginner</li>
-                                  <li class="breadcrumb-item small"><i class="fa fa-calendar-alt text-primary me-2"></i>3 Week</li>
+                                  <li class="breadcrumb-item small"><i class="fa fa-calendar-alt text-primary me-2"></i>Mois</li>
                               </ol>
                           </div>
                           <div class="position-relative mt-auto">
                               <img class="img-fluid" src="../../../../public/assets/images/backgrounds/courses-3.jpg" alt="">
                               <div class="courses-overlay">
-                                  <a class="btn btn-outline-primary border-2" href="">Read More</a>
                               </div>
                           </div>
                       </div>
@@ -257,82 +252,83 @@
 
   
 
-      <!-- Team Start -->
-      <div class="container-xxl py-6">
-          <div class="container">
-              <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                  <h6 class="text-primary text-uppercase mb-2">Meet The Team</h6>
-                  <h1 class="display-6 mb-4">We Have Great Experience Of Driving</h1>
-              </div>
-              <div class="row g-0 team-items">
-                  <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                      <div class="team-item position-relative">
-                          <div class="position-relative">
-                              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/can.jpg" alt="">
-                              <div class="team-social text-center">
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-                              </div>
-                          </div>
-                          <div class="bg-light text-center p-4">
-                              <h5 class="mt-2">Gestion des candidats</h5>
-                              <span>Permet une gestion complète des candidats, plannings, examens, paiements et séances.</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                      <div class="team-item position-relative">
-                          <div class="position-relative">
-                              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/voituree.jpg" alt="">
-                              <div class="team-social text-center">
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-                              </div>
-                          </div>
-                          <div class="bg-light text-center p-4">
-                              <h5 class="mt-2">Gestion des véhicules</h5>
-                              <span>Permet une gestion complète de vos véhicules, ravitaillements en carburant, entretiens, dépenses.</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                      <div class="team-item position-relative">
-                          <div class="position-relative">
-                              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/transactione.jpg" alt="">
-                              <div class="team-social text-center">
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-                              </div>
-                          </div>
-                          <div class="bg-light text-center p-4">
-                              <h5 class="mt-2">Gestion des statistiques</h5>
-                              <span>Permet une gestion complète des Recettes/Dépenses, des statistiques des examens, des moniteurs et des véhicules</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                      <div class="team-item position-relative">
-                          <div class="position-relative">
-                              <img class="img-fluid" src="../../../../public/assets/images/backgrounds/money.jpg" alt="">
-                              <div class="team-social text-center">
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
-                                  <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
-                              </div>
-                          </div>
-                          <div class="bg-light text-center p-4">
-                              <h5 class="mt-2">Gestion des transactions</h5>
-                              <span>Facilite une gestion efficace des transactions en automatisant le suivi des paiements et des dépenses</span>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <!-- Team End -->
+    <!-- Team Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-4 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                    <h6 class="text-primary text-uppercase mb-2">PermitExpert :</h6>
+                    <h1 class="display-6 mb-4"> Des fonctionnalités conçues pour vous.</h1>
+                </div>
+                <div class="row g-0 team-items">
+                    <div class="col-lg-3 col-md-6 " data-wow-delay="0.1s">
+                        <div class="team-item ">
+                            <div class="">
+                                <img class="img-fluid" src="../../../../public/assets/images/backgrounds/can.jpg" alt="">
+                                <div class="team-social text-center">
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="bg-light text-center p-4">
+                                <h5 class="mt-2">Gestion des candidats</h5>
+                                <span>Permet une gestion complète des candidats, plannings, examens, paiements et séances.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="team-item ">
+                            <div class="">
+                                <img class="img-fluid" src="../../../../public/assets/images/backgrounds/voituree.jpg" alt="">
+                                <div class="team-social text-center">
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="bg-light text-center p-4">
+                                <h5 class="mt-2">Gestion des véhicules</h5>
+                                <span>Permet une gestion complète de vos véhicules, ravitaillements en carburant, entretiens, dépenses.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="team-item ">
+                            <div class="">
+                                <img class="img-fluid mb-6" src="../../../../public/assets/images/backgrounds/transactione.jpg" alt="">
+                                <div class="team-social text-center">
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="bg-light text-center p-3">
+                                <h5 class="mt-2 mb-15">Gestion des statistiques</h5>
+                                <span>Permet une gestion complète des Recettes/Dépenses, des statistiques des examens, des moniteurs et des véhicules.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="team-item ">
+                            <div class="">
+                                <img class="img-fluid" src="../../../../public/assets/images/backgrounds/money.jpg" alt="">
+                                <div class="team-social text-center">
+                                   <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-square btn-outline-primary border-2 m-1" href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="bg-light text-center p-4">
+                                <h5 class="mt-2">Gestion des transactions</h5>
+                                <span>Facilite une gestion efficace des transactions en automatisant le suivi des paiements et des dépenses.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+
 
 
     
