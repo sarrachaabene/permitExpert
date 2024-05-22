@@ -104,7 +104,14 @@
               <span class="hide-menu">véhicules</span>
             </router-link>
           </li>
-
+          <li class="sidebar-item" v-if="!userRole">
+            <router-link class="sidebar-link" to="/message" aria-expanded="false">
+              <span>
+                <i class="fa fa-envelope"></i>
+              </span>
+              <span class="hide-menu">Contact</span>
+            </router-link>
+          </li>
 
 
           <li class="sidebar-item">
@@ -115,7 +122,7 @@
               <span class="hide-menu">Paramétres</span>
             </router-link>
           </li>
-
+  
   <!--         <li class="sidebar-item">
             <a class="sidebar-link" to="/parametre" aria-expanded="false">
               <span>

@@ -143,11 +143,10 @@ class DemandeInscriptionController extends Controller
         'dateNaissance' => 'required|date',
         'status' => 'string',
     ]);
-
     try {
         $demandeInscription = DemandeInscription::create($validatedData);
         if ($demandeInscription) {
-            return response()->json($demandeInscription, 201); // Utiliser le code de statut 201 pour "Created"
+            return response()->json($demandeInscription, 201); 
         } else {
             return response()->json("La demande d'inscription n'a pas été créée", 400);
         }

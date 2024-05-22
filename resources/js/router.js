@@ -18,6 +18,8 @@ import Veriforcode from "./components//Page/VerifForCodeComponent.vue";
 import codeforpass from "./components//Page/codeForPassword.vue";
 import ressource from "./components//Page/Ressource.vue";
 import permit from "./components//Page/PermitComponent.vue";
+import Message from "./components//Page/MessageComponent.vue";
+
 
 const routes = [
     { path: "/", component: permit },
@@ -40,6 +42,7 @@ const routes = [
     { path: "/:pathMatch(.*)*", component: PageNotFound },
     { path: "/utilisateur", component: UtilisateurComponent },
     { path: "/ressource", component: ressource },
+    { path: "/message", component: Message },
 ];
 const router = createRouter({
     history: createWebHistory(),

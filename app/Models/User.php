@@ -64,9 +64,10 @@ class User extends Authenticatable
 
     public function transactions()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class, 'id');
     }
 
+    
     public function demandeInscriptions()
     {
         return $this->hasMany(DemandeInscription::class);
@@ -86,4 +87,5 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Resource::class);
     }
+
 }

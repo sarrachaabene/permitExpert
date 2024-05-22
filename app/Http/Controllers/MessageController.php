@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers; // Déplacez le namespace ici
-
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
@@ -102,22 +102,29 @@ public function store(Request $request)
     try {
         $validatedData = $request->validate([
             'message_description' => 'required|string',
-            'recipient_id' => 'required|exists:users,id|different:sender_msg',
+            'recipient_username' => [
+                'required',
+                'exists:users,user_name',
+                Rule::notIn([auth()->user()->username]), 
+            ],
         ]);
-
         $sender_id = auth()->id(); 
+        $recipient_id = User::where('user_name', $validatedData['recipient_username'])->value('id');
+                $sender_auto_ecole_id = auth()->user()->id_auto_ecole;
+        $recipient_auto_ecole_id = User::findOrFail($recipient_id)->id_auto_ecole;
 
-        if ($validatedData['recipient_id'] === $sender_id) {
+        if ($sender_auto_ecole_id !== $recipient_auto_ecole_id) {
+            return response()->json(["error" => "L'utilisateur n'appartient pas à la même auto-école que l'expéditeur."], 400);
+        }
+        if ($recipient_id === $sender_id) {
             return response()->json(["error" => "Le destinataire et l'expéditeur ne peuvent pas être les mêmes."], 400);
         }
-
         $message = Message::create([
             'description' => $validatedData['message_description'],
             'sender_id' => $sender_id, 
-            'recipient_id' => $validatedData['recipient_id'],
+            'recipient_id' => $recipient_id,
             'dateM' => now(), 
         ]);
-
         Notification::create([
             'message_id' => $message->id,
             'message_description' => $message->description,

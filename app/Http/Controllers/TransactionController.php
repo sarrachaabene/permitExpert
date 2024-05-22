@@ -77,7 +77,24 @@ class TransactionController extends Controller
              if ($transactions->isEmpty()) {
                  return response()->json("Aucune transaction trouvée pour cette auto-école.", 404);
              } 
-             return response()->json($transactions, 200);
+             
+             $transactionDetails = [];
+             foreach ($transactions as $transaction) {
+                 $userDetails = User::find($transaction->user_id);
+                 $vehiculeDetails = Vehicule::find($transaction->vehicule_id);
+                 $transactionDetails[] = [
+                     "id" => $transaction->id,
+                     "montantT" => $transaction->montantT,
+                     "dateT" => $transaction->dateT,
+                     "description" => $transaction->description,
+                     "Type_T" => $transaction->Type_T,
+                     "Type_Transaction" => $transaction->Type_Transaction,
+                     "user_name" => $userDetails ? $userDetails->user_name : "",
+                     "immatricule" => $vehiculeDetails ? $vehiculeDetails->immatricule : "",
+                 ];
+             }
+     
+             return response()->json($transactionDetails, 200);
          } catch (\Exception $e) {
              $error = "Erreur lors de la récupération des transactions: " . $e->getMessage();
              return response()->json(["error" => $error], 500);

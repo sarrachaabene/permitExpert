@@ -26,4 +26,8 @@ public function seances()
 {
     return $this->hasMany(Seance::class);
 }
+public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'id');
+    }
 }

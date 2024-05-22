@@ -37,7 +37,10 @@ Route::get('/ressource', function () {
   //if(Auth::check())
   return view('welcome');
 });
-
+Route::get('/message', function () {
+  //if(Auth::check())
+  return view('welcome');
+});
 Route::get('/registerf', function () {
   //if(Auth::check())
   return view('registerfinal');
