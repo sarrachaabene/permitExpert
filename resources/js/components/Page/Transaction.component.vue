@@ -280,6 +280,7 @@ export default {
     return {
       deleteSuccessMessage: '', 
       AddSuccessMessage: '', 
+      updateSuccessMessage:'',
       originalTransactionList: [],
       originalUserList: [],
       transaction: [],

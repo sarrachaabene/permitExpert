@@ -65,6 +65,18 @@
                 </div>
               </div>
             </div>
+            <div v-if="AddSuccessMessage" class="alert alert-success" role="alert">
+  {{ AddSuccessMessage }}
+</div>
+<div v-if="deleteSuccessMessage" class="alert alert-success" role="alert">
+  {{ deleteSuccessMessage }}
+</div>
+<div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
+  {{ AddErrorMessage }}
+</div>
+<div v-if="updateSuccessMessage" class="alert alert-success" role="alert">
+  {{ updateSuccessMessage }}
+</div>
           </div>
         </div>
       </div>
@@ -103,9 +115,7 @@
           <button @click="addResource" class="btn btn-primary" type="button" style="background-color: #9dcd5a; border-color: #9dcd5a">
             Ajouter
           </button>
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35">
-            Annuler
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35">Annuler</button>
         </div>
       </div>
     </div>
@@ -168,6 +178,10 @@ const RESSOURCE_API_BASE_URL = "http://localhost:8000/api/ressourceeducative";
 export default {
   data() {
     return {
+      AddSuccessMessage:'',
+      deleteSuccessMessage:'',
+      updateSuccessMessage:'',
+      AddErrorMessage:'',
       ressource: [],
       selectedResourceId: null,
       newRessource: {
@@ -207,8 +221,16 @@ export default {
         $('#exampleModal').modal('hide'); 
         $('body').removeClass('modal-open'); 
         $('.modal-backdrop').remove(); 
+        this.AddSuccessMessage = 'Ressource a été ajoutée avec succès.';
+    setTimeout(() => {
+      this.AddSuccessMessage = ''; 
+    }, 3000);
       } catch (error) {
         console.error("Error adding resource:", error);
+        this.AddErrorMessage = 'Erreur lors ajout d\'admin';
+    setTimeout(() => {
+      this.AddErrorMessage = ''; 
+    }, 3000);
       }
     },
     openEditModal(resource) {

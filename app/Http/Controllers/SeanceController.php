@@ -187,6 +187,9 @@ class SeanceController extends Controller
                 'heureD' => $validatedData['heureD'],
                 'heureF' => $validatedData['heureF'],
                 'dateS' => $validatedData['dateS'],
+                'status'=>'en attente',
+                'candidat_status'=>'en attente',
+                'moniteur_status'=>'en attente',
                 'moniteur_id' => $validatedData['moniteur_id'],
                 'candidat_id' => $validatedData['candidat_id'],
                 'vehicule_id' => $validatedData['vehicule_id'],
@@ -646,6 +649,93 @@ public function delete($id)
  *      )
  * )
  */
+
+
+
+
+ public function AccepterSeance($id)
+{
+    $user = Auth::user();
+
+    $seance = Seance::find($id);
+
+    if (!$seance) {
+        return response()->json(["error" => "La séance n'existe pas."], 404);
+    }
+
+    try {
+        if ($user->role === 'candidat') {
+            $seance->candidat_status = "confirmee";
+            if ($seance->moniteur_status === "confirmee") {
+                $seance->status = "confirmee";
+            } else if ($seance->moniteur_status === "refusee") {
+                $seance->status = "refusee";
+            } else {
+                $seance->status = "en attente";
+            }
+        } elseif ($user->role === 'moniteur') {
+            $seance->moniteur_status = "confirmee";
+            if ($seance->candidat_status === "confirmee") {
+                $seance->status = "confirmee";
+            } else if ($seance->candidat_status === "refusee") {
+                $seance->status = "refusee";
+            } else {
+                $seance->status = "en attente";
+            }
+        } else {
+            return response()->json(["error" => "L'utilisateur n'est pas autorisé à accéder à cette ressource."], 403);
+        }
+        
+        $seance->save();
+
+        return response()->json(["seance" => $seance], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la modification de la séance: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
+
+public function RefuserSeance($id)
+{
+    $user = Auth::user();
+
+    $seance = Seance::find($id);
+
+    if (!$seance) {
+        return response()->json(["error" => "La séance n'existe pas."], 404);
+    }
+
+    try {
+        if ($user->role === 'candidat') {
+            $seance->candidat_status = "refusee";
+            if ($seance->moniteur_status === "refusee" || $seance->moniteur_status === "confirmee") {
+                $seance->status = "refusee";
+            } else {
+                $seance->status = "en attente";
+            }
+        } elseif ($user->role === 'moniteur') {
+            $seance->moniteur_status = "refusee";
+            if ($seance->candidat_status === "refusee" || $seance->candidat_status === "confirmee") {
+                $seance->status = "refusee";
+            } else {
+                $seance->status = "en attente";
+            }
+        } else {
+            return response()->json(["error" => "L'utilisateur n'est pas autorisé à accéder à cette ressource."], 403);
+        }
+        
+        $seance->save();
+
+        return response()->json(["seance" => $seance], 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la modification de la séance: " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
+    }
+}
+
+
+
 public function AccepterPourCandidat($id)
 {
     try {

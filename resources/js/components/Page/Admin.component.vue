@@ -54,6 +54,19 @@
                 </div>
               </div>
             </div>
+            <div v-if="AddSuccessMessage" class="alert alert-success" role="alert">
+  {{ AddSuccessMessage }}
+</div>
+<div v-if="deleteSuccessMessage" class="alert alert-success" role="alert">
+  {{ deleteSuccessMessage }}
+</div>
+<div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
+  {{ AddErrorMessage }}
+</div>
+<div v-if="updateSuccessMessage" class="alert alert-success" role="alert">
+  {{ updateSuccessMessage }}
+</div>
+
           </div>
         </div>
       </div>
@@ -173,6 +186,11 @@ const USER_API_BASE_URL = "http://localhost:8000/api/user";
 export default {
   data() {
     return {
+
+      AddSuccessMessage:'',
+      deleteSuccessMessage:'',
+      updateSuccessMessage:'',
+      AddErrorMessage:'',
       users: [],
       newAdmin: {
         user_name: '',
@@ -229,8 +247,16 @@ export default {
           $('#exampleModal').modal('hide'); 
           $('body').removeClass('modal-open'); 
           $('.modal-backdrop').remove(); 
+          this.AddSuccessMessage = 'Admin a été ajoutée avec succès.';
+    setTimeout(() => {
+      this.AddSuccessMessage = ''; 
+    }, 3000);
         } catch (error) {
           console.error("Error adding admin:", error);
+          this.AddErrorMessage = 'Erreur lors ajout d\'admin';
+    setTimeout(() => {
+      this.AddErrorMessage = ''; 
+    }, 3000);
         }
       }
     },
@@ -244,6 +270,10 @@ export default {
         console.log(response.data);
         this.fetchData();
         $('#editModal').modal('hide');
+        this.updateSuccessMessage = 'La transaction a été mise à ajoutée avec succès.';
+    setTimeout(() => {
+      this.updateSuccessMessage = ''; 
+    }, 3000);
       } catch (error) {
         console.error("Error updating admin:", error);
       }
@@ -272,6 +302,10 @@ export default {
         console.log(response.data); 
         this.fetchData(); 
         $('#deleteConfirmationModal').modal('hide');
+        this.deleteSuccessMessage = 'Admin a été supprimée avec succès.';
+    setTimeout(() => {
+      this.deleteSuccessMessage = ''; 
+    }, 3000);
       } catch (error) {
         console.error("Error deleting user:", error);
       }

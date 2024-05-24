@@ -60,6 +60,18 @@
                 </div>
               </div>
             </div>
+            <div v-if="deleteSuccessMessage" class="alert alert-success" role="alert">
+              {{ deleteSuccessMessage }}
+            </div>
+            <div v-if="AddSuccessMessage" class="alert alert-success" role="alert">
+              {{ AddSuccessMessage }}
+            </div>
+            <div v-if="updateSuccessMessage" class="alert alert-success" role="alert">
+              {{ updateSuccessMessage }}
+            </div>
+            <div v-if="deleteerrorsMessage" class="alert alert-danger" role="alert">
+              {{ deleteerrorsMessage }}
+            </div>
           </div>
         </div>
       </div>
@@ -84,7 +96,11 @@
           <form @submit.prevent="addAutoEcole">
             <div class="mb-3">
               <label class="form-label" for="nomAdmin">Nom d'admin:</label>
-              <input v-model="nomAdmin" name="nomAdmin" class="form-control" id="nomAdmin" placeholder="Nom d'admin" />
+              <select v-model="nomAdmin" name="nomAdmin" class="form-control" id="nomAdmin" placeholder="Nom d'admin" >
+                <option v-for="user in users" :key="user.id" :value="user.user_name">
+                  {{ user.user_name }}
+                </option>
+              </select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="nomAutoEcole">Nom d'auto école:</label>
@@ -97,22 +113,25 @@
             <div class="mb-3">
               <label class="form-label" for="description">Description:</label>
               <input v-model="description" name="description" class="form-control" id="description" placeholder="Description" />
-            </div>      
+            </div>  
+            <div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
+        {{ AddErrorMessage }}
+      </div>   
+            <div v-if="!isFormValid() && formSubmitted" class="alert alert-danger" role="alert">
+              Veuillez remplir tous les champs correctement.
+            </div> 
             <div class="modal-footer">
               <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Ajouter
               </button>
-              <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35"  data-bs-dismiss="modal">Annuler</button>
-
+              <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
-  
 
-  
   <!-- Modal de confirmation de suppression -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -125,14 +144,15 @@
           Êtes-vous sûr de vouloir supprimer cette auto-école ?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35"  data-bs-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
           <button type="button" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-danger" @click="deleteAutoEcole">Supprimer</button>
         </div>
       </div>
     </div>
   </div>
- <!-- Modal de modification d'auto-école -->
- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+
+  <!-- Modal de modification d'auto-école -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -140,10 +160,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="editAutoEcole" >
+          <form @submit.prevent="editAutoEcole">
             <div class="mb-3">
               <label class="form-label" for="editNomAdmin">Nom d'admin:</label>
-              <input v-model="editNomAdmin" name="editNomAdmin" class="form-control" id="editNomAdmin" placeholder="Nom d'admin" />
+              <select v-model="editNomAdmin" name="editNomAdmin" class="form-control" id="editNomAdmin" placeholder="Nom d'admin" >
+                <option v-for="user in users" :key="user.id" :value="user.user_name">
+                  {{ user.user_name }}
+                </option>
+              </select>
             </div>
             <div class="mb-3">
               <label class="form-label" for="editNomAutoEcole">Nom d'auto école:</label>
@@ -158,7 +182,7 @@
               <input v-model="editDescription" name="editDescription" class="form-control" id="editDescription" placeholder="Description" />
             </div>      
             <div class="modal-footer">
-              <button class="btn btn-primary" type="submit"  style="background-color: #9dcd5a; border-color: #9dcd5a">
+              <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Enregistrer
               </button>
               <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
@@ -168,17 +192,23 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 import axios from "axios";
 const AUTOECOLE_API_BASE_URL = "http://localhost:8000/api/autoEcole";
+const USER_API_BASE_URL = "http://localhost:8000/api/user";
 
 export default {
   data() {
     return {
+      formSubmitted: false,
       autoEcole: [],
+      users: [],
+      deleteSuccessMessage:'',
+      AddSuccessMessage:'',
+      updateSuccessMessage:'',
+      AddErrorMessage:'',
       searchQuery: '', 
       autoEcoleToDeleteId: null,
       nomAdmin: '',
@@ -206,6 +236,7 @@ export default {
     }
     console.log("Component mounted.");
     this.fetchData();
+    this.fetchUsers();
   },
   methods: {
     async fetchData() {
@@ -228,37 +259,55 @@ export default {
       this.autoEcoleToDeleteId = autoEcoleId;
       $('#deleteModal').modal('show'); 
     },
+    async fetchUsers() {
+      try {
+        const response = await axios.get(`${USER_API_BASE_URL}/indexForSuper`);
+        this.users = response.data;
+        console.log("Fetched users:", this.users);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    },
     async deleteAutoEcole() {
       try {
         const response = await axios.delete(`${AUTOECOLE_API_BASE_URL}/delete/${this.autoEcoleToDeleteId}`);
         console.log("Auto-école supprimée avec succès:", response.data);
         this.fetchData();
         $('#deleteModal').modal('hide'); 
+        this.deleteSuccessMessage = 'Auto-école été supprimée avec succès.';
+        setTimeout(() => {
+          this.deleteSuccessMessage = ''; 
+        }, 3000);
       } catch (error) {
         console.error("Erreur lors de la suppression de l'auto-école:", error.response.data);
         this.errorMessage = "Une erreur s'est produite lors de la suppression de l'auto-école.";
+        this.deleteerrorsMessage = 'une erreur lors de la suppression ';
+        setTimeout(() => {
+          this.deleteerrorsMessage = ''; 
+        }, 3000);
       }
     },
     async editAutoEcole() {
-  try {
-    const formData = {
-      user_name: this.editNomAdmin,
-      nom: this.editNomAutoEcole,
-      adresse: this.editAdresse,
-      description: this.editDescription
-    };
-    const response = await axios.put(`${AUTOECOLE_API_BASE_URL}/update/${this.editAutoEcoleId}`, formData);
-    console.log("Auto-école modifiée avec succès:", response.data);
-    this.fetchData();
-    $('#editModal').modal('hide');
-  } catch (error) {
-    console.error("Erreur lors de la modification de l'auto-école:", error.response.data);
-    this.errorMessage = "Une erreur s'est produite lors de la modification de l'auto-école.";
-  }
-},
-
-
-
+      try {
+        const formData = {
+          user_name: this.editNomAdmin,
+          nom: this.editNomAutoEcole,
+          adresse: this.editAdresse,
+          description: this.editDescription
+        };
+        const response = await axios.put(`${AUTOECOLE_API_BASE_URL}/update/${this.editAutoEcoleId}`, formData);
+        console.log("Auto-école modifiée avec succès:", response.data);
+        this.fetchData();
+        $('#editModal').modal('hide');
+        this.updateSuccessMessage = 'Auto-école modifiée avec succès.';
+        setTimeout(() => {
+          this.updateSuccessMessage = ''; 
+        }, 3000);
+      } catch (error) {
+        console.error("Erreur lors de la modification de l'auto-école:", error.response.data);
+        this.errorMessage = "Une erreur s'est produite lors de la modification de l'auto-école.";
+      }
+    },
     openEditModal(autoEcoleId) {
       const autoEcole = this.autoEcole.find(auto => auto.id === autoEcoleId);
       this.editNomAdmin = autoEcole.user_name;
@@ -269,22 +318,46 @@ export default {
       $('#editModal').modal('show');
     },
     async addAutoEcole() {
-      try {
-        const formData = {
-          user_name: this.nomAdmin,
-          nom: this.nomAutoEcole,
-          adresse: this.adresse,
-          description: this.description
-        };
-        const response = await axios.post(`${AUTOECOLE_API_BASE_URL}/store`, formData);
-        console.log("Auto-école ajoutée avec succès:", response.data);
-        this.fetchData();
-        $('#exampleModal').modal('hide'); 
+      this.formSubmitted = true;
+      if (this.isFormValid()) {
+        try {
+          const formData = {
+            user_name: this.nomAdmin,
+            nom: this.nomAutoEcole,
+            adresse: this.adresse,
+            description: this.description
+          };
+          const response = await axios.post(`${AUTOECOLE_API_BASE_URL}/store`, formData);
+          console.log("Auto-école ajoutée avec succès:", response.data);
+          this.fetchData();
+          $('#exampleModal').modal('hide'); 
           $('body').removeClass('modal-open'); 
-          $('.modal-backdrop').remove();       } catch (error) {
-        console.error("Erreur lors de l'ajout de l'auto-école:", error.response.data);
-        this.errorMessage = "Une erreur s'est produite lors de l'ajout de l'auto-école.";
+          $('.modal-backdrop').remove();  
+          this.AddSuccessMessage = 'Auto-école ajoutée avec succès.';
+          setTimeout(() => {
+            this.AddSuccessMessage = ''; 
+          }, 3000);  
+        } catch (error) {      
+          console.error("Erreur lors de l'ajout de l'auto-école:", error.response.data);
+          if (error.response && error.response.data && error.response.data.message) {
+            this.AddErrorMessage = error.response.data.message;
+          } else {
+            this.AddErrorMessage = "Une erreur s'est produite lors de l'ajout de l'auto-école,L'administrateur a déjà une auto-école .";
+          }
+          setTimeout(() => {
+            this.AddErrorMessage = ''; 
+          }, 5000);
+
+        }
       }
+    },
+    isFormValid() {
+      return (
+        this.nomAdmin.trim() !== '' &&
+        this.nomAutoEcole.trim() !== '' &&
+        this.adresse.trim() !== '' &&
+        this.description.trim() !== ''
+      );
     },
   }
 };

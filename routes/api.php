@@ -150,6 +150,13 @@ Route::middleware(['auth:api'])->group(function () {
   Route::get('/seance/indexForMobile',[SeanceController::class,'indexForMobile']);
   Route::get('/seance/showSeancesAndExams /{date}',[SeanceController::class,'showSeancesAndExams']);
   Route::put('/ModifierPassword', [ApiController::class, 'ModifierPassword']);
+  Route::put('/seance/AccepterSeance/{id}',[SeanceController::class,'AccepterSeance']);
+  Route::put('/seance/RefuserSeance/{id}',[SeanceController::class,'RefuserSeance']);
+  
+
+
+
+  
 });
 
 
