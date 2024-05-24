@@ -88,17 +88,49 @@ class SeanceController extends Controller
           
           try {
               $seances = Seance::where('auto_ecole_id', $adminAutoEcoleId)->get();
+              $examens = Examen::where('auto_ecole_id', $adminAutoEcoleId)->get();
       
-              if ($seances->isEmpty()) {
-                  return response()->json(["error" => "Aucune séance trouvée pour cette auto-école."], 404);
+              if ($seances->isEmpty() || $examens->isEmpty()) {
+                  return response()->json(["error" => "Aucune séance ou examen trouvée pour cette auto-école."], 404);
               }
-      
-              return response()->json($seances, 200);
+              $examenDetails = [];
+              foreach ($examens as $examen) {
+                  $candidatDetails = User::find($examen->user_id);
+                  $vehiculeDetails = Vehicule::find($examen->vehicule_id);
+                  $examenDetails[] = [
+                      "id" => $examen->id,
+                      "type" => $examen->type,
+                      "heureD" => $examen->heureD,
+                      "heureF" => $examen->heureF,
+                      "dateE" => $examen->dateE,
+                      "nom du candidat" => $candidatDetails ? $candidatDetails->user_name : "",
+                      "immatricule" => $vehiculeDetails ? $vehiculeDetails->immatricule: "",
+                  ];
+              }
+              $seanceDetails = [];
+              foreach ($seances as $seance) {
+                  $candidatDetails = User::find($seance->candidat_id);
+                  $moniteurDetails = User::find($seance->moniteur_id);
+                  $vehiculeDetails = Vehicule::find($seance->vehicule_id);
+                  $seanceDetails[] = [
+                      "id" => $seance->id,
+                      "type" => $seance->type,
+                      "heureD" => $seance->heureD,
+                      "heureF" => $seance->heureF,
+                      "dateS" => $seance->dateS,
+                      "status" => $seance->status,
+                      "nom du candidat" => $candidatDetails ? $candidatDetails->user_name : "",
+                      "nom du moniteur" => $moniteurDetails ? $moniteurDetails->user_name : "",
+                      "immatricule" => $vehiculeDetails ? $vehiculeDetails->immatricule: "",
+                  ];
+              }
+              return response()->json(["seances" => $seanceDetails, "examens" => $examenDetails], 200);
           } catch (\Exception $e) {
-              $error = "Erreur lors de la récupération des séances: " . $e->getMessage();
+              $error = "Erreur lors de la récupération des séances et examens: " . $e->getMessage();
               return response()->json(["error" => $error], 500);
           }
       }
+      
 /**
  * @OA\Post(
  *      path="/api/seance/store",

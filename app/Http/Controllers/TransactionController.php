@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\AutoEcole;
 use App\Models\Vehicule;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Validation\Rule;
 /**
  * @OA\Schema(
  *     schema="Transaction",
@@ -146,36 +146,52 @@ class TransactionController extends Controller
       public function store(Request $request)
       {
           try {
-              $adminId = Auth::id(); 
+              $adminId = Auth::id();
               $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
-              
+      
               $validatedData = $request->validate([
                   'Type_T' => 'required|in:vehicule,utilisateur,general',
                   'Type_Transaction' => 'required|in:flux entrant,flux sortant',
                   'montantT' => 'required|numeric',
-                  'dateT' => 'required|date',
                   'description' => 'required',
-                  'user_id' => 'required_without:vehicule_id|exists:users,id',
-                  'vehicule_id' => 'required_without:user_id|exists:vehicules,id',
+                  'user_name' => 'required_if:Type_T,utilisateur|exists:users,user_name',
+                  'immatricule' => 'required_if:Type_T,vehicule|exists:vehicules,immatricule',
               ]);
       
-              $validatedData['auto_ecole_id'] = $adminAutoEcoleId; 
+              $userId = null;
+              $vehiculeId = null;
       
-              if (($validatedData['Type_T'] === 'vehicule' && !Vehicule::find($validatedData['vehicule_id'])) ||
-                  ($validatedData['Type_T'] === 'utilisateur' && !User::find($validatedData['user_id']))) {
-                  $msg = "L'utilisateur ou le véhicule spécifié n'a pas été trouvé.";
-                  return response()->json(["error" => $msg], 404);
+              if ($validatedData['Type_T'] === 'vehicule') {
+                  $vehicule = Vehicule::where('immatricule', $validatedData['immatricule'])->firstOrFail();
+                  $vehiculeId = $vehicule->id;
+      
+                  if ($vehicule->auto_ecole_id !== $adminAutoEcoleId) {
+                      return response()->json(["error" => "Le véhicule n'appartient pas à la même auto-école que l'administrateur."], 400);
+                  }
+              }
+      
+              if ($validatedData['Type_T'] === 'utilisateur') {
+                  $user = User::where('user_name', $validatedData['user_name'])->firstOrFail();
+                  $userId = $user->id;
+      
+                  if (!in_array($user->role, ['moniteur', 'candidat'])) {
+                      return response()->json(["error" => "L'utilisateur doit être un moniteur ou un candidat."], 400);
+                  }
+      
+                  if ($user->auto_ecole_id !== $adminAutoEcoleId) {
+                      return response()->json(["error" => "L'utilisateur n'appartient pas à la même auto-école que l'administrateur."], 400);
+                  }
               }
       
               $transaction = Transaction::create([
                   'Type_T' => $validatedData['Type_T'],
                   'montantT' => $validatedData['montantT'],
-                  'dateT' => $validatedData['dateT'],
+                  'dateT' => now(),
                   'Type_Transaction' => $validatedData['Type_Transaction'],
                   'description' => $validatedData['description'],
-                  'user_id' => $validatedData['user_id'] ?? null,
-                  'vehicule_id' => $validatedData['vehicule_id'] ?? null,
-                  'auto_ecole_id' => $adminAutoEcoleId, // Ajout de l'auto_ecole_id à la transaction
+                  'user_id' => $userId,
+                  'vehicule_id' => $vehiculeId,
+                  'auto_ecole_id' => $adminAutoEcoleId,
               ]);
       
               return response()->json($transaction, 200);
@@ -185,6 +201,7 @@ class TransactionController extends Controller
           }
       }
       
+            
   /**
  * @OA\Get(
  *      path="/api/transaction/show/{id}",
@@ -442,62 +459,60 @@ public function showTransactionByVehiculeId($vehiculeId)
  */
     // TODO: Add validation and error handling
     public function update(Request $request, $id)
-    {
-        try {
-            $validatedData = $request->validate([
-                'Type_T' => 'required|in:vehicule,utilisateur,general',
-                'montantT' => 'required|numeric',
-                'dateT' => 'required|date',
-                'description' => 'required',
-                'user_id' => 'sometimes|exists:users,id',
-                'vehicule_id' => 'sometimes|exists:vehicules,id',
-            ]);
-    
-            $transaction = Transaction::find($id);
-    
-            if ($transaction) {
-                if (($validatedData['Type_T'] === 'vehicule' && !Vehicule::find($validatedData['vehicule_id'])) ||
-                    ($validatedData['Type_T'] === 'utilisateur' && !User::find($validatedData['user_id']))) {
-                    $msg = "L'utilisateur ou le véhicule spécifié n'a pas été trouvé.";
-                    return response()->json(["error" => $msg], 404);
-                }  
-                if ($validatedData['Type_T'] === 'vehicule') {
-                    $transaction->update([
-                        'Type_T' => $validatedData['Type_T'],
-                        'montantT' => $validatedData['montantT'],
-                        'dateT' => $validatedData['dateT'],
-                        'description' => $validatedData['description'],
-                        'vehicule_id' => $validatedData['vehicule_id'],
-                        'user_id' => null,
-                    ]);
-                } elseif ($validatedData['Type_T'] === 'utilisateur') {
-                    $transaction->update([
-                        'Type_T' => $validatedData['Type_T'],
-                        'montantT' => $validatedData['montantT'],
-                        'dateT' => $validatedData['dateT'],
-                        'description' => $validatedData['description'],
-                        'user_id' => $validatedData['user_id'],
-                        'vehicule_id' => null,
-                    ]);
-                } elseif ($validatedData['Type_T'] === 'general') {
-                    $transaction->update([
-                        'Type_T' => $validatedData['Type_T'],
-                        'montantT' => $validatedData['montantT'],
-                        'dateT' => $validatedData['dateT'],
-                        'description' => $validatedData['description'],
-                        'user_id' => null,
-                        'vehicule_id' => null,
-                    ]);
-                }  
-                return response()->json($transaction, 200);
-            } else {
-                return response()->json("Transaction non trouvée", 404);
-            }
-        } catch (\Exception $e) {
-            $error = "Erreur lors de la mise à jour de la transaction : " . $e->getMessage();
-            return response()->json(["error" => $error], 500);
+{
+    try {
+        $adminId = Auth::id();
+        $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+
+        $transaction = Transaction::findOrFail($id);
+        $validatedData = $request->validate([
+            'Type_T' => 'in:vehicule,utilisateur,general',
+            'Type_Transaction' => 'in:flux entrant,flux sortant',
+            'montantT' => 'numeric',
+            'description' => 'string',
+            'user_name' => [
+                'required_if:Type_T,utilisateur',
+                Rule::exists('users', 'user_name')->where(function ($query) use ($adminAutoEcoleId) {
+                    $query->where('auto_ecole_id', $adminAutoEcoleId);
+                }),
+            ],
+            'immatricule' => [
+                'required_if:Type_T,vehicule',
+                Rule::exists('vehicules', 'immatricule')->where(function ($query) use ($adminAutoEcoleId) {
+                    $query->where('auto_ecole_id', $adminAutoEcoleId);
+                }),
+            ],
+        ]);
+
+        $userId = null;
+        $vehiculeId = null;
+
+        if (isset($validatedData['immatricule'])) {
+            $vehicule = Vehicule::where('immatricule', $validatedData['immatricule'])->firstOrFail();
+            $vehiculeId = $vehicule->id;
         }
+
+        if (isset($validatedData['user_name'])) {
+            $user = User::where('user_name', $validatedData['user_name'])->firstOrFail();
+            $userId = $user->id;
+        }
+        $transaction->update([
+          'Type_T' => $validatedData['Type_T'] ?? $transaction->Type_T,
+          'montantT' => $validatedData['montantT'] ?? $transaction->montantT,
+          'Type_Transaction' => $validatedData['Type_Transaction'] ?? $transaction->Type_Transaction,
+          'description' => $validatedData['description'] ?? $transaction->description,
+          'user_id' => $validatedData['Type_T'] === 'utilisateur' ? $userId ?? $transaction->user_id : null,
+          'vehicule_id' => $validatedData['Type_T'] === 'vehicule' ? $vehiculeId ?? $transaction->vehicule_id : null,
+          'auto_ecole_id' => $adminAutoEcoleId,
+          'dateT' => now(),
+      ]);
+
+        return response()->json($transaction, 200);
+    } catch (\Exception $e) {
+        $error = "Erreur lors de la mise à jour de la transaction : " . $e->getMessage();
+        return response()->json(["error" => $error], 500);
     }
+}
        /**
  * @OA\Delete(
  *      path="/api/transaction/delete/{id}",

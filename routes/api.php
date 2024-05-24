@@ -69,8 +69,8 @@ Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
 
 //  Route::middleware('auth:api','role:admin')->group(function () { 
   Route::middleware('auth:api')->group(function () { 
-    Route::post('/showProfile', [ApiController::class, 'showProfile']);
-    Route::post('/updateProfile', [ApiController::class, 'updateProfile']);
+  Route::post('/showProfile', [ApiController::class, 'showProfile']);
+  Route::post('/updateProfile', [ApiController::class, 'updateProfile']);
   Route::post('/user/store',[ApiController::class,'store']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
@@ -120,7 +120,7 @@ Route::macro('role', function () {
 });
 
   Route::middleware('auth:api','role:candidat')->group(function () { 
-  Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
+  Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'accepterExamen']);
   Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
   Route::post('/seance/AccepterPourCandidat/{id}',[SeanceController::class,'AccepterPourCandidat']);
   Route::post('/seance/RefuserPourCandidat/{id}',[SeanceController::class,'RefuserPourCandidat']);
@@ -129,8 +129,6 @@ Route::macro('role', function () {
  
 
 Route::middleware('auth:api','role:moniteur')->group(function () { 
-  Route::post('/Examen/AccepterExamen/{id}',[ExamenController::class,'AccepterExamen']);
-  Route::post('/Examen/RefuserExamen/{id}',[ExamenController::class,'RefuserExamen']);
   Route::post('/seance/AccepterPourMoniteur/{id}',[SeanceController::class,'AccepterPourMoniteur']);
   Route::post('/seance/RefuserPourMoniteur/{id}',[SeanceController::class,'RefuserPourMoniteur']);
 
