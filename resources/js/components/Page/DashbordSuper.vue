@@ -46,17 +46,17 @@ export default {
         },
         xaxis: {
           type: 'datetime',
-          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+          categories: ["2018-09-01", "2018-10-01", "2018-11-01", "2018-12-01", "2019-01-01", "2019-02-01", "2019-03-01"]
         },
         tooltip: {
           x: {
-            format: 'dd/MM/yy HH:mm'
+            format: 'MMM yyyy'
           },
         },
       },
       series: [{
         name: 'Auto école',
-        data: [11, 32, 98, 32, 23, 52, 3]
+        data: [20, 30, 40, 35, 45, 50, 55] // Remplacez ces valeurs par le nombre d'auto-écoles pour chaque mois respectif
       }],
       series_pie_chart: [44, 55, 13, 43],
       chartOptions_pie_chart: {

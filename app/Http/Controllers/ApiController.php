@@ -79,9 +79,10 @@ public function index()
 
     try {
         $roles = ['candidat', 'moniteur', 'secretaire'];
-        $users = User::whereIn('role', $roles)
-                     ->where('auto_ecole_id', $adminAutoEcoleId)
-                     ->get();
+        $users = User::withTrashed()
+        ->whereIn('role', $roles)
+        ->where('auto_ecole_id', $adminAutoEcoleId)
+        ->get();
 
         if ($users->isEmpty()) {
             return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés et l'auto-école de l'administrateur", 404);
@@ -409,7 +410,32 @@ public function updateForSuperAdmin(Request $request, $id)
      // TODO: Test sur le role , utiliser
      //delete for admin
      public function delete($id) {
-      $user = User::find($id);
+      $user = User::withTrashed()->find($id);
+
+      if ($user) {
+          if ($user->trashed()) {
+              $user->restore();
+              return response()->json("User has been restored successfully", 200);
+          } else {
+            if ($user->role !== 'candidat' && $user->role !== 'moniteur' && $user->role !== 'secretaire') {
+              return response()->json("Accès non autorisé pour supprimer cet utilisateur", 403);
+          }
+          try {
+              $user->delete();
+          } catch (\Exception $e) {
+              return response()->json("Failed to delete user. Error: " . $e->getMessage(), 500);
+          }
+          if ($user->trashed()) {
+              return response()->json("User deleted successfully", 200);
+          } else {
+              return response()->json("Failed to delete user", 500);
+          } 
+          }
+      } else {
+          // User not found
+          return "User does not exist.";
+      }
+    /*   $user = User::find($id);
       if (!$user) {
           $msg = "User not found";
           return response()->json($msg, 404);
@@ -426,7 +452,7 @@ public function updateForSuperAdmin(Request $request, $id)
           return response()->json("User deleted successfully", 200);
       } else {
           return response()->json("Failed to delete user", 500);
-      }
+      } */
   }
   //delete for superAdmin
   public function deleteForSuperAdmin($id) {

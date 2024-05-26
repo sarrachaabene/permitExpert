@@ -78,7 +78,7 @@
         <a href="/permit" class="nav-item nav-link active">A propos de nous</a>
         <a href="/contact" class="nav-item nav-link">Contact</a>
       </div>
-      <a href="" style="background-color:#F3BD00;   height: 90px; "
+      <a href="/login" style="background-color:#F3BD00;   height: 90px; "
         class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Commencer<i class="fa fa-arrow-right ms-3"></i></a>
     </div>
   </nav>

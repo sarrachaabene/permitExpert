@@ -2,7 +2,7 @@
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <div style="background-color:white"
-      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+    class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center background-image">
       <div class="d-flex align-items-center justify-content-center w-100">
         <div class="row justify-content-center w-100">
           <div class="col-md-8 col-lg-6 col-xxl-3">
@@ -163,5 +163,11 @@ form .input-field {
   font-size: 1.125rem;
   text-align: center;
   border: 1px solid #ddd;
+}
+.background-image {
+    background-image: url('C:\laragon\www\PermitExpert\public\assets\images\bg login (1).jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 </style>

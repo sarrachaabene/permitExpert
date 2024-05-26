@@ -270,7 +270,7 @@ export default {
         console.log(response.data);
         this.fetchData();
         $('#editModal').modal('hide');
-        this.updateSuccessMessage = 'La transaction a été mise à ajoutée avec succès.';
+        this.updateSuccessMessage = 'La transaction a été mise à jour avec succès.';
     setTimeout(() => {
       this.updateSuccessMessage = ''; 
     }, 3000);

@@ -66,17 +66,15 @@
               </div>
             </div>
             <div v-if="AddSuccessMessage" class="alert alert-success" role="alert">
-  {{ AddSuccessMessage }}
-</div>
-<div v-if="deleteSuccessMessage" class="alert alert-success" role="alert">
-  {{ deleteSuccessMessage }}
-</div>
-<div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
-  {{ AddErrorMessage }}
-</div>
-<div v-if="updateSuccessMessage" class="alert alert-success" role="alert">
-  {{ updateSuccessMessage }}
-</div>
+              {{ AddSuccessMessage }}
+            </div>
+            <div v-if="deleteSuccessMessage" class="alert alert-success" role="alert">
+              {{ deleteSuccessMessage }}
+            </div>
+
+            <div v-if="updateSuccessMessage" class="alert alert-success" role="alert">
+              {{ updateSuccessMessage }}
+            </div>
           </div>
         </div>
       </div>
@@ -111,6 +109,9 @@
             </div>
           </form>
         </div>
+        <div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
+              {{ AddErrorMessage }}
+            </div>
         <div class="modal-footer">
           <button @click="addResource" class="btn btn-primary" type="button" style="background-color: #9dcd5a; border-color: #9dcd5a">
             Ajouter
@@ -145,7 +146,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button @click="updateResource(selectedResourceId)" type="button" class="btn btn-primary" style="background-color: #9dcd5a; border-color: #9dcd5a">Enregistrer</button>
+          <button @click="updateResource(selectedResourceId)" type="button"  class="btn btn-primary" style="background-color: #9dcd5a; border-color: #9dcd5a">Enregistrer</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35">Annuler</button>
         </div>
       </div>
@@ -213,6 +214,15 @@ export default {
       console.error("Error fetching data from the backend:", error);
     },
     async addResource() {
+      // Vérification des champs vides
+      if (!this.newRessource.titreR || !this.newRessource.descriptionR || !this.newRessource.link) {
+        this.AddErrorMessage = 'Veuillez remplir tous les champs.';
+        setTimeout(() => {
+          this.AddErrorMessage = '';
+        }, 3000);
+        return; // Arrête l'exécution de la méthode si des champs sont vides
+      }
+      
       try {
         const response = await axios.post(`${RESSOURCE_API_BASE_URL}/store`, this.newRessource);
         console.log(response.data); 
@@ -222,15 +232,15 @@ export default {
         $('body').removeClass('modal-open'); 
         $('.modal-backdrop').remove(); 
         this.AddSuccessMessage = 'Ressource a été ajoutée avec succès.';
-    setTimeout(() => {
-      this.AddSuccessMessage = ''; 
-    }, 3000);
+        setTimeout(() => {
+          this.AddSuccessMessage = ''; 
+        }, 3000);
       } catch (error) {
         console.error("Error adding resource:", error);
-        this.AddErrorMessage = 'Erreur lors ajout d\'admin';
-    setTimeout(() => {
-      this.AddErrorMessage = ''; 
-    }, 3000);
+        this.AddErrorMessage = 'Erreur lors de l\'ajout de la ressource.';
+        setTimeout(() => {
+          this.AddErrorMessage = ''; 
+        }, 3000);
       }
     },
     openEditModal(resource) {
@@ -250,6 +260,10 @@ export default {
         $('#editModal').modal('hide'); 
         $('body').removeClass('modal-open'); 
         $('.modal-backdrop').remove(); 
+        this.updateSuccessMessage = 'Ressource a été mise à jour avec succès.';
+        setTimeout(() => {
+          this.updateSuccessMessage = ''; 
+        }, 3000);
       } catch (error) {
         console.error("Error updating resource:", error);
       }
@@ -264,6 +278,10 @@ export default {
         console.log(response.data); 
         this.fetchData(); 
         $('#deleteResourceConfirmationModal').modal('hide');
+        this.deleteSuccessMessage = 'Ressource a été supprimée avec succès.';
+        setTimeout(() => {
+          this.deleteSuccessMessage = ''; 
+        }, 3000);
       } catch (error) {
         console.error("Error deleting resource:", error);
       }
@@ -275,3 +293,4 @@ export default {
   },
 }; 
 </script>
+          
