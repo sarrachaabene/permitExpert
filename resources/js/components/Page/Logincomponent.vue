@@ -125,7 +125,7 @@ export default {
 </script>
 <style scoped>
 .background-image {
-    background-image: url('C:\Users\Lenovo ThinkPad.DESKTOP-6NTPK62\Desktop\clonage\permitExpert\public\assets\images\bg login (1).jpg');
+    background-image: url('C:\laragon\www\PermitExpert\public\assets\images\bg login (1).jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

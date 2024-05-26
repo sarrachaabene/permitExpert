@@ -116,44 +116,45 @@
   </div>
 
   <!-- Modal Modification d'administrateur -->
-  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <br>
-          <h5 class="modal-title mx-auto" id="editModalLabel" style="font-weight: bold; margin-top: 30px ;text-align: center;">Modifier les informations de l'administrateur</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- Modal Modification d'administrateur -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <br>
+        <h5 class="modal-title mx-auto" id="editModalLabel" style="font-weight: bold; margin-top: 30px ;text-align: center;">Modifier les informations de l'administrateur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="edit_user_name">Nom d'utilisateur:</label>
+          <input type="text" class="form-control" id="edit_user_name" v-model="editedUser.user_name">
         </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="edit_user_name">Nom d'utilisateur:</label>
-            <input type="text" class="form-control" id="edit_user_name" v-model="editedUser.user_name">
-          </div>
-          <div class="form-group" v-if="showEmailField">
-  <label for="email">Email:</label>
-  <input type="email" class="form-control" id="email" v-model="newAdmin.email">
-</div>
-
-          <div class="form-group">
-            <label for="edit_cin">CIN:</label>
-            <input type="text" class="form-control" id="edit_cin" v-model="editedUser.cin">
-          </div>
-          <div class="form-group">
-            <label for="edit_numTel">Numéro de téléphone:</label>
-            <input type="text" class="form-control" id="edit_numTel" v-model="editedUser.numTel">
-          </div>
-          <div class="form-group">
-            <label for="edit_dateNaissance">Date de naissance:</label>
-            <input type="date" class="form-control" id="edit_dateNaissance" v-model="editedUser.dateNaissance">
-          </div>
+        <div class="form-group" >
+          <label for="edit_email">Email:</label>
+          <input type="email" class="form-control" id="edit_email" v-model="editedUser.email">
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" style="background-color: #9dcd5a; border-color: #9dcd5a" class="btn btn-primary" @click="updateAdmin">Enregistrer </button>
+        <div class="form-group">
+          <label for="edit_cin">CIN:</label>
+          <input type="text" class="form-control" id="edit_cin" v-model="editedUser.cin">
         </div>
+        <div class="form-group">
+          <label for="edit_numTel">Numéro de téléphone:</label>
+          <input type="text" class="form-control" id="edit_numTel" v-model="editedUser.numTel">
+        </div>
+        <div class="form-group">
+          <label for="edit_dateNaissance">Date de naissance:</label>
+          <input type="date" class="form-control" id="edit_dateNaissance" v-model="editedUser.dateNaissance">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" style="background-color: #9dcd5a; border-color: #9dcd5a" class="btn btn-primary" @click="updateAdmin">Enregistrer </button>
       </div>
     </div>
   </div>
+</div>
+
 
   <!-- Modal Confirmation de suppression -->
   <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
