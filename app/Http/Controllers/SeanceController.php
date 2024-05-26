@@ -450,23 +450,26 @@ public function indexForMobile()
     $user = Auth::user(); 
     try {
         if ($user->role === 'candidat') {
-            $seances = Seance::where('candidat_id', $user->id)->get();
-            $examens = Examen::where('user_id', $user->id)->get();
+            $seances = Seance::where('candidat_id', $user->id)->pluck('dateS');
+            $examens = Examen::where('user_id', $user->id)->pluck('dateE');
         } elseif ($user->role === 'moniteur') {
-            $seances = Seance::where('moniteur_id', $user->id)->get();
-            $examens = null;
+            $seances = Seance::where('moniteur_id', $user->id)->pluck('dateS');
+            $examens = collect(); // Créer une collection vide pour éviter les erreurs
         } else {
             return response()->json(["error" => "L'utilisateur n'est pas autorisé à accéder à cette ressource."], 403);
         }
-        if ($seances->isEmpty() && (!$examens || $examens->isEmpty())) {
+        
+        if ($seances->isEmpty() && $examens->isEmpty()) {
             return response()->json(["error" => "Aucune séance ou examen trouvé pour cet utilisateur."], 404);
         }
+
         return response()->json(["seances" => $seances, "examens" => $examens], 200);
     } catch (\Exception $e) {
         $error = "Erreur lors de la récupération des séances et des examens: " . $e->getMessage();
         return response()->json(["error" => $error], 500);
     }
 }
+
 //Affichage pour Moniteur
     public function ShowSeanceForMoniteur($date) 
     {

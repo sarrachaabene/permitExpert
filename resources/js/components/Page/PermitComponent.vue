@@ -73,9 +73,12 @@
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="/index" class="nav-item nav-link">Acceuil</a>
                 <a href="/permit" class="nav-item nav-link active">A propos de nous</a> 
-                <a href="/contact" class="nav-item nav-link">Contact</a>
+                <a href="/contact" class="nav-item nav-link">Demande</a>
             </div>
+            
+
             <a href="/login"  style="background-color:#F3BD00;   height: 80px; " class="btn btn-primary py-4 px-lg-5 d-none d-lg-block"> Get Started<i class="fa fa-arrow-right ms-3"></i></a>
+
         </div>
     </nav>
     <!-- Navbar End -->
@@ -84,12 +87,14 @@
     <!-- Page Header Start -->
     <div class="container-fluid page-header py-6 my-6 mt-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="container text-center">
-            <h1 class="display-4 text-white animated slideInDown mb-4">A PROPOS DE NOUS</h1>
+          <br><br>
+            <h1 class="display-4 text-white animated slideInDown mb-2">A PROPOS DE NOUS</h1>
+            <br>
             <nav aria-label="breadcrumb animated slideInDown">
                 <ol class="breadcrumb justify-content-center mb-0">
                     <li class="breadcrumb-item"><a class="text-white" href="#">Acceuil</a></li>
                     <li class="breadcrumb-item"><a class="text-white" href="#">A propos de nous</a></li>
-                    <li class="breadcrumb-item text-primary active" aria-current="page">Cantact</li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Demande</li>
                 </ol>
             </nav>
         </div>

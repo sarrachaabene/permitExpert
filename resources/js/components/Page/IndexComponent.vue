@@ -76,7 +76,7 @@
       <div class="navbar-nav ms-auto p-4 p-lg-0">
         <a href="/index" class="nav-item nav-link">Acceuil</a>
         <a href="/permit" class="nav-item nav-link active">A propos de nous</a>
-        <a href="/contact" class="nav-item nav-link">Contact</a>
+        <a href="/contact" class="nav-item nav-link">Demande</a>
       </div>
       <a href="/login" style="background-color:#F3BD00;   height: 90px; "
         class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Commencer<i class="fa fa-arrow-right ms-3"></i></a>
@@ -243,7 +243,6 @@
                           </div>
                       </div>
                   </div>
-                  
               </div>
           </div>
       </div>
