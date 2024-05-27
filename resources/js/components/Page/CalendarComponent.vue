@@ -42,8 +42,8 @@ export default {
       group: { resources: ['Owners'] },
       allowMultiple: true,
       ownerDataSource: [
-        { OwnerText: 'habib', Id: 1, OwnerColor: '#9dcd5a' },
-        { OwnerText: 'Steven', Id: 2, OwnerColor: '#DF7588' },
+        { OwnerText: 'Séance', Id: 1, OwnerColor: '#9dcd5a' },
+        { OwnerText: 'Examen', Id: 2, OwnerColor: '#DF7588' },
         { OwnerText: 'Michael', Id: 3, OwnerColor: '#7499e1' },
       ],
       eventSettings: {

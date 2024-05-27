@@ -20,6 +20,16 @@ Route::get('/code', function () {
   //if(Auth::check())
   return view('code');
 });
+
+/* Route::get('/pdf/{filename}', function ($filename) {
+  $path = public_path('storage/autorite_de_delivrance/' . $filename);
+
+  if (file_exists($path)) {
+      return response()->file($path);
+  } else {
+      abort(404);
+  }
+}); */
 Route::get('/index', function () {
   //if(Auth::check())
   return view('index');

@@ -18,7 +18,7 @@
                           placeholder="Rechercher par nom..." />
                       </div>
                       <div class="col-lg-4 text-right">
-                        <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" style="
+                        <button  data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" style="
                             color: white;
                             background-color: #1F4069;
                             border-color: #1F4069;
@@ -29,7 +29,7 @@
                       <div class="col-lg-4 text-right">
                         <select v-model="selectedRole" @change="filterUsers" class="form-select">
                           <option value="">Tous les rôles</option>
-                          <option value="secretaire">Secrétaire</option>
+                          <option v-if="userRole" value="secretaire">Secrétaire</option>
                           <option value="moniteur">Moniteur</option>
                           <option value="candidat">Candidat</option>
                         </select>
@@ -49,6 +49,7 @@
                               <th scope="col" v-if="selectedRole !== 'secretaire' && selectedRole !== 'moniteur'"
                                 style="font-size: 14px;">Catégorie permis</th>
                               <th scope="col" style="font-size: 14px;">Status</th>
+                              <th scope="col" v-if="selectedRole !== 'secretaire' && selectedRole !== 'candidat'" style="font-size: 14px;">Autorité de délivrance</th>
                               <th scope="col" style="font-size: 14px;">Historique de paiement</th>
 
                               <th scope="col">Action</th>
@@ -69,6 +70,14 @@
                                 <span v-if="user.deleted_at != null"
                                   style="font-weight: bold;  color: red;">non Authorisé</span>
                               </td>
+                              <td v-if="selectedRole !== 'secretaire' && selectedRole !== 'candidat'">
+  <button 
+    @click="viewPdf(user)"
+    style="color: white; background-color: #1F4069; border-color: #1F4069;" 
+    class="btn btn-success">
+    Consulter
+  </button>
+</td>
                               <td>
                                 <button @click="showTransactionDetails(user.id)"
                                   style="background-color: #9dcd5a; border-color: #9dcd5a;"
@@ -160,7 +169,7 @@
                 <select v-model="newUser.role" class="form-select" id="role" placeholder="Role">
                   <option value="candidat">Candidat</option>
                   <option value="moniteur">Moniteur</option>
-                  <option value="secretaire">Secretaire</option>
+                  <option v-if="userRole" value="secretaire">Secretaire</option>
                 </select>
               </div>
               <div class="mb-3">
@@ -200,6 +209,11 @@
                   <option value="Permis_H">Permis_H</option>
                 </select>
               </div>
+              <div class="mb-3" v-if="newUser.role === 'moniteur'">
+  <h6 style="text-align: left;"><strong>Autorité de délivrance:</strong></h6>
+  <input @change="handleFileUpload" class="form-control" id="autorite_de_delivrance" type="file" accept=".pdf" />
+</div>
+
               <div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
                 {{ AddErrorMessage }}
               </div>
@@ -263,6 +277,10 @@
                   <option value="Permis_H">Permis_H</option>
                 </select>
               </div>
+<!--               <div class="mb-3" v-if="editedUser.role === 'moniteur'">
+            <h6 style="text-align: left;"><strong>Autorité de délivrance:</strong></h6>
+            <input @change="handleEditFileUpload" class="form-control" id="EditAutoriteDeDelivrance" type="file" accept=".pdf" />
+          </div> -->
               <div class="modal-footer">
                 <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                   Modifier
@@ -316,23 +334,23 @@ const USER_API_BASE_URL = "http://localhost:8000/api/user";
 
 export default {
   data() {
-    return {
-      AddSuccessMessage: '',
-      deleteSuccessMessage: '',
-      updateSuccessMessage: '',
-      AddErrorMessage: '',
-      originalUserList: [],
-      user: [],
-      searchQuery: '',
-      selectedRole: '',
-      userIdToDelete: null,
-      transactionDetails: {},
-      editedUser: {},
-      newUser: { user_name: '', email: '', role: '', cin: '', numTel: '', dateNaissance: '', cat_permis: '' },
-
-
-    };
-  },
+  return {
+    editFile: null,
+    AddSuccessMessage: '',
+    deleteSuccessMessage: '',
+    updateSuccessMessage: '',
+    AddErrorMessage: '',
+    originalUserList: [],
+    user: [],
+    searchQuery: '',
+    selectedRole: '',
+    userIdToDelete: null,
+    transactionDetails: {},
+    editedUser: {},
+    userRole: localStorage.getItem('users') && JSON.parse(localStorage.getItem('users'))[0].role === "admin",
+    newUser: { user_name: '', email: '', role: '', cin: '', numTel: '', dateNaissance: '', cat_permis: '', autorite_de_delivrance: '' },
+  };
+},
   mounted() {
     let isSuperAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "superAdmin";
     if (isSuperAdmin) {
@@ -342,6 +360,12 @@ export default {
     this.fetchData();
   },
   methods: {
+    handleEditFileUpload(event) {
+      this.editFile = event.target.files[0];
+    },
+    handleFileUpload(event) {
+      this.newUser.autorite_de_delivrance = event.target.files[0];
+    },
     async fetchData() {
       try {
         const response = await axios.get(`${USER_API_BASE_URL}/index`);
@@ -351,18 +375,33 @@ export default {
       }
     },
     async addUser() {
-      // Vérifiez si les champs requis sont vides
       if (!this.newUser.user_name || !this.newUser.email || !this.newUser.role || !this.newUser.cin || !this.newUser.numTel || !this.newUser.dateNaissance) {
         this.AddErrorMessage = 'Veuillez remplir tous les champs obligatoires.';
         setTimeout(() => {
           this.AddErrorMessage = '';
         }, 3000);
-        return; // Arrêtez l'exécution de la méthode si des champs sont vides
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('user_name', this.newUser.user_name);
+      formData.append('email', this.newUser.email);
+      formData.append('role', this.newUser.role);
+      formData.append('cin', this.newUser.cin);
+      formData.append('numTel', this.newUser.numTel);
+      formData.append('dateNaissance', this.newUser.dateNaissance);
+      formData.append('cat_permis', this.newUser.cat_permis);
+      if (this.newUser.role === 'moniteur' && this.newUser.autorite_de_delivrance) {
+        formData.append('autorite_de_delivrance', this.newUser.autorite_de_delivrance);
       }
 
       try {
-        const response = await axios.post(`${USER_API_BASE_URL}/store`, this.newUser);
-        console.log("user added successfully:", response.data);
+        const response = await axios.post(`${USER_API_BASE_URL}/store`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        console.log("User added successfully:", response.data);
         this.fetchData();
         $('#exampleModal').modal('hide');
         $('body').removeClass('modal-open');
@@ -377,6 +416,14 @@ export default {
         setTimeout(() => {
           this.AddErrorMessage = '';
         }, 3000);
+      }
+    },
+    viewPdf(user) {
+      if (user.autorite_de_delivrance) {
+        const pdfUrl = `http://localhost:8000/storage/${user.autorite_de_delivrance}`;
+        window.open(pdfUrl, '_blank');
+      } else {
+        alert("Aucun fichier PDF disponible pour cet utilisateur.");
       }
     },
     handleSuccess(data) {
@@ -409,6 +456,7 @@ export default {
       this.editedUser = JSON.parse(JSON.stringify(user));
       $('#editModal').modal('show');
     },
+
     async updateUser() {
       try {
         const response = await axios.put(`${USER_API_BASE_URL}/update/${this.editedUser.id}`, this.editedUser);

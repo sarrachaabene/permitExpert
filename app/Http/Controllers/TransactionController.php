@@ -81,7 +81,7 @@ class TransactionController extends Controller
              $transactionDetails = [];
              foreach ($transactions as $transaction) {
                  $userDetails = User::withTrashed()->find($transaction->user_id);
-                 $vehiculeDetails = Vehicule::find($transaction->vehicule_id);
+                 $vehiculeDetails = Vehicule::withTrashed()->find($transaction->vehicule_id);
                  $transactionDetails[] = [
                      "id" => $transaction->id,
                      "montantT" => $transaction->montantT,

@@ -77,6 +77,16 @@
                 </div>
               </div>
             </div>
+            <div v-if="AddSuccessMessage" class="alert alert-success" role="alert">
+                {{ AddSuccessMessage }}
+              </div>
+              <div v-if="deleteSuccessMessage" class="alert alert-success" role="alert">
+                {{ deleteSuccessMessage }}
+              </div>
+
+              <div v-if="updateSuccessMessage" class="alert alert-success" role="alert">
+                {{ updateSuccessMessage }}
+              </div>
           </div>
         </div>
       </div>
@@ -119,6 +129,9 @@
                 <option value="bus">bus</option>
               </select>
             </div>
+            <div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
+                {{ AddErrorMessage }}
+              </div>
             <div class="modal-footer">
               <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Ajouter
@@ -239,6 +252,10 @@ const VEHICULE_API_BASE_URL = "http://localhost:8000/api/vehicule";
 export default {
   data() {
     return {
+      AddSuccessMessage: '',
+    deleteSuccessMessage: '',
+    updateSuccessMessage: '',
+    AddErrorMessage: '',
       vehicule: [],
       searchQuery: '',
       selectedVehicle: {},
@@ -285,7 +302,7 @@ export default {
         const response = await axios.get(`http://localhost:8000/api/transaction/ShowTransactionByvehiculeId/${vehiculeId}`);
         this.transactions = response.data;
       } catch (error) {
-        console.error("Error fetching transactions:", error);
+        console.error("Error fetching vehicule:", error);
       }
     },
     async addVehicle() {
@@ -296,8 +313,16 @@ export default {
         $('#exampleModal').modal('hide'); 
           $('body').removeClass('modal-open'); 
           $('.modal-backdrop').remove();
+          this.AddSuccessMessage = 'vehicule ajouté avec succès.';
+        setTimeout(() => {
+          this.AddSuccessMessage = '';
+        }, 3000);
       } catch (error) {
         console.error("Error adding vehicle:", error);
+        this.AddErrorMessage = 'Erreur lors de l\'ajout d\'une vehicule';
+        setTimeout(() => {
+          this.AddErrorMessage = '';
+        }, 3000);
       }
     },
     deleteVehicle(id) {
@@ -310,6 +335,10 @@ export default {
         console.log(response.data);
         this.fetchData(); 
         $('#deleteConfirmationModal').modal('hide');
+        this.deleteSuccessMessage = 'Vehicule supprimee';
+        setTimeout(() => {
+          this.deleteSuccessMessage = '';
+        }, 3000);
       } catch (error) {
         console.error("Error deleting vehicle:", error);
       }
@@ -324,6 +353,10 @@ export default {
         console.log("Vehicle updated successfully:", response.data);
         this.fetchData();
         $('#editModal').modal('hide');
+        this.updateSuccessMessage = 'Vehicule modifié';
+        setTimeout(() => {
+          this.updateSuccessMessage = '';
+        }, 3000);
       } catch (error) {
         console.error("Error updating vehicle:", error);
       }

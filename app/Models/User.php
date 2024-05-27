@@ -29,7 +29,8 @@ class User extends Authenticatable
         'dateNaissance',
         'verification_code',
         'user_image',
-        'auto_ecole_id'
+        'auto_ecole_id',
+        'autorite_de_delivrance'
     ];
 
     protected $hidden = [

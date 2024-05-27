@@ -75,14 +75,23 @@ class ApiController extends Controller {
 public function index()
 {
     $adminId = Auth::id(); 
-    $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+    $admin = User::findOrFail($adminId);
+    $adminAutoEcoleId = $admin->auto_ecole_id;
+    $adminRole = $admin->role;
 
     try {
-        $roles = ['candidat', 'moniteur', 'secretaire'];
+        if ($adminRole === 'admin') {
+            $roles = ['candidat', 'moniteur', 'secretaire'];
+        } elseif ($adminRole === 'secretaire') {
+            $roles = ['candidat', 'moniteur'];
+        } else {
+            return response()->json("Accès non autorisé", 403);
+        }
+
         $users = User::withTrashed()
-        ->whereIn('role', $roles)
-        ->where('auto_ecole_id', $adminAutoEcoleId)
-        ->get();
+            ->whereIn('role', $roles)
+            ->where('auto_ecole_id', $adminAutoEcoleId)
+            ->get();
 
         if ($users->isEmpty()) {
             return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés et l'auto-école de l'administrateur", 404);
@@ -93,6 +102,7 @@ public function index()
         return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
     }
 }
+
 
   //afficher le nombre des utilisateurs
   public function CountUser()
@@ -174,7 +184,8 @@ public function index()
  {
      try {
          $adminId = Auth::id(); 
-          $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+         $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+ 
          $validatedData = $request->validate([
              'user_name' => 'required|string|max:255',
              'email' => 'required|string|email|max:255|unique:users',
@@ -184,9 +195,15 @@ public function index()
              'numTel' => 'required|string|max:255',
              'dateNaissance' => 'required|date',
              'cat_permis' => ($request->role === 'candidat') ? 'required|string|in:Permis_A1,Permis_A,Permis_B,Permis_B_E,Permis_C,Permis_C_E,Permis_D,Permis_D_E,Permis_D1,Permis_H' : '', // Validation conditionnelle pour cat_permis
+             'autorite_de_delivrance' => ($request->role === 'moniteur') ? 'required|file|mimes:pdf|max:2048' : '', // Validation du fichier PDF uniquement pour moniteur
          ]);
  
          $validatedData['auto_ecole_id'] = $adminAutoEcoleId; 
+ 
+         if ($request->hasFile('autorite_de_delivrance') && $request->role === 'moniteur') {
+             $filePath = $request->file('autorite_de_delivrance')->store('autorite_de_delivrance', 'public');
+             $validatedData['autorite_de_delivrance'] = $filePath;
+         }
  
          $user = User::create($validatedData);
          $defaultRole = $validatedData['role'];
@@ -202,6 +219,7 @@ public function index()
          return response()->json(["error" => "Failed to create user: " . $e->getMessage()], 500);
      }
  }
+ 
  
 //store pour SuperAdmin
 public function storeForSuperAdmin(Request $request)
@@ -346,31 +364,6 @@ public function update(Request $request, $id)
             if (!isset($validatedData['cat_permis'])) {
                 return response()->json(["error" => "Le champ 'cat_permis' est obligatoire pour le rôle 'candidat'"], 422);
             }
-        }
-        $user->update($validatedData);
-        return response()->json($user, 200);
-    } catch (\Exception $e) {
-        return response()->json(["error" => "Failed to update user: " . $e->getMessage()], 500);
-    }
-}
-//update dor SuperAdmin
-public function updateForSuperAdmin(Request $request, $id)
-{
-    try {
-        $validatedData = $request->validate([
-            'user_name' => 'string|max:255',
-            'email' => 'string|email|max:255|unique:users,email,' . $id,
-            'cin' => 'string|max:255',
-            'numTel' => 'string|max:255',
-            'dateNaissance' => 'date',
-        ]);
-        $user = User::find($id);
-        if (!$user) {
-            $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
-            return response()->json($msg, 404);
-        }
-        if ($user->role !== 'admin') {
-            return response()->json(["error" => "Accès non autorisé pour la mise à jour de cet utilisateur"], 403);
         }
         $user->update($validatedData);
         return response()->json($user, 200);

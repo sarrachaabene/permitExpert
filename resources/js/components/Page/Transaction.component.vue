@@ -255,6 +255,9 @@
               <label class="form-label" for="exampleTextarea">Description:</label>
               <textarea name="Description" class="form-control" v-model="newTransactionDescription" placeholder="Description"></textarea>
             </div>
+            <div v-if="AddErrorMessage" class="alert alert-danger" role="alert">
+                {{ AddErrorMessage }}
+              </div>
             <div class="modal-footer">
               <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                 Ajouter
@@ -278,6 +281,7 @@ const VEHICULE_API_BASE_URL = "http://localhost:8000/api/vehicule";
 export default {
   data() {
     return {
+      AddErrorMessage: '',
       deleteSuccessMessage: '', 
       AddSuccessMessage: '', 
       updateSuccessMessage:'',
@@ -429,6 +433,10 @@ async fetchVehicule() {
     }, 3000);
   } catch (error) {
     console.error("Error adding transaction:", error);
+    this.AddErrorMessage = 'Erreur lors de l\'ajout d\'une transaction';
+        setTimeout(() => {
+          this.AddErrorMessage = '';
+        }, 3000);
   }
 },
 
