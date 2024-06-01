@@ -37,17 +37,24 @@
                             <th scope="col">nom d'admin</th>
                             <th scope="col">Numéro de téléphone</th>
                             <th scope="col">Email</th>
+                            <th scope="col" style="font-size: 14px;">Status</th>
                             <th scope="col">Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr v-for="(auto, index) in filteredAutoEcole" :key="index">
                             <th scope="row">#</th>
-                            <td>{{ auto.auto_ecole.nom }}</td>
-                            <td>{{ auto.auto_ecole.adresse }}</td>
-                            <td>{{ auto.user_name }}</td>
-                            <td>{{ auto.numTel }}</td>
-                            <td>{{ auto.email }}</td>
+                            <td>{{ auto.nom }}</td>
+                            <td>{{ auto.adresse }}</td>
+                            <td>{{ auto.admin.user_name }}</td>
+                            <td>{{ auto.admin.numTel }}</td>
+                            <td>{{ auto.admin.email }}</td>
+                            <td>
+                                <span v-if="auto.deleted_at == null"
+                                  style="font-weight: bold;  color: green;">Disponible</span>
+                                <span v-if="auto.deleted_at != null"
+                                  style="font-weight: bold;  color: red;">Non disponible</span>
+                              </td>
                             <td style="display: flex; justify-content: space-between;">
                               <a href="#" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-success" @click="openEditModal(auto.id)">Modifier</a>
                               <a href="#" @click="confirmDelete(auto.id)" style="background-color: orangered; border-color: orangered; margin-left: 5px;" class="btn btn-danger">Supprimer</a>
@@ -142,7 +149,9 @@
         </div>
         <div class="modal-body">
           Êtes-vous sûr de vouloir supprimer cette auto-école ?
-        </div>
+          <br>
+          <br>
+          Lors de la suppression, tous les utilisateurs, véhicules, séances, examens et transactions de cette auto-école seront supprimés.        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
           <button type="button" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-danger" @click="deleteAutoEcole">Supprimer</button>
@@ -205,10 +214,11 @@ export default {
       formSubmitted: false,
       autoEcole: [],
       users: [],
-      deleteSuccessMessage:'',
-      AddSuccessMessage:'',
-      updateSuccessMessage:'',
-      AddErrorMessage:'',
+      deleteSuccessMessage: '',
+      AddSuccessMessage: '',
+      updateSuccessMessage: '',
+      AddErrorMessage: '',
+      deleteerrorsMessage: '', // Définir la propriété ici
       searchQuery: '', 
       autoEcoleToDeleteId: null,
       nomAdmin: '',
@@ -225,13 +235,13 @@ export default {
   computed: {
     filteredAutoEcole() {
       return this.autoEcole.filter(auto => {
-        return auto.auto_ecole.nom.toLowerCase().includes(this.searchQuery.toLowerCase());
+        return auto.nom.toLowerCase().includes(this.searchQuery.toLowerCase());
       });
     }
   },
   mounted() {
     let isAdmin = JSON.parse(localStorage.getItem('users'))[0].role === "admin";
-    if (isAdmin){
+    if (isAdmin) {
       window.location.href = '/dashbord';
     }
     console.log("Component mounted.");
@@ -241,7 +251,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(`${AUTOECOLE_API_BASE_URL}/user`);
+        const response = await axios.get(`${AUTOECOLE_API_BASE_URL}/index`);
         this.handleSuccess(response.data);
       } catch (error) {
         this.handleError(error);
@@ -280,7 +290,6 @@ export default {
         }, 3000);
       } catch (error) {
         console.error("Erreur lors de la suppression de l'auto-école:", error.response.data);
-        this.errorMessage = "Une erreur s'est produite lors de la suppression de l'auto-école.";
         this.deleteerrorsMessage = 'une erreur lors de la suppression ';
         setTimeout(() => {
           this.deleteerrorsMessage = ''; 
@@ -310,12 +319,16 @@ export default {
     },
     openEditModal(autoEcoleId) {
       const autoEcole = this.autoEcole.find(auto => auto.id === autoEcoleId);
-      this.editNomAdmin = autoEcole.user_name;
-      this.editNomAutoEcole = autoEcole.auto_ecole.nom;
-      this.editAdresse = autoEcole.auto_ecole.adresse;
-      this.editDescription = autoEcole.auto_ecole.description;
-      this.editAutoEcoleId = autoEcoleId;
-      $('#editModal').modal('show');
+      if (autoEcole) {
+        this.editNomAdmin = autoEcole.admin ? autoEcole.admin.user_name : '';
+        this.editNomAutoEcole = autoEcole.nom;
+        this.editAdresse = autoEcole.adresse;
+        this.editDescription = autoEcole.description;
+        this.editAutoEcoleId = autoEcoleId;
+        $('#editModal').modal('show');
+      } else {
+        console.error("Auto-école non trouvée avec l'id:", autoEcoleId);
+      }
     },
     async addAutoEcole() {
       this.formSubmitted = true;
@@ -347,7 +360,6 @@ export default {
           setTimeout(() => {
             this.AddErrorMessage = ''; 
           }, 5000);
-
         }
       }
     },

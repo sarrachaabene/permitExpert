@@ -90,9 +90,6 @@ class SeanceController extends Controller
               $seances = Seance::where('auto_ecole_id', $adminAutoEcoleId)->get();
               $examens = Examen::where('auto_ecole_id', $adminAutoEcoleId)->get();
       
-              if ($seances->isEmpty() || $examens->isEmpty()) {
-                  return response()->json(["error" => "Aucune séance ou examen trouvée pour cette auto-école."], 404);
-              }
               $examenDetails = [];
               foreach ($examens as $examen) {
                   $candidatDetails = User::find($examen->user_id);
@@ -100,10 +97,11 @@ class SeanceController extends Controller
                   $examenDetails[] = [
                       "id" => $examen->id,
                       "type" => $examen->type,
+                      "status" => $examen->status,
                       "heureD" => $examen->heureD,
                       "heureF" => $examen->heureF,
                       "dateE" => $examen->dateE,
-                      "nom du candidat" => $candidatDetails ? $candidatDetails->user_name : "",
+                      "user_name" => $candidatDetails ? $candidatDetails->user_name : "",
                       "immatricule" => $vehiculeDetails ? $vehiculeDetails->immatricule: "",
                   ];
               }
@@ -119,8 +117,8 @@ class SeanceController extends Controller
                       "heureF" => $seance->heureF,
                       "dateS" => $seance->dateS,
                       "status" => $seance->status,
-                      "nom du candidat" => $candidatDetails ? $candidatDetails->user_name : "",
-                      "nom du moniteur" => $moniteurDetails ? $moniteurDetails->user_name : "",
+                      "user_name" => $candidatDetails ? $candidatDetails->user_name : "",
+                      "Moniteur_name" => $moniteurDetails ? $moniteurDetails->user_name : "",
                       "immatricule" => $vehiculeDetails ? $vehiculeDetails->immatricule: "",
                   ];
               }
@@ -130,6 +128,7 @@ class SeanceController extends Controller
               return response()->json(["error" => $error], 500);
           }
       }
+      
       
 /**
  * @OA\Post(

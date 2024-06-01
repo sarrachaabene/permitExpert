@@ -3,6 +3,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Vehicule;
+use App\Models\Seance;
+use App\Models\Examen;
+use App\Models\Transaction;
 use App\Models\AutoEcole;
 use Illuminate\Support\Facades\DB;
 /**
@@ -61,27 +65,61 @@ class AutoEcoleController extends Controller
     // TODO: error handling
     public function index()
     {
-      try {
-          $autoEcole = AutoEcole::get();
-          if ($autoEcole->isEmpty()) {
-              return response()->json("Aucune auto-école n'a été trouvée", 404);
-          }
-          return response()->json($autoEcole, 200);
-      } catch (\Exception $e) {
-          return response()->json("Erreur interne du serveur", 500);
-      }
-  }
+        try {
+            $autoEcoles = AutoEcole::withTrashed()->get();
+            
+            if ($autoEcoles->isEmpty()) {
+                return response()->json("Aucune auto-école n'a été trouvée", 404);
+            }
+            
+            $autoecoleDetails = [];
+            foreach ($autoEcoles as $autoEcole) {
+               $admin = User::withTrashed()
+                            ->where('role', 'admin')
+                            ->where('auto_ecole_id', $autoEcole->id)
+                            ->first();
+                
+                $autoecoleDetails[] = [
+                    "id" => $autoEcole->id,
+                    "nom" => $autoEcole->nom,
+                    "adresse" => $autoEcole->adresse,
+                    "description" => $autoEcole->description,
+                    "deleted_at" => $autoEcole->deleted_at, 
+                    "admin" => $admin ? [
+                        "id" => $admin->id,
+                        "user_name" => $admin->user_name,
+                        "email" => $admin->email,
+                        "numTel" => $admin->numTel
+                    ] : [ 
+                        "id" => null,
+                        "user_name" => null,
+                        "email" => null,
+                        "numTel" => null
+                    ]
+                ];
+            }
+            
+            return response()->json($autoecoleDetails, 200);
+        } catch (\Exception $e) {
+            return response()->json("Erreur interne du serveur", 500);
+        }
+    }
+    
+    
+    
+
+    
 
 
   public function countAutoEcoles()
   {
       try {
-          $count = AutoEcole::count(); // Calculer le nombre d'auto-écoles
+          $count = AutoEcole::count(); 
           if ($count === 0) {
               return response()->json("Aucune auto-école n'a été trouvée", 404);
           }
           return response()->json([
-              'count' => $count // Retourner le nombre d'auto-écoles
+              'count' => $count 
           ], 200);
       } catch (\Exception $e) {
           return response()->json("Erreur interne du serveur", 500);
@@ -338,7 +376,8 @@ if ($autoEcole) {
               }
       
               $autoEcole->update($request->all());
-      
+          $user->auto_ecole_id = $autoEcole->id;
+        $user->save();
               return response()->json($autoEcole, 200);
           } catch (\Exception $e) {
               return response()->json(["error" => "Erreur lors de la mise à jour de l'auto-école : " . $e->getMessage()], 500);
@@ -440,19 +479,24 @@ public function delete($autoEcoleId)
     try {
         DB::beginTransaction();
 
-        DB::table('vehicules')->where('auto_ecole_id', $autoEcoleId)->delete();
+        Vehicule::where('auto_ecole_id', $autoEcoleId)->delete();
 
-        DB::table('users')->where('auto_ecole_id', $autoEcoleId)->delete(); 
+        Seance::where('auto_ecole_id', $autoEcoleId)->delete();
 
-        DB::table('auto_ecoles')->where('id', $autoEcoleId)->delete();
+        Examen::where('auto_ecole_id', $autoEcoleId)->delete();
+        Transaction::where('auto_ecole_id', $autoEcoleId)->delete();
+
+
+        User::where('auto_ecole_id', $autoEcoleId)->update(['deleted_at' => now()]);
+
+        AutoEcole::where('id', $autoEcoleId)->update(['deleted_at' => now()]);
 
         DB::commit();
-        return response()->json("Auto-école and associated users deleted successfully", 200);
+        return response()->json("Auto-école, associated vehicles, sessions, exams, and users deleted successfully", 200);
     } catch (\Exception $e) {
         DB::rollBack();
-        return response()->json("Failed to delete auto-école and associated users: " . $e->getMessage(), 500);
-    }
-}
+        return response()->json("Failed to delete auto-école, associated vehicles, sessions, exams, and users: " . $e->getMessage(), 500);
+    }}
 
 
 

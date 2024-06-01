@@ -136,7 +136,7 @@ export default {
     },
     async fetchUsers() {
       try {
-        const response = await axios.get(`${USER_API_BASE_URL}/index`);
+        const response = await axios.get(`${USER_API_BASE_URL}/indexForContactSe`);
         this.users = response.data;
         console.log("Fetched users:", this.users); 
       } catch (error) {
@@ -184,4 +184,4 @@ export default {
   }
 };
 
-</script>
+</script> 

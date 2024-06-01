@@ -34,6 +34,7 @@
                             <th scope="col">Nom</th>
                             <th scope="col">Numéro de téléphone</th>
                             <th scope="col">Email</th>
+                            <th scope="col" style="font-size: 14px;">Status</th>
                             <th scope="col">Action</th>
                           </tr>
                         </thead>
@@ -42,10 +43,23 @@
                             <td>{{ user.user_name }}</td>
                             <td>{{ user.numTel }}</td>
                             <td>{{ user.email }}</td>
+                            <td>
+                                <span v-if="user.deleted_at == null"
+                                  style="font-weight: bold;  color: green;">Authorisé</span>
+                                <span v-if="user.deleted_at != null"
+                                  style="font-weight: bold;  color: red;">non Authorisé</span>
+                              </td>
                             <td class="d-flex justify-content-center">
                               <a href="#" style="background-color: #9dcd5a; border-color: #9dcd5a; margin-right: 5px;" class="btn btn-success" @click="showEditModal(user)">Modifier</a>
-                              <a href="#" @click="showDeleteConfirmation(user.id)" style="background-color: orangered; border-color: orangered; margin-left: 5px;" class="btn btn-danger">Supprimer</a>
-                            </td>
+        <a v-if="user.deleted_at==null" @click.prevent="showDeleteConfirmation(user.id)"
+                                  style="background-color: orangered; border-color: orangered; margin-left: 5px;"
+                                  class="btn btn-danger">Bloquer</a>
+                                  <a v-if="user.deleted_at!=null" @click.prevent="showDeleteConfirmation(user.id)"
+                                  style="
+                                    background-color: #9dcd5a;
+                                    border-color: #9dcd5a;
+                                    margin-right: 5px;" 
+                                    class="btn btn-success">Récuperer</a>                            </td>
                           </tr>
                         </tbody>
                       </table>
@@ -161,11 +175,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmation de suppression</h5>
+          <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmation de modification</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Êtes-vous sûr de vouloir supprimer cet administrateur ?
+          Êtes-vous sûr de vouloir modifiier le status de cet administrateur ?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" data-bs-dismiss="modal">Annuler</button>
@@ -173,7 +187,7 @@
             background-color: #9dcd5a;
             border-color: #9dcd5a;
             margin-right: 5px;
-          " @click="confirmDeleteUser">Supprimer</button>
+          " @click="confirmDeleteUser">Modifier</button>
         </div>
       </div>
     </div>
@@ -271,7 +285,7 @@ export default {
         console.log(response.data);
         this.fetchData();
         $('#editModal').modal('hide');
-        this.updateSuccessMessage = 'La transaction a été mise à jour avec succès.';
+        this.updateSuccessMessage = 'L\'admin a été mise à jour avec succès.';
     setTimeout(() => {
       this.updateSuccessMessage = ''; 
     }, 3000);

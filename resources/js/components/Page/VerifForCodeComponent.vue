@@ -24,7 +24,8 @@
                   </div>
                   <br><br>
                   <div class="text-center">
-                    <button type="submit" style="background-color: #FA7F35; border-color: #FA7F35; margin-left: 5px; font-size: 16px;" class="btn btn-danger">Continuer</button>
+                    <button type="submit" style="background-color: #FA7F35; border-color: #FA7F35; 
+                    margin-left: 5px; font-size: 16px;" class="btn btn-danger">Continuer</button>
                   </div>
                 </form>
               </div>

@@ -75,6 +75,7 @@ Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::get('/user/show/{id}', [ApiController::class, 'show']);
   Route::put('/user/update/{id}',[ApiController::class,'update']);
   Route::get('/user/index', [ApiController::class, 'index']);
+  Route::get('/user/indexForContactSe', [ApiController::class, 'indexForContactSe']);
   Route::get('/user/CountUser', [ApiController::class, 'CountUser']);
   Route::delete('/user/delete/{id}',[ApiController::class,'delete']);
   Route::get('/seance/index',[SeanceController::class,'index']);

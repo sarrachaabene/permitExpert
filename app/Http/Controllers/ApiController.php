@@ -104,6 +104,37 @@ public function index()
 }
 
 
+public function indexForContactSe()
+{
+    $adminId = Auth::id(); 
+    $admin = User::findOrFail($adminId);
+    $adminAutoEcoleId = $admin->auto_ecole_id;
+    $adminRole = $admin->role;
+
+    try {
+        if ($adminRole === 'admin') {
+            $roles = ['candidat', 'moniteur', 'secretaire'];
+        } elseif ($adminRole === 'secretaire') {
+            $roles = ['candidat', 'moniteur','admin'];
+        } else {
+            return response()->json("Accès non autorisé", 403);
+        }
+
+        $users = User::withTrashed()
+            ->whereIn('role', $roles)
+            ->where('auto_ecole_id', $adminAutoEcoleId)
+            ->get();
+
+        if ($users->isEmpty()) {
+            return response()->json("Aucun utilisateur trouvé pour les rôles spécifiés et l'auto-école de l'administrateur", 404);
+        }
+
+        return response()->json($users, 200);
+    } catch (\Exception $e) {
+        return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+    }
+}
+
   //afficher le nombre des utilisateurs
   public function CountUser()
   {
@@ -143,18 +174,21 @@ public function index()
 
 
 //Affichage pour superAdmin
-  public function indexForSuper()
-  {
-      try {
-          $users = User::where('role', 'admin')->get();
-                    if ($users->isEmpty()) {
-              return response()->json("Aucun utilisateur trouvé avec le rôle 'admin'", 404);
-          }
-                    return response()->json($users, 200);
-      } catch (\Exception $e) {
-          return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
-      }
-  }
+public function indexForSuper()
+{
+    try {
+        $users = User::withTrashed()->where('role', 'admin')->get();
+        
+        if ($users->isEmpty()) {
+            return response()->json("Aucun utilisateur trouvé avec le rôle 'admin'", 404);
+        }
+        
+        return response()->json($users, 200);
+    } catch (\Exception $e) {
+        return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+    }
+}
+
   
 /**
  * @OA\Post(
@@ -371,6 +405,34 @@ public function update(Request $request, $id)
         return response()->json(["error" => "Failed to update user: " . $e->getMessage()], 500);
     }
 }
+
+public function updateForSuperAdmin(Request $request, $id)
+{
+    try {
+        $validatedData = $request->validate([
+            'user_name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:users,email,' . $id,
+            'cin' => 'string|max:255',
+            'numTel' => 'string|max:255',
+            'dateNaissance' => 'date',
+        ]);
+
+        $user = User::find($id);
+        if (!$user) {
+            $msg = "L'utilisateur avec l'ID spécifié n'a pas été trouvé";
+            return response()->json($msg, 404);
+        }
+        if (!in_array($user->role, ['admin'])) {
+            return response()->json(["error" => "Accès non autorisé pour la mise à jour de cet utilisateur"], 403);
+        }
+        $user->update($validatedData);
+        $user->save();
+        return response()->json($user, 200);
+    } catch (\Exception $e) {
+        return response()->json(["error" => "Failed to update user: " . $e->getMessage()], 500);
+    }
+}
+
 /**
  * @OA\Delete(
  *      path="/api/user/delete/{id}",
@@ -449,25 +511,40 @@ public function update(Request $request, $id)
   }
   //delete for superAdmin
   public function deleteForSuperAdmin($id) {
-    $user = User::find($id);
+    $user = User::withTrashed()->find($id);
+
     if (!$user) {
-        $msg = "User not found";
-        return response()->json($msg, 404);
+        return response()->json("User not found", 404);
     }
-          if ($user->role !== 'admin') {
+
+    if ($user->role !== 'admin') {
         return response()->json("Accès non autorisé pour supprimer cet utilisateur", 403);
     }
-    try {
-        $user->delete();
-    } catch (\Exception $e) {
-        return response()->json("Failed to delete user. Error: " . $e->getMessage(), 500);
-    }
+
     if ($user->trashed()) {
-        return response()->json("User deleted successfully", 200);
+        try {
+          $user->restore();
+          return response()->json("User permanently deleted successfully", 200);
+        } catch (\Exception $e) {
+            return response()->json("Failed to permanently delete user. Error: " . $e->getMessage(), 500);
+        }
     } else {
-        return response()->json("Failed to delete user", 500);
+        try {
+          $user->auto_ecole_id = null;
+            $user->delete();
+            $user->save();
+        } catch (\Exception $e) {
+            return response()->json("Failed to delete user. Error: " . $e->getMessage(), 500);
+        }
+
+        if ($user->trashed()) {
+            return response()->json("User deleted successfully", 200);
+        } else {
+            return response()->json("Failed to delete user", 500);
+        }
     }
 }
+
 /**
  * @OA\Post(
  *     path="/api/updateProfile",
