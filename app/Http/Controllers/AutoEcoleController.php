@@ -125,6 +125,36 @@ class AutoEcoleController extends Controller
           return response()->json("Erreur interne du serveur", 500);
       }
   }
+  public function countAutoEcolesByMonth()
+  {
+      try {
+          // Créer un tableau de tous les mois de l'année
+          $months = range(1, 12);
+  
+          // Sélectionner le nombre d'auto-écoles pour chaque mois, même s'il est nul
+          $counts = AutoEcole::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+                              ->orWhereNull('deleted_at') // Pour inclure les enregistrements non supprimés
+                              ->groupBy(DB::raw('MONTH(created_at)'))
+                              ->orderBy(DB::raw('MONTH(created_at)'))
+                              ->get();
+  
+          // Remplir les mois manquants avec un compteur de 0
+          $result = [];
+          foreach ($months as $month) {
+              $count = $counts->where('month', $month)->first();
+              $result[] = [
+                  'month' => $month,
+                  'count' => $count ? $count->count : 0,
+              ];
+          }
+  
+          return response()->json($result, 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur interne du serveur", 500);
+      }
+  }
+  
+  
     /**
  * @OA\Get(
  *      path="/api/autoEcole/user",

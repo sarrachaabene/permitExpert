@@ -100,6 +100,35 @@ class TransactionController extends Controller
              return response()->json(["error" => $error], 500);
          }
      }
+     public function indexFluxSE()
+     {
+         $adminId = Auth::id(); 
+         $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+         $transactions = Transaction::where('auto_ecole_id', $adminAutoEcoleId)->get();
+         
+         $arrayListFluxE = array_fill(0, 12, 0); 
+         $arrayListFluxS = array_fill(0, 12, 0); 
+         
+         foreach ($transactions as $transaction) {
+             $month = date('n', strtotime($transaction->dateT)); 
+             $montant = $transaction->montantT;
+             
+             if ($transaction->Type_Transaction == 'flux entrant') {
+                 $arrayListFluxE[$month - 1] += $montant;
+             } elseif ($transaction->Type_Transaction == 'flux sortant') {
+                 $arrayListFluxS[$month - 1] += $montant;
+             }
+         }
+         
+         $fluxData = [
+             'fluxEntrant' => $arrayListFluxE,
+             'fluxSortant' => $arrayListFluxS,
+         ];
+     
+         // Renvoyer les données sous forme de JSON
+         return response()->json($fluxData);
+     }
+     
      
 /**
  * @OA\Post(

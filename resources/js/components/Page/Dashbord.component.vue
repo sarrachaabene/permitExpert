@@ -65,7 +65,7 @@
         <div class="shadow p-3 mb-5 bg-body rounded h-100">
           <div id="chart" class="mb-4">
             <apexchart type="area" height="350" :options="chartOptions" :series="series"></apexchart>
-            <h4  style="text-align: center ; color: #1C406B;">Flux entrant et sortant</h4>
+            <h4 style="text-align: center ; color: #1C406B;">Flux entrant et sortant</h4>
           </div>
         </div>
       </div>
@@ -92,6 +92,8 @@ export default {
   data() {
     return {
       userCounts: null,
+      fluxEntrant: [],
+      fluxSortant: [],
       vehiculeCount: null,
       chartOptions: {
         chart: {
@@ -106,9 +108,9 @@ export default {
           curve: 'smooth'
         },
         xaxis: {
-          type: 'datetime',
-          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-        },
+  type: 'category',
+  categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
+},
         tooltip: {
           x: {
             format: 'dd/MM/yy HH:mm'
@@ -117,13 +119,13 @@ export default {
       },
       series: [{
         name: 'Flux entrant',
-        data: [31, 40, 28, 51, 42, 109, 100]
+        data: []
       }, 
       {
         name: 'Flux sortant',
-        data: [11, 32, 98, 32, 23, 52, 3]
+        data: []
       }],
-      series_pie_chart: [44, 55, 13, 43],
+      series_pie_chart: [],
       chartOptions_pie_chart: {
         chart: {
           width: 380,
@@ -152,8 +154,50 @@ export default {
     console.log("Component mounted.");
     this.fetchUserCounts();
     this.fetchVehiculeCount();
+    this.fetch();
+    this.fetchFluxSE();
   },
   methods: {
+    fetchFluxSE() {
+  axios.get("/transaction/indexFluxSE")
+    .then(response => {
+      const data = response.data;
+      if (data && data.fluxEntrant && data.fluxSortant) {
+        // Extraction des flux entrants et sortants par mois
+        this.fluxEntrant = data.fluxEntrant; // Ajustez ici si la structure de vos données est différente
+        this.fluxSortant = data.fluxSortant; // Ajustez ici si la structure de vos données est différente
+
+        // Mise à jour des séries pour le graphique en area
+        this.series = [{
+          name: 'Flux entrant',
+          data: this.fluxEntrant.map(item => parseInt(item)) // Assurez-vous que les valeurs sont des nombres
+        }, 
+        {
+          name: 'Flux sortant',
+          data: this.fluxSortant.map(item => parseInt(item)) // Assurez-vous que les valeurs sont des nombres
+        }];
+      } else {
+        console.error('Error fetching flux entrant and sortant: Data is undefined or null.');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching flux entrant and sortant:', error);
+    });
+},
+
+
+
+    fetch() {
+      axios.get("/user/count")
+        .then(response => {
+          const userData = response.data;
+          this.series_pie_chart = [userData.moniteurs, userData.candidats, userData.secretaires, this.vehiculeCount];
+        })
+        .catch(error => {
+          console.error('Error fetching user counts:', error);
+        });
+    },
+
     fetchUserCounts() {
       axios.get("/user/CountUser")
         .then(response => {
@@ -163,15 +207,16 @@ export default {
           console.error('Error fetching user counts:', error);
         });
     },
+
     fetchVehiculeCount() {
-  axios.get("/vehicule/CountVehicule")
-    .then(response => {
-      this.vehiculeCount = response.data.nombre_de_vehicules; // Accès à la clé "nombre_de_vehicules"
-    })
-    .catch(error => {
-      console.error('Error fetching vehicule count:', error);
-    });
-},
+      axios.get("/vehicule/CountVehicule")
+        .then(response => {
+          this.vehiculeCount = response.data.nombre_de_vehicules; // Accès à la clé "nombre_de_vehicules"
+        })
+        .catch(error => {
+          console.error('Error fetching vehicule count:', error);
+        });
+    },
   },
 };
 </script>

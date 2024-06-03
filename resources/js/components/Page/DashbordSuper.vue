@@ -45,9 +45,9 @@ export default {
           curve: 'smooth'
         },
         xaxis: {
-          type: 'datetime',
-          categories: ["2018-09-01", "2018-10-01", "2018-11-01", "2018-12-01", "2019-01-01", "2019-02-01", "2019-03-01"]
-        },
+  type: 'category',
+  categories: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
+},
         tooltip: {
           x: {
             format: 'MMM yyyy'
@@ -56,7 +56,7 @@ export default {
       },
       series: [{
         name: 'Auto école',
-        data: [20, 30, 40, 35, 45, 50, 55] // Remplacez ces valeurs par le nombre d'auto-écoles pour chaque mois respectif
+        data: [] 
       }],
       series_pie_chart: [44, 55, 13, 43],
       chartOptions_pie_chart: {
@@ -64,7 +64,6 @@ export default {
           width: 380,
           type: 'pie',
         },
-        labels: ['Moniteur', 'Candidat', 'Secrétaire', 'Véhicule'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -86,8 +85,26 @@ export default {
     }
     console.log("Component mounted.");
     this.fetchNumberOfAutoEcoles();
+    this.fetchNumberOfAutoEcolesByMonth();
   },
   methods: {
+    fetchNumberOfAutoEcolesByMonth() {
+      axios.get("/autoEcole/countAutoEcolesByMonth")
+        .then(response => {
+          const data = response.data;
+          const autoEcoleCounts = data.map(item => item.count);
+          this.series = [{
+            name: 'Auto école',
+            data: autoEcoleCounts
+          }];
+          // Mettre à jour le nombre total d'auto-écoles
+          this.numberOfAutoEcoles = autoEcoleCounts.reduce((total, count) => total + count, 0);
+        })
+        .catch(error => {
+          console.error('Erreur lors de la récupération du nombre d\'auto-écoles:', error);
+        });
+    },
+  
     fetchNumberOfAutoEcoles() {
       axios.get("/autoEcole/countAutoEcoles")
         .then(response => {

@@ -265,7 +265,7 @@
               <button type="button" style="background-color: #fa7f35; border-color: #fa7f35" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             </div>
           </form>
-        </div>
+        </div>   
       </div>
     </div>
   </div>

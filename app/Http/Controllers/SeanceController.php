@@ -95,6 +95,7 @@ class SeanceController extends Controller
                   $candidatDetails = User::find($examen->user_id);
                   $vehiculeDetails = Vehicule::find($examen->vehicule_id);
                   $examenDetails[] = [
+                    "Type"=>"examen",
                       "id" => $examen->id,
                       "type" => $examen->type,
                       "status" => $examen->status,
@@ -111,6 +112,7 @@ class SeanceController extends Controller
                   $moniteurDetails = User::find($seance->moniteur_id);
                   $vehiculeDetails = Vehicule::find($seance->vehicule_id);
                   $seanceDetails[] = [
+                    "Type"=>"seance",
                       "id" => $seance->id,
                       "type" => $seance->type,
                       "heureD" => $seance->heureD,
@@ -157,7 +159,7 @@ class SeanceController extends Controller
     {
         $adminId = Auth::id(); 
         $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
-    
+     
         try {
             $validatedData = $request->validate([
                 'type' => 'required|string|in:code,circuit,parc',
@@ -601,25 +603,39 @@ public function indexForMobile()
  *      )
  * )
  */
-public function delete($id)
+public function delete($id, $type)
 {
     try {
-        $seance = Seance::find($id);
-
-        if (!$seance) {
-            $msg = "La séance n'a pas été trouvée.";
-            return response()->json(["error" => $msg], 404);
-        }
-        if ($seance->delete()) {
-            return response()->json("La séance a été supprimée avec succès.", 200);
+        if ($type == 'seance') {
+            $seance = Seance::find($id);
+            if ($seance) {
+                if ($seance->delete()) {
+                    return response()->json("La séance a été supprimée avec succès.", 200);
+                } else {
+                    return response()->json("Erreur lors de la suppression de la séance.", 500);
+                }
+            } else {
+                return response()->json(["error" => "La séance n'a pas été trouvée."], 404);
+            }
+        } elseif ($type == 'examen') {
+            $examen = Examen::find($id);
+            if ($examen) {
+                if ($examen->delete()) {
+                    return response()->json("L'examen a été supprimé avec succès.", 200);
+                } else {
+                    return response()->json("Erreur lors de la suppression de l'examen.", 500);
+                }
+            } else {
+                return response()->json(["error" => "L'examen n'a pas été trouvé."], 404);
+            }
         } else {
-            return response()->json("Erreur lors de la suppression de la séance.", 500);
+            return response()->json(["error" => "Type invalide fourni."], 400);
         }
     } catch (\Exception $e) {
-        $error = "Erreur lors de la suppression de la séance: " . $e->getMessage();
+        $error = "Erreur lors de la suppression: " . $e->getMessage();
         return response()->json(["error" => $error], 500);
     }
-}         
+}
           /**
  * @OA\Post(
  *      path="/api/seance/AccepterPourCandidat/{id}",

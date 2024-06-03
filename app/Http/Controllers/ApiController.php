@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\AutoEcole;
+use App\Models\Vehicule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -171,7 +172,49 @@ public function indexForContactSe()
       }
   }
   
-
+  
+  public function count()
+  {
+      $adminId = Auth::id(); 
+      $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+      
+      try {
+          // Compter les utilisateurs, y compris les éléments supprimés logiquement
+          $roles = ['candidat', 'moniteur', 'secretaire'];
+          $users = User::withTrashed()
+                       ->whereIn('role', $roles)
+                       ->where('auto_ecole_id', $adminAutoEcoleId)
+                       ->get();
+  
+          $countByRole = [
+              'candidat' => 0,
+              'moniteur' => 0,
+              'secretaire' => 0,
+          ];
+  
+          foreach ($users as $user) {
+              if ($user->deleted_at === null) {
+                  $countByRole[$user->role]++;
+              }
+          }
+  
+          // Compter les véhicules, y compris les éléments supprimés logiquement
+          $vehiculesCount = Vehicule::withTrashed()
+                                     ->where('auto_ecole_id', $adminAutoEcoleId)
+                                     ->count();
+  
+          return response()->json([
+              'candidats' => $countByRole['candidat'],
+              'moniteurs' => $countByRole['moniteur'],
+              'secretaires' => $countByRole['secretaire'],
+              'nombre_de_vehicules' => $vehiculesCount
+          ], 200);
+      } catch (\Exception $e) {
+          return response()->json("Erreur lors de la récupération des utilisateurs: " . $e->getMessage(), 500);
+      }
+  }
+  
+  
 
 //Affichage pour superAdmin
 public function indexForSuper()
