@@ -82,7 +82,9 @@ class RessourceEducativeController extends Controller
                 return $ressources->map(function ($ressource) {
                     return [
                         'titreR' => $ressource->titreR,
-                        'Image' => $ressource->Image
+                        'descriptionR' => $ressource->descriptionR, 
+                        'Image' => $ressource->Image,
+                        'link' => $ressource->link
                     ];
                 });
             })->toArray();
@@ -97,6 +99,7 @@ class RessourceEducativeController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }
+    
     
     
     

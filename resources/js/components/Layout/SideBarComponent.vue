@@ -117,9 +117,9 @@
           <li class="sidebar-item">
             <router-link class="sidebar-link" to="/profile" aria-expanded="false">
               <span>
-                <i class="ti ti-settings"></i>
+                <i class="fas fa-user"></i>
               </span>
-              <span class="hide-menu">Paramétres</span>
+              <span class="hide-menu">Profil</span>
             </router-link>
           </li>
   

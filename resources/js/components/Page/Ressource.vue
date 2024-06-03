@@ -142,6 +142,11 @@
         <div class="modal-body">
           <form>
             <div class="mb-3">
+  <label class="form-label" for="editNSerie">Numéro de série:</label>
+  <input v-model="updatedRessource.NSerie" type="text" class="form-control" id="editNSerie" placeholder="Numéro de série">
+</div>
+
+            <div class="mb-3">
               <label class="form-label" for="editTitre">Titre:</label>
               <input v-model="updatedRessource.titreR" type="text" class="form-control" id="editTitre" placeholder="Titre">
             </div>
@@ -153,6 +158,11 @@
               <label class="form-label" for="editLink">Lien:</label>
               <input v-model="updatedRessource.link" type="text" class="form-control" id="editLink" placeholder="Lien">
             </div>
+            <div class="mb-3">
+  <label class="form-label" for="editImage">Nouvelle Image:</label>
+  <input type="file" @change="handleEditFileUpload" class="form-control" id="editImage" />
+</div>
+
           </form>
         </div>
         <div class="modal-footer">
@@ -200,13 +210,16 @@ export default {
         NSerie: '',
         descriptionR: '',
         link: '',
-        image: null 
+        Image: null 
       },
       updatedRessource: {
-        titreR: '',
-        descriptionR: '',
-        link: ''
-      }
+  titreR: '',
+  descriptionR: '',
+  link: '',
+  Image: null,
+  NSerie: ''
+}
+
     };
   },
   methods: {
@@ -236,10 +249,23 @@ export default {
       }
       
       try {
-        const response = await axios.post(`${RESSOURCE_API_BASE_URL}/store`, this.newRessource);
+        // Création d'un objet FormData pour envoyer l'image avec la requête
+        const formData = new FormData();
+        formData.append('titreR', this.newRessource.titreR);
+        formData.append('NSerie', this.newRessource.NSerie);
+        formData.append('descriptionR', this.newRessource.descriptionR);
+        formData.append('link', this.newRessource.link);
+        formData.append('Image', this.newRessource.Image);
+        
+        const response = await axios.post(`${RESSOURCE_API_BASE_URL}/store`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data' // Spécification du type de contenu pour l'envoi de l'image
+          }
+        });
+        
         console.log(response.data); 
         this.fetchData(); 
-        this.newRessource = { titreR: '', descriptionR: '', link: '' };
+        this.newRessource = { titreR: '', descriptionR: '', link: '', NSerie: '', Image: null }; // Réinitialisation des champs
         $('#exampleModal').modal('hide'); 
         $('body').removeClass('modal-open'); 
         $('.modal-backdrop').remove(); 
@@ -256,30 +282,45 @@ export default {
       }
     },
     openEditModal(resource) {
-      this.selectedResourceId = resource.id;
-      this.updatedRessource = {
-        titreR: resource.titreR,
-        descriptionR: resource.descriptionR,
-        link: resource.link
-      };
-      $('#editModal').modal('show');
-    },
-    async updateResource(id) {
-      try {
-        const response = await axios.put(`${RESSOURCE_API_BASE_URL}/update/${id}`, this.updatedRessource);
-        console.log(response.data); 
-        this.fetchData(); 
-        $('#editModal').modal('hide'); 
-        $('body').removeClass('modal-open'); 
-        $('.modal-backdrop').remove(); 
-        this.updateSuccessMessage = 'Ressource a été mise à jour avec succès.';
-        setTimeout(() => {
-          this.updateSuccessMessage = ''; 
-        }, 3000);
-      } catch (error) {
-        console.error("Error updating resource:", error);
-      }
-    },
+  this.selectedResourceId = resource.id;
+  this.updatedRessource = {
+    titreR: resource.titreR,
+    descriptionR: resource.descriptionR,
+    link: resource.link,
+    NSerie: resource.NSerie // Ajoutez cette ligne pour inclure le numéro de série
+  };
+  $('#editModal').modal('show');
+},
+
+async updateResource(id) {
+  try {
+    const requestBody = {
+      titreR: this.updatedRessource.titreR,
+      NSerie: this.updatedRessource.NSerie, // Incluez le numéro de série dans la requête
+      descriptionR: this.updatedRessource.descriptionR,
+      link: this.updatedRessource.link
+    };
+
+    const response = await axios.put(`${RESSOURCE_API_BASE_URL}/update/${id}`, requestBody);
+    console.log(response.data); 
+    this.fetchData(); 
+    $('#editModal').modal('hide'); 
+    $('body').removeClass('modal-open'); 
+    $('.modal-backdrop').remove(); 
+    this.updateSuccessMessage = 'Ressource a été mise à jour avec succès.';
+    setTimeout(() => {
+      this.updateSuccessMessage = ''; 
+    }, 3000);
+  } catch (error) {
+    console.error("Error updating resource:", error);
+  }
+},
+
+handleEditFileUpload(event) {
+  this.updatedRessource.Image = event.target.files[0];
+},
+
+
     deleteResource(id) {
       this.selectedResourceId = id;
       $('#deleteResourceConfirmationModal').modal('show');
@@ -298,6 +339,10 @@ export default {
         console.error("Error deleting resource:", error);
       }
     },
+    handleFileUpload(event) {
+      this.newRessource.Image = event.target.files[0];
+    }
+
   },
   mounted() {
     console.log("Component mounted.");
