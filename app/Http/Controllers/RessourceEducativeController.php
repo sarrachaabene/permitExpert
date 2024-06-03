@@ -75,6 +75,31 @@ class RessourceEducativeController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }
+    public function indexx()
+    {
+        try {
+            $ressources = RessourceEducative::all()->groupBy('NSerie')->map(function ($ressources) {
+                return $ressources->map(function ($ressource) {
+                    return [
+                        'titreR' => $ressource->titreR,
+                        'Image' => $ressource->Image
+                    ];
+                });
+            })->toArray();
+    
+            if (empty($ressources)) {
+                return response()->json(["error" => "Aucune ressource éducative trouvée."], 404);
+            }
+    
+            return response()->json($ressources, 200);
+        } catch (\Exception $e) {
+            $error = "Erreur lors de la récupération des ressources éducatives: " . $e->getMessage();
+            return response()->json(["error" => $error], 500);
+        }
+    }
+    
+    
+    
   /**
  * @OA\Post(
  *      path="/api/ressourceeducative/store",
@@ -106,33 +131,45 @@ class RessourceEducativeController extends Controller
  * )
  */
 
-     // TODO: Add validation and error handling
-     public function store(Request $request)
-     {
-         try {
-             $validatedData = $request->validate([
-                 'titreR' => 'required|string',
-                 'descriptionR' => 'required|string',
-                 'link'=>'required|string',
-             ]);
-                  $existingRessource = RessourceEducative::where('link', $validatedData['link'])
-            
-                 ->first();
-             if ($existingRessource) {
-                 return response()->json(["error" => "Une ressource éducative similaire existe déjà."], 400);
-             }
-                  $ressourceEducative = RessourceEducative::create([
-                 'titreR' => $validatedData['titreR'],
-                 'descriptionR' => $validatedData['descriptionR'],
-                 'link' => $validatedData['link'],
-                 'dateD' => isset($validatedData['dateD']) ? $validatedData['dateD'] : now(),
-             ]);
-             return response()->json($ressourceEducative, 200);
-         } catch (\Exception $e) {
-             $error = "Erreur lors de la création de la ressource éducative: " . $e->getMessage();
-             return response()->json(["error" => $error], 500);
+ public function store(Request $request)
+ {
+     try {
+         $validatedData = $request->validate([
+             'titreR' => 'required|string',
+             'descriptionR' => 'required|string',
+             'link' => 'required|string|unique:ressource_educatives,link', 
+             'NSerie' => 'required|string',
+             'Image' => 'required|Image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
+         ]);
+ 
+         if ($request->hasFile('Image')) {
+             $image = $request->file('Image');
+             $imageName = time().'.'.$image->getClientOriginalExtension();
+             $image->move(public_path('images'), $imageName);
+             $validatedData['Image'] = 'images/'.$imageName; 
          }
-     } 
+ 
+         $existingRessource = RessourceEducative::where('link', $validatedData['link'])->first();
+         if ($existingRessource) {
+             return response()->json(["error" => "Une ressource éducative similaire existe déjà."], 400);
+         }
+ 
+         $ressourceEducative = RessourceEducative::create([
+             'titreR' => $validatedData['titreR'],
+             'descriptionR' => $validatedData['descriptionR'],
+             'link' => $validatedData['link'],
+             'NSerie' => $validatedData['NSerie'],
+             'dateD' => isset($validatedData['dateD']) ? $validatedData['dateD'] : now(),
+             'Image' => $validatedData['Image'], 
+         ]);
+ 
+         return response()->json($ressourceEducative, 200);
+     } catch (\Exception $e) {
+         $error = "Erreur lors de la création de la ressource éducative: " . $e->getMessage();
+         return response()->json(["error" => $error], 500);
+     }
+ }
+ 
    /**
  * @OA\Get(
  *      path="/api/ressourceeducative/show/{id}",
@@ -220,23 +257,41 @@ class RessourceEducativeController extends Controller
     {
         try {
             $validatedData = $request->validate([
-              'titreR' => 'required|string',
-              'descriptionR' => 'required|string',
-              'link'=>'required|string',
+                'titreR' => 'sometimes|string',
+                'descriptionR' => 'sometimes|string',
+                'link' => 'sometimes|string|unique:ressource_educatives,link,' . $id,
+                'NSerie' => 'sometimes|string',
+                'Image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
-                $ressourceEducative = RessourceEducative::find($id);
-                if ($ressourceEducative) {
-                $ressourceEducative->update($validatedData);
-                return response()->json($ressourceEducative, 200);
+    
+            $ressourceEducative = RessourceEducative::findOrFail($id);
+    
+            if ($request->hasFile('Image')) {
+                $image = $request->file('Image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images'), $imageName);
+                $validatedData['Image'] = 'images/' . $imageName;
+    
+                if ($ressourceEducative->Image) {
+                    File::delete(public_path($ressourceEducative->Image));
+                }
             } else {
-                $msg = "La ressource éducative avec l'ID spécifié n'a pas été trouvée.";
-                return response()->json(["error" => $msg], 404);
+                $validatedData['Image'] = $ressourceEducative->Image;
             }
+    
+            $ressourceEducative->fill($validatedData);
+    
+            $ressourceEducative->save();
+    
+            return response()->json($ressourceEducative, 200);
         } catch (\Exception $e) {
             $error = "Erreur lors de la mise à jour de la ressource éducative: " . $e->getMessage();
             return response()->json(["error" => $error], 500);
         }
     }
+    
+
+    
        /**
  * @OA\Delete(
  *      path="/api/ressourceeducative/delete/{id}",

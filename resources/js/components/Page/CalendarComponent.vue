@@ -313,6 +313,35 @@ async fetchMoniteur() {
         console.error('Error fetching seances and examens:', error);
       }
     },
+    async modifyEvent(event) {
+      try {
+        if (event.eventType === 'séance') {
+          await axios.put(`http://localhost:8000/api/seance/${event.id}`, {
+            type: event.type,
+            date: event.date,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            user_id: event.user_id,
+            moniteur_id: event.moniteur_id,
+            vehicule_id: event.vehicule_id
+          });
+          console.log("Séance updated successfully");
+        } else if (event.eventType === 'examen') {
+          await axios.put(`http://localhost:8000/api/examen/${event.id}`, {
+            type: event.type,
+            date: event.date,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            user_id: event.user_id,
+            moniteur_id: event.moniteur_id,
+            vehicule_id: event.vehicule_id
+          });
+          console.log("Examen updated successfully");
+        }
+      } catch (error) {
+        console.error("Error updating event:", error);
+      }
+    },
     onEventRendered(args) {
       const status = args.data.status;
       console.log('Event rendered:', args.data);

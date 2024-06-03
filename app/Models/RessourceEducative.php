@@ -14,6 +14,8 @@ class RessourceEducative extends Model
       'typeR',
       'dateD',
       'link',
+      'NSerie',
+      'Image',
 ];
 
 public function users()

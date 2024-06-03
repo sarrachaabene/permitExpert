@@ -58,6 +58,7 @@ Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::put('/autoEcole/update/{id}',[AutoEcoleController::class,'update']);
   Route::delete('/autoEcole/delete/{id}',[AutoEcoleController::class,'delete']);
   Route::get('/ressourceeducative/index',[RessourceEducativeController::class,'index']);
+  Route::get('/ressourceeducative/indexx',[RessourceEducativeController::class,'indexx']);
   Route::get('/ressourceeducative/show/{id}',[RessourceEducativeController::class,'show']);
   Route::post('/ressourceeducative/store',[RessourceEducativeController::class,'store']);
   Route::put('/ressourceeducative/update/{id}',[RessourceEducativeController::class,'update']);
