@@ -32,7 +32,8 @@ use App\Models\Notification;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::get('/ressourceeducative/index',[RessourceEducativeController::class,'index']);
+Route::get('/ressourceeducative/indexx',[RessourceEducativeController::class,'indexx']);
 Route::post('/login', [ApiController::class, 'loginClient']);
 Route::put('/updateProfile/{email}',[ApiController::class,'registerClient']);
 Route::get('/checkEmail/{email}', [ApiController::class, 'checkEmail']);
@@ -40,8 +41,6 @@ Route::get('/verifyCode/{email}/{code}', [ApiController::class, 'verifyCode']);
 Route::put('/updatePassword/{email}', [ApiController::class, 'updatePassword']);
 Route::get('/checkEmailForPassword/{email}', [ApiController::class, 'checkEmailForPassword']);
 Route::post('/demandeInscript/store',[DemandeInscriptionController::class,'store']);
-
-
 Route::middleware('auth:api','role:superAdmin')->group(function () { 
   Route::post('/autoEcole/store',[AutoEcoleController::class,'store']);
   Route::get('/user/showForSuperAdmin/{id}', [ApiController::class, 'showForSuperAdmin']);
@@ -57,8 +56,6 @@ Route::get('/autoEcole/index',[AutoEcoleController::class,'index']);
   Route::get('/autoEcole/show/{id}',[AutoEcoleController::class,'show']);
   Route::put('/autoEcole/update/{id}',[AutoEcoleController::class,'update']);
   Route::delete('/autoEcole/delete/{id}',[AutoEcoleController::class,'delete']);
-  Route::get('/ressourceeducative/index',[RessourceEducativeController::class,'index']);
-  Route::get('/ressourceeducative/indexx',[RessourceEducativeController::class,'indexx']);
   Route::get('/ressourceeducative/show/{id}',[RessourceEducativeController::class,'show']);
   Route::post('/ressourceeducative/store',[RessourceEducativeController::class,'store']);
   Route::put('/ressourceeducative/update/{id}',[RessourceEducativeController::class,'update']);

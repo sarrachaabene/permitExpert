@@ -30,8 +30,9 @@
                       <table class="table table-borded">
                         <thead>
                           <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">Titre</th>
+<!--                            <th scope="col">id</th>
+ -->                            <th scope="col">Titre</th>
+                            <th scope="col">Numéro de série</th>
                             <th scope="col">Description</th>
                             <th scope="col">Lien</th>
                             <th scope="col">Action</th>
@@ -39,9 +40,10 @@
                         </thead>
                         <tbody>
                           <tr v-for="(res, index) in ressource" :key="index">
-                            <th scope="row">{{ res.id }}</th>
-                            <td>{{ res.titreR }}</td>
-                            <td>{{ res.descriptionR }}</td>
+<!--                             <th scope="row">#</th>
+ -->                            <td>{{ res.titreR }}</td>
+                            <td>{{ res.NSerie }}</td>
+                           <td>{{ res.descriptionR }}</td>
                             <td>{{ res.link }} </td>
                             <td style="display: flex; justify-content: space-between;">
                               <button @click="openEditModal(res)" style="
@@ -96,6 +98,10 @@
         <div class="modal-body">
           <form>
             <div class="mb-3">
+              <label class="form-label" for="exampleFormControlInput1">Numéro de série:</label>
+              <input v-model="newRessource.NSerie" class="form-control" id="exampleFormControlInput1" type="text" placeholder="Numéro de série" />
+            </div>
+            <div class="mb-3">
               <label class="form-label" for="exampleFormControlInput1">Titre:</label>
               <input v-model="newRessource.titreR" class="form-control" id="exampleFormControlInput1" type="text" placeholder="Titre" />
             </div>
@@ -106,6 +112,10 @@
             <div class="mb-3">
               <label class="form-label" for="exampleTextarea">Lien:</label>
               <input v-model="newRessource.link" class="form-control" id="exampleTextarea" placeholder="Lien" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="exampleFormControlInput1">Image:</label>
+              <input type="file" @change="handleFileUpload" class="form-control" id="exampleFormControlInput1" />
             </div>
           </form>
         </div>
@@ -187,8 +197,10 @@ export default {
       selectedResourceId: null,
       newRessource: {
         titreR: '',
+        NSerie: '',
         descriptionR: '',
-        link: ''
+        link: '',
+        image: null 
       },
       updatedRessource: {
         titreR: '',
@@ -215,7 +227,7 @@ export default {
     },
     async addResource() {
       // Vérification des champs vides
-      if (!this.newRessource.titreR || !this.newRessource.descriptionR || !this.newRessource.link) {
+      if (!this.newRessource.titreR || !this.newRessource.descriptionR || !this.newRessource.link || !this.newRessource.NSerie) {
         this.AddErrorMessage = 'Veuillez remplir tous les champs.';
         setTimeout(() => {
           this.AddErrorMessage = '';
