@@ -1,86 +1,91 @@
 <template>
-  <br/><br/><br/><br/><br/>
+  <br><br><br><br>
   <div id='app'>
     <div id='container'>
-      <ejs-schedule :height='height'
-                    :width='width'
-                    :views='views'
-                    :selectedDate='selectedDate'
-                    :eventSettings='eventSettings'
-                    :editorTemplate="'editorTemplate'"
-                    :popupOpen='onPopupOpen'
-                    :popupClose='onPopupClose'
-                    @eventClick="onEventClick"
-                    @eventRendered="onEventRendered">
+      <ejs-schedule 
+        :height='height'
+        :width='width'
+        :views='views'
+        :selectedDate='selectedDate'
+        :eventSettings='eventSettings'
+        :editorTemplate="'editorTemplate'"
+        :popupOpen='onPopupOpen'
+        :popupClose='onPopupClose'
+        @eventClick="onEventClick"
+        @eventRendered="onEventRendered">
         <template v-slot:editorTemplate>
           <div class="modal fade show" style="display: block;">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title mx-auto" id="exampleModalLabel" style="font-weight: bold; margin-top: 30px">
-                    Ajouter événement
-                  </h5>
+                  <h5 class="modal-title mx-auto" style="font-weight: bold; margin-top: 30px">Ajouter événement</h5>
                   <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" @click="onPopupClose">
                     <span class="fas fa-times fs--1"></span>
                   </button>
                 </div>
                 <br />
                 <div class="modal-body">
-                  <form >
+                  <form @submit.prevent="submitForm">
                     <div class="mb-3">
-                      <h6 style="text-align: left;"><strong>Type d'évènement</strong></h6>
-        <select class="form-select" >
-          <option value="seance">Séance</option>
-          <option value="examen">Examen</option>
-        </select>
-      </div>
+                      <h6><strong>Type d'évènement</strong></h6>
+                      <select v-model="newEvent.type" class="form-select">
+                        <option value="seance">Séance</option>
+                        <option value="examen">Examen</option>
+                      </select>
+                    </div>
                     <div class="mb-3">
-                      <h6 style="text-align: left;"><strong>Type</strong></h6>
-        <select class="form-select" >
-          <option value="code">Code</option>
-          <option value="circuit">Circuit</option>
-          <option value="parc">Parc</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <h6 style="text-align: left;"><strong>Date</strong></h6>
-        <input name="Date" class="form-control" type="date" placeholder="Date" />
-      </div>
-      <div class="mb-3" >
-        <h6 style="text-align: left;"><strong>Heure début</strong></h6>
-        <input name="Heure début" class="form-control" type="time" placeholder="Heure début" />
-      </div>
-      <div class="mb-3" >
-        <h6 style="text-align: left;"><strong>Heure Fin</strong></h6>
-        <input name="Heure début" class="form-control" type="time" placeholder="Heure début" />
-      </div>
-      <div class="mb-3">
-        <h6 style="text-align: left;"><strong>Nom du candidat</strong></h6>
-        <select class="form-control"  placeholder="Nom du candidat">
-          <option v-for="candidat in candidats" :key="candidat.id" :value="candidat.user_name">
-                  {{ candidat.user_name }}
-                </option>        </select>
-      </div>
-      <div class="mb-3">
-        <h6 style="text-align: left;"><strong>Nom du moniteur</strong></h6>
-        <select class="form-control"  placeholder="Nom du candidat">
-        <option v-for="moniteur in moniteurs" :key="moniteur.id" :value="moniteur.user_name">
-                  {{ moniteur.user_name }}
-                </option></select>
-      </div>
-      <div class="mb-3">
-        <h6 style="text-align: left;"><strong>Immatricule du véhicule</strong></h6>
-        <select class="form-control" v-model="newTransactionUserName" placeholder="Nom d'utilisateur">
-                <option v-for="vehicule in vehicules" :key="vehicule.id" :value="vehicule.immatricule">
-                  {{ vehicule.immatricule }}
-                </option>
-              </select>
-      </div>
+                      <h6><strong>Type</strong></h6>
+                      <select v-model="newEvent.subject" class="form-select">
+                        <option value="code">Code</option>
+                        <option value="circuit">Circuit</option>
+                        <option value="parc">Parc</option>
+                      </select>
+                    </div>
+                    <div class="mb-3" v-if="newEvent.type === 'examen'">
+                      <h6><strong>Date</strong></h6>
+                      <input v-model="newEvent.dateE" class="form-control" type="date" placeholder="Date" />
+                    </div>
+                    <div class="mb-3" v-if="newEvent.type === 'seance'">
+                      <h6><strong>Date</strong></h6>
+                      <input v-model="newEvent.dateS" class="form-control" type="date" placeholder="Date" />
+                    </div>
+                    <div class="mb-3">
+                      <h6><strong>Heure début</strong></h6>
+                      <input v-model="newEvent.heureD" class="form-control" type="time" placeholder="Heure début" />
+                    </div>
+                    <div class="mb-3">
+                      <h6><strong>Heure Fin</strong></h6>
+                      <input v-model="newEvent.heureF" class="form-control" type="time" placeholder="Heure Fin" />
+                    </div>
+                    <div class="mb-3">
+                      <h6><strong>Nom du candidat</strong></h6>
+                      <select v-model="newEvent.candidat_nom" class="form-control">
+                        <option v-for="candidat in candidats" :key="candidat.id" :value="candidat.user_name">
+                          {{ candidat.user_name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="mb-3" v-if="newEvent.type === 'seance'">
+                      <h6><strong>Nom du moniteur</strong></h6>
+                      <select v-model="newEvent.moniteur_nom" class="form-control">
+                        <option v-for="moniteur in moniteurs" :key="moniteur.id" :value="moniteur.user_name">
+                          {{ moniteur.user_name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <h6><strong>Immatricule du véhicule</strong></h6>
+                      <select v-model="newEvent.vehicule_immatriculation" class="form-control">
+                        <option v-for="vehicule in vehicules" :key="vehicule.id" :value="vehicule.immatricule">
+                          {{ vehicule.immatricule }}
+                        </option>
+                      </select>
+                    </div>
                     <div class="modal-footer">
                       <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
                         Ajouter
                       </button>
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #fa7f35; border-color: #fa7f35" @click="onPopupClose">
+                      <button type="button" class="btn btn-secondary" style="background-color: #fa7f35; border-color: #fa7f35" @click="onPopupClose">
                         Annuler
                       </button>
                     </div>
@@ -146,7 +151,7 @@ export default {
       selectedDate: new Date(),
       group: { resources: ['Owners'] },
       allowMultiple: true,
-      height: '550px',
+      height: '700px',
       width: '100%',
       ownerDataSource: [
         { OwnerText: 'Séance', Id: 1, OwnerColor: '#9dcd5a' },
@@ -156,7 +161,28 @@ export default {
       eventSettings: {
         dataSource: []
       },
-      showQuickInfo: false
+      showQuickInfo: false,
+      selectedEvent: {
+      Type: '',
+      Subject: '',
+      StartTime: '',
+      EndTime: '',
+      user_name: '',
+      Moniteur_name: '',
+      immatricule: ''
+    },
+    newEvent: {
+        type: 'seance',
+        subject: '',
+        dateE: '',
+        dateS:'',
+        heureD: '',
+        heureF: '',
+        candidat_nom: '',
+        moniteur_nom: '',
+        vehicule_immatriculation: ''
+      }
+
     };
   },
   provide: {
@@ -196,48 +222,23 @@ async fetchMoniteur() {
     console.error("Error fetching moniteurs:", error);
   }
 },
-/*     onPopupOpen: function (args) {
-      if (args.type === 'Editor') {
-        let subjectElement = args.element.querySelector('#Subject');
-        if (subjectElement) {
-          subjectElement.value = args.data.Subject || "";
-        }
-        let statusElement = args.element.querySelector('#EventType');
-        if (!statusElement.classList.contains('e-dropdownlist')) {
-          let dropDownListObject = new DropDownList({
-            placeholder: 'Choose status',
-            value: args.data.EventType,
-            dataSource: ['New', 'Requested', 'Confirmed']
-          });
-          dropDownListObject.appendTo(statusElement);
-          statusElement.setAttribute('name', 'EventType');
-        }
-        let startElement = args.element.querySelector('#StartTime');
-        if (!startElement.classList.contains('e-datetimepicker')) {
-          new DateTimePicker(
-            { value: new Date(args.data.StartTime) || new Date() },
-            startElement
-          );
-        }
-        let endElement = args.element.querySelector('#EndTime');
-        if (!endElement.classList.contains('e-datetimepicker')) {
-          new DateTimePicker(
-            { value: new Date(args.data.EndTime) || new Date() },
-            endElement
-          );
-        }
-        let descriptionElement = args.element.querySelector('#Description');
-        if (descriptionElement) {
-          descriptionElement.value = args.data.Description || "";
-        }
-        this.hideElements(".e-footer-content");
-      }
-    }, */
     onPopupClose: function () {
   const modalElements = document.querySelectorAll('.modal.fade.show');
   modalElements.forEach(modalElement => {
     modalElement.style.display = 'none';
   });
+  this.newEvent = {
+        type: 'seance',
+        subject: '',
+        dateE: '',
+        heureD: '',
+        heureF: '',
+        candidat_nom: '',
+        moniteur_nom: '',
+        dateS:'',
+        vehicule_immatriculation: ''
+      };
+    //  this.$refs.schedule.closeQuickInfoPopup();
 },
 
 
@@ -252,10 +253,32 @@ async fetchMoniteur() {
     }
   }
 },
+async submitForm() {
+      const { type, subject, dateE,dateS, heureD, heureF, candidat_nom, moniteur_nom, vehicule_immatriculation } = this.newEvent;
+      const apiUrl = type === 'seance' ? '/seance/store' : '/Examen/store';
+      const payload = {
+        type: subject,
+        ...(type=='examen' && {dateE}),
+        ...(type=='seance' && {dateS}),
+        heureD,
+        heureF,
+        candidat_nom,
+        vehicule_immatriculation,
+        ...(type === 'seance' && { moniteur_nom })
+      };
 
-
-
-
+      try {
+        await axios.post(apiUrl, payload);
+        this.fetchSeancesAndExamens();
+        this.onPopupClose();
+      } catch (error) {
+        if (error.response && error.response.data) {
+          console.error('API Error:', error.response.data);
+        } else {
+          console.error('Unexpected Error:', error);
+        }
+      }
+    },
     createDateFromStrings(dateString, timeString) {
       const [year, month, day] = dateString.split('-').map(Number);
       const [hours, minutes, seconds] = timeString.split(':').map(Number);
@@ -313,35 +336,36 @@ async fetchMoniteur() {
         console.error('Error fetching seances and examens:', error);
       }
     },
-    async modifyEvent(event) {
-      try {
-        if (event.eventType === 'séance') {
-          await axios.put(`http://localhost:8000/api/seance/${event.id}`, {
-            type: event.type,
-            date: event.date,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            user_id: event.user_id,
-            moniteur_id: event.moniteur_id,
-            vehicule_id: event.vehicule_id
-          });
-          console.log("Séance updated successfully");
-        } else if (event.eventType === 'examen') {
-          await axios.put(`http://localhost:8000/api/examen/${event.id}`, {
-            type: event.type,
-            date: event.date,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            user_id: event.user_id,
-            moniteur_id: event.moniteur_id,
-            vehicule_id: event.vehicule_id
-          });
-          console.log("Examen updated successfully");
-        }
-      } catch (error) {
-        console.error("Error updating event:", error);
-      }
-    },
+
+    async updateEvent(eventData) {
+  try {
+    if (eventData.Type === 'seance') {
+      await axios.put(`http://localhost:8000/api/seance/update/${eventData.Id}`, {
+        type: eventData.Subject,
+        date: eventData.StartTime.toISOString().split('T')[0],
+        startTime: eventData.StartTime.toTimeString().split(' ')[0],
+        endTime: eventData.EndTime.toTimeString().split(' ')[0],
+        user_id: eventData.user_id,
+        moniteur_id: eventData.moniteur_id,
+        vehicule_id: eventData.vehicule_id
+      });
+      console.log("Séance mise à jour avec succès");
+    } else if (eventData.Type === 'examen') {
+      await axios.put(`http://localhost:8000/api/Examen/update/${eventData.Id}`, {
+        type: eventData.Subject,
+        date: eventData.StartTime.toISOString().split('T')[0],
+        startTime: eventData.StartTime.toTimeString().split(' ')[0],
+        endTime: eventData.EndTime.toTimeString().split(' ')[0],
+        user_id: eventData.user_id,
+        moniteur_id: eventData.moniteur_id,
+        vehicule_id: eventData.vehicule_id
+      });
+      console.log("Examen mis à jour avec succès");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'événement:", error);
+  }
+},
     onEventRendered(args) {
       const status = args.data.status;
       console.log('Event rendered:', args.data);
@@ -423,6 +447,13 @@ async fetchMoniteur() {
         </select>
       </div>
       <div class="mb-3">
+        <h6 style="text-align: left;"><strong>Type d'évènement</strong></h6>
+                      <select  class="form-select">
+                        <option value="seance">Séance</option>
+                        <option value="examen">Examen</option>
+                      </select>
+                    </div>
+      <div class="mb-3">
         <h6 style="text-align: left;"><strong>Date</strong></h6>
         <input name="Date" class="form-control" type="date" placeholder="Date" />
       </div>
@@ -453,13 +484,15 @@ async fetchMoniteur() {
         </select>
       </div>
     <button class="btn btn-primary" type="submit" style="background-color: #9dcd5a; border-color: #9dcd5a">
-                Ajouter
+                Modifier
               </button>    </form>
     `
   });
 });
-
+ this.updateEvent(eventData);
+//  Swal.fire("L'événement a été mis à jour avec succès!"); 
     }
+    
   });
 },
 deleteEvent(eventData) {
@@ -505,10 +538,9 @@ deleteEvent(eventData) {
     } else {
       await this.fetchSeancesAndExamens();
     }
-    await this.fetchVehicule(); // Assuming you have a method to fetch vehicules
-  await this.fetchCandidat();     // Assuming you have a method to fetch users
+    await this.fetchVehicule(); 
+  await this.fetchCandidat();     
   await this.fetchMoniteur();   
-  // Now you can safely access the length property
   if (this.vehicules.length === 0 || this.users.length === 0) {
     console.error('Vehicules or users array is empty');
     return;

@@ -125,67 +125,73 @@
 
 
    <a href="https://htmlcodex.com/contact-form"></a>.</p>
-                      <form>
-                          <div class="row g-3">
-                              <div class="col-md-6">
-                                  <div class="form-floating">
-                                      <input type="text" class="form-control border-0 bg-light" id="name" placeholder="Your Name">
-                                      <label for="name">Nom d'utilisateur</label>
-                                  </div>
-                              </div>
-                              <div class="col-md-6">
-                                  <div class="form-floating">
-                                      <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
-                                      <label for="email">adresse émail</label>
-                                  </div>
-                              </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
-                                        <label for="email">Numéro du téléphone</label>
-                                    </div>
-                                </div>
-                                    <div class="col-md-6">
-                                      <div class="form-floating">
-                                          <input type="email" class="form-control border-0 bg-light" id="email" placeholder="Your Email">
-                                          <label for="email">Cin</label>
-                                      </div>
-                                  </div>
-                                  
-                              <div class="col-6">
-                                  <div class="form-floating">
-                                      <input type="date" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
-                                      <label for="subject">Date du naissance</label>
-                                  </div>
-                              </div> 
-                              
-                                <div class="col-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
-                                        <label for="subject">Nom de l'autoécole</label>
-                                    </div>
-                                </div>
-                              <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control border-0 bg-light" id="subject" placeholder="Subject">
-                                        <label for="subject">adresse autoécole</label>
-                                    </div>
-                                </div>
-                              <div class="col-12">
-                                  <div class="form-floating">
-                                      <textarea class="form-control border-0 bg-light" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
-                                      <label for="message">description</label>
-                                  </div>
-                              </div>
-                              <div class="col-12">
-                                  <button class="btn btn-primary py-3 px-5" type="submit">Send Message</button>
-                              </div>
-                          </div>
-                      </form>
+   <form @submit.prevent="submitForm">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.user_nameA" type="text" class="form-control border-0 bg-light" id="name" name="user_nameA" placeholder="Your Name">
+            <label for="name">Nom d'utilisateur</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.emailA" type="email" class="form-control border-0 bg-light" id="email" name="emailA" placeholder="Your Email">
+            <label for="email">Adresse email</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.numTel" type="text" class="form-control border-0 bg-light" id="phone" name="numTel" placeholder="Your Phone">
+            <label for="phone">Numéro du téléphone</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input v-model="form.cin" type="text" class="form-control border-0 bg-light" id="cin" name="cin" placeholder="Your CIN">
+            <label for="cin">Cin</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input v-model="form.dateNaissance" type="date" class="form-control border-0 bg-light" id="birthdate" name="dateNaissance" placeholder="Your Birthdate">
+            <label for="birthdate">Date de naissance</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input v-model="form.nomEcole" type="text" class="form-control border-0 bg-light" id="schoolName" name="nomEcole" placeholder="School Name">
+            <label for="schoolName">Nom de l'autoécole</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <input v-model="form.aderesseEcole" type="text" class="form-control border-0 bg-light" id="schoolAddress" name="aderesseEcole" placeholder="School Address">
+            <label for="schoolAddress">Adresse autoécole</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-floating">
+            <textarea v-model="form.descriptionEcole" class="form-control border-0 bg-light" id="description" name="descriptionEcole" placeholder="Leave a message here" style="height: 150px"></textarea>
+            <label for="description">Description</label>                    
+          </div>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary py-3 px-5" type="submit">Envoyer</button>
+        </div>
+        <div v-if="successMessage" class="alert alert-success" role="alert">
+        {{ successMessage }}
+      </div>
+      <div v-if="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+    </div>
+    </form>
+    </div>
+
+
                   </div>
               </div>
           </div>
-      </div>
       <!-- Contact End -->
 
 

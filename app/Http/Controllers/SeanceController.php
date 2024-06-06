@@ -159,20 +159,25 @@ class SeanceController extends Controller
     {
         $adminId = Auth::id(); 
         $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
-     
+    
         try {
             $validatedData = $request->validate([
                 'type' => 'required|string|in:code,circuit,parc',
                 'heureD' => 'required|date_format:H:i',
                 'heureF' => 'required|date_format:H:i|after:heureD',
                 'dateS' => 'required|date',
-                'moniteur_id' => 'required|exists:users,id,role,moniteur,auto_ecole_id,'.$adminAutoEcoleId,
-                'candidat_id' => 'required|exists:users,id,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
-                'vehicule_id' => 'required|exists:vehicules,id,auto_ecole_id,'.$adminAutoEcoleId,
+                'moniteur_nom' => 'required|exists:users,user_name,role,moniteur,auto_ecole_id,'.$adminAutoEcoleId,
+                'candidat_nom' => 'required|exists:users,user_name,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
+                'vehicule_immatriculation' => 'required|exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
             ]);
-                $existingSeance = Seance::where('moniteur_id', $validatedData['moniteur_id'])
-                ->where('candidat_id', $validatedData['candidat_id'])
-                ->where('vehicule_id', $validatedData['vehicule_id'])
+    
+            $moniteurId = User::where('user_name', $validatedData['moniteur_nom'])->pluck('id')->first();
+            $candidatId = User::where('user_name', $validatedData['candidat_nom'])->pluck('id')->first();
+            $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+    
+            $existingSeance = Seance::where('moniteur_id', $moniteurId)
+                ->where('candidat_id', $candidatId)
+                ->where('vehicule_id', $vehiculeId)
                 ->where('dateS', $validatedData['dateS'])
                 ->where(function ($query) use ($validatedData) {
                     $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
@@ -183,7 +188,8 @@ class SeanceController extends Controller
             if ($existingSeance) {
                 return response()->json(["error" => "Il existe déjà une séance planifiée pour ce moniteur, candidat et véhicule à ce moment."], 400);
             }
-                $seance = Seance::create([
+    
+            $seance = Seance::create([
                 'type' => $validatedData['type'],
                 'heureD' => $validatedData['heureD'],
                 'heureF' => $validatedData['heureF'],
@@ -191,9 +197,9 @@ class SeanceController extends Controller
                 'status'=>'en attente',
                 'candidat_status'=>'en attente',
                 'moniteur_status'=>'en attente',
-                'moniteur_id' => $validatedData['moniteur_id'],
-                'candidat_id' => $validatedData['candidat_id'],
-                'vehicule_id' => $validatedData['vehicule_id'],
+                'moniteur_id' => $moniteurId,
+                'candidat_id' => $candidatId,
+                'vehicule_id' => $vehiculeId,
                 'auto_ecole_id' => $adminAutoEcoleId,
             ]);
     
@@ -203,6 +209,7 @@ class SeanceController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }
+    
     
   /**
  * @OA\Get(
@@ -533,41 +540,59 @@ public function indexForMobile()
 
     public function update(Request $request, $id)
     {
+        $adminId = Auth::id(); 
+        $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+    
         try {
-            $seance = Seance::find($id);
-                if (!$seance) {
-                return response()->json(["error" => "La séance avec l'ID spécifié n'a pas été trouvée."], 404);
-            }
-                $validatedData = $request->validate([
+            $validatedData = $request->validate([
                 'type' => 'string|in:code,circuit,parc',
                 'heureD' => 'date_format:H:i',
                 'heureF' => 'date_format:H:i|after:heureD',
                 'dateS' => 'date',
-                'moniteur_id' => 'exists:users,id,role,moniteur',
-                'candidat_id' => 'exists:users,id,role,candidat',
-                'vehicule_id' => 'exists:vehicules,id',
+                'moniteur_nom' => 'exists:users,user_name,role,moniteur,auto_ecole_id,'.$adminAutoEcoleId,
+                'candidat_nom' => 'exists:users,user_name,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
+                'vehicule_immatriculation' => 'exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
             ]);
-                $existingSeance = Seance::where('moniteur_id', $validatedData['moniteur_id'])
-                ->where('candidat_id', $validatedData['candidat_id'])
-                ->where('vehicule_id', $validatedData['vehicule_id'])
+                $moniteurId = User::where('user_name', $validatedData['moniteur_nom'])->pluck('id')->first();
+            $candidatId = User::where('user_name', $validatedData['candidat_nom'])->pluck('id')->first();
+            $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+    
+            $seance = Seance::where('id', $id)->where('auto_ecole_id', $adminAutoEcoleId)->firstOrFail();
+    
+            $existingSeance = Seance::where('moniteur_id', $moniteurId)
+                ->where('candidat_id', $candidatId)
+                ->where('vehicule_id', $vehiculeId)
                 ->where('dateS', $validatedData['dateS'])
                 ->where(function ($query) use ($validatedData) {
                     $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
                         ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
                 })
-                ->where('id', '!=', $id) 
+                ->where('id', '!=', $id)
                 ->exists();
     
             if ($existingSeance) {
                 return response()->json(["error" => "Il existe déjà une séance planifiée pour ce moniteur, candidat et véhicule à ce moment."], 400);
             }
-                $seance->update($validatedData);
+                $seance->update([
+                'type' => $validatedData['type'],
+                'heureD' => $validatedData['heureD'],
+                'heureF' => $validatedData['heureF'],
+                'dateS' => $validatedData['dateS'],
+                'moniteur_id' => $moniteurId,
+                'candidat_id' => $candidatId,
+                'vehicule_id' => $vehiculeId,
+                'status' => 'en attente',
+                'candidat_status' => 'en attente',
+                'moniteur_status' => 'en attente',
+            ]);
+    
             return response()->json($seance, 200);
         } catch (\Exception $e) {
             $error = "Erreur lors de la mise à jour de la séance: " . $e->getMessage();
             return response()->json(["error" => $error], 500);
         }
     }
+    
          /**
  * @OA\Delete(
  *      path="/api/seance/delete/{id}",

@@ -108,58 +108,67 @@ public function index()
  * )
  */
 
-public function store(Request $request)
-{
-    $adminId = Auth::id(); 
-    $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
-    
-    try {
-        $validatedData = $request->validate([
-            'type' => 'required|string',
-            'heureD' => 'required|date_format:H:i',
-            'heureF' => 'required|date_format:H:i|after:heureD',
-            'dateE' => 'required|date',
-            'user_id' => 'required|exists:users,id,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
-            'vehicule_id' => 'required|exists:vehicules,id,auto_ecole_id,'.$adminAutoEcoleId,
-        ]);
-        $existingExamen = Examen::where('user_id', $validatedData['user_id'])
-                                ->where('dateE', $validatedData['dateE'])
-                                ->where(function ($query) use ($validatedData) {
-                                    $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
-                                          ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
-                                })
-                                ->exists();
-
-        if ($existingExamen) {
-            return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
-        }
-        $existingExamenVehicule = Examen::where('vehicule_id', $validatedData['vehicule_id'])
-                                        ->where('dateE', $validatedData['dateE'])
-                                        ->where(function ($query) use ($validatedData) {
-                                            $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
-                                                  ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
-                                        })
-                                        ->exists();
-
-        if ($existingExamenVehicule) {
-            return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
-        }
-        $examen = Examen::create([
-            'type' => $validatedData['type'],
-            'heureD' => $validatedData['heureD'],
-            'heureF' => $validatedData['heureF'],
-            'dateE' => $validatedData['dateE'],
-            'user_id' => $validatedData['user_id'],
-            'vehicule_id' => $validatedData['vehicule_id'],
-            'auto_ecole_id' => $adminAutoEcoleId,
-        ]);
-
-        return response()->json($examen, 200);
-        
-    } catch (\Exception $e) {
-        return response()->json(["error" => "Erreur lors de la création de l'examen: " . $e->getMessage()], 500);
-    }
-}
+ public function store(Request $request)
+ {
+     $adminId = Auth::id(); 
+     $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+     
+     try {
+         $validatedData = $request->validate([
+             'type' => 'required|string',
+             'heureD' => 'required|date_format:H:i',
+             'heureF' => 'required|date_format:H:i|after:heureD',
+             'dateE' => 'required|date',
+             'candidat_nom' => 'required|exists:users,user_name,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
+             'vehicule_immatriculation' => 'required|exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
+         ]);
+ 
+         // Trouver les IDs des candidats et des véhicules
+         $candidatId = User::where('user_name', $validatedData['candidat_nom'])->pluck('id')->first();
+         $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+ 
+         $existingExamen = Examen::where('user_id', $candidatId)
+             ->where('dateE', $validatedData['dateE'])
+             ->where(function ($query) use ($validatedData) {
+                 $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                       ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+             })
+             ->exists();
+ 
+         if ($existingExamen) {
+             return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
+         }
+ 
+         $existingExamenVehicule = Examen::where('vehicule_id', $vehiculeId)
+             ->where('dateE', $validatedData['dateE'])
+             ->where(function ($query) use ($validatedData) {
+                 $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                       ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+             })
+             ->exists();
+ 
+         if ($existingExamenVehicule) {
+             return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
+         }
+ 
+         $examen = Examen::create([
+             'type' => $validatedData['type'],
+             'heureD' => $validatedData['heureD'],
+             'heureF' => $validatedData['heureF'],
+             'dateE' => $validatedData['dateE'],
+             'user_id' => $candidatId,
+             'vehicule_id' => $vehiculeId,
+             'auto_ecole_id' => $adminAutoEcoleId,
+         ]);
+ 
+         return response()->json($examen, 200);
+ 
+     } catch (\Exception $e) {
+         $error = "Erreur lors de la création de l'examen: " . $e->getMessage();
+         return response()->json(["error" => $error], 500);
+     }
+ }
+ 
 
   /**
  * @OA\Get(
@@ -372,51 +381,67 @@ public function showExamensByVehiculeId($vehiculeId)
  */
 public function update(Request $request, $id)
 {
+    $adminId = Auth::id(); 
+    $adminAutoEcoleId = User::findOrFail($adminId)->auto_ecole_id;
+    
     try {
-        $examen = Examen::find($id);
-
-        if (!$examen) {
-            $msg = "L'examen avec l'ID spécifié n'a pas été trouvé.";
-            return response()->json(["error" => $msg], 404);
-        }
-
         $validatedData = $request->validate([
             'type' => 'string',
             'heureD' => 'date_format:H:i',
             'heureF' => 'date_format:H:i|after:heureD',
             'dateE' => 'date',
-            'user_id' => 'exists:users,id',
-            'vehicule_id' => 'exists:vehicules,id',
+            'candidat_nom' => 'exists:users,user_name,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
+            'vehicule_immatriculation' => 'exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
         ]);
-        $existingExamen = Examen::where('user_id', $validatedData['user_id'])
-                                ->where('dateE', $validatedData['dateE'])
-                                ->where(function ($query) use ($validatedData, $examen) {
-                                    $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
-                                          ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
-                                })
-                                ->where('id', '!=', $examen->id)
-                                ->exists();
+
+        $candidatId = User::where('user_name', $validatedData['candidat_nom'])->pluck('id')->first();
+        $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+
+        $existingExamen = Examen::where('id', '!=', $id)
+            ->where('user_id', $candidatId)
+            ->where('dateE', $validatedData['dateE'])
+            ->where(function ($query) use ($validatedData) {
+                $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                      ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+            })
+            ->exists();
+
         if ($existingExamen) {
             return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
         }
-        $existingExamenVehicule = Examen::where('vehicule_id', $validatedData['vehicule_id'])
-                                        ->where('dateE', $validatedData['dateE'])
-                                        ->where(function ($query) use ($validatedData, $examen) {
-                                            $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
-                                                  ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
-                                        })
-                                        ->where('id', '!=', $examen->id)
-                                        ->exists();
+
+        $existingExamenVehicule = Examen::where('id', '!=', $id)
+            ->where('vehicule_id', $vehiculeId)
+            ->where('dateE', $validatedData['dateE'])
+            ->where(function ($query) use ($validatedData) {
+                $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                      ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+            })
+            ->exists();
+
         if ($existingExamenVehicule) {
             return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
         }
-        $examen->update($validatedData);
+
+        $examen = Examen::findOrFail($id);
+        $examen->update([
+            'type' => $validatedData['type'],
+            'heureD' => $validatedData['heureD'],
+            'heureF' => $validatedData['heureF'],
+            'dateE' => $validatedData['dateE'],
+            'user_id' => $candidatId,
+            'vehicule_id' => $vehiculeId,
+            'auto_ecole_id' => $adminAutoEcoleId,
+        ]);
+
         return response()->json($examen, 200);
+
     } catch (\Exception $e) {
         $error = "Erreur lors de la mise à jour de l'examen: " . $e->getMessage();
         return response()->json(["error" => $error], 500);
     }
 }
+
 /**
  * @OA\Delete(
  *      path="/api/Examen/delete/{id}",
