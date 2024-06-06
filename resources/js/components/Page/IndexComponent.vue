@@ -50,11 +50,11 @@
           <small>(+216) 73 449 596</small>
         </div>
         <div class="h-100 d-inline-flex align-items-center mx-n2">
-          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href=""><i
+          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="https://www.facebook.com/elyosdigital"><i
               class="fab fa-facebook-f"></i></a>
           <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href=""><i
               class="fab fa-twitter"></i></a>
-          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href=""><i
+          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="https://www.linkedin.com/company/elyosdigital/mycompany/"><i
               class="fab fa-linkedin-in"></i></a>
           <a class="btn btn-square btn-link rounded-0" href=""><i class="fab fa-instagram"></i></a>
         </div>
@@ -96,9 +96,9 @@
                                   <div class="col-lg-7">
                                       <h1 class="display-2 text-light mb-5 animated slideInDown"> "Gérez mieux, conduisez plus."
   </h1>
-                                      <a href="" class="btn btn-primary py-sm-3 px-sm-5">En savoir plus</a>
-                                      <a href="" class="btn btn-light py-sm-3 px-sm-5 ms-3">Nos offres</a>
-                                  </div>
+                                        <a href="#team-section" class="btn btn-primary py-sm-3 px-sm-5">En savoir plus</a>
+                                        <a href="#nos-offres" class="btn btn-light py-sm-3 px-sm-5 ms-3">Nos offres</a>
+                                    </div>
                               </div>
                           </div>
                       </div>
@@ -185,8 +185,8 @@
   
 
       <!-- Courses Start -->
-      <div class="container-xxl courses my-6 py-6 pb-0">
-          <div class="container">
+<div id="nos-offres" class="container-xxl courses my-6 py-6 pb-0">
+            <div class="container">
               <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                   <h6 class="text-primary text-uppercase mb-2 bb">Nos offres</h6>
                   <h1 class="display-6 mb-4">Consulter Nos Offres!</h1>
@@ -252,8 +252,8 @@
   
 
     <!-- Team Start -->
-        <div class="container-xxl py-5">
-            <div class="container">
+  <div id="team-section" class="container-xxl py-5">
+              <div class="container">
                 <div class="text-center mx-auto mb-4 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                     <h6 class="text-primary text-uppercase mb-2">PermitExpert :</h6>
                     <h1 class="display-6 mb-4"> Des fonctionnalités conçues pour vous.</h1>
@@ -351,25 +351,23 @@
           </p>
         </div>
         <div class="col-lg-3 col-md-6">
-          <h4 class="text-light mb-4">Quick Links</h4>
-          <a class="btn btn-link" href="">Apropos De nous</a>
+          <h4 class="text-light mb-4"> Liens rapides</h4>
+          <a class="btn btn-link" href="http://localhost:8000/permit">Apropos De nous</a>
           <a class="btn btn-link" href="">Contactez-nous</a>
-          <a class="btn btn-link" href="">notres services</a>
+          <a class="btn btn-link" href="http://localhost:8000/contact">notres services</a>
         </div>
         <div class="col-lg-3 col-md-6">
-          <h4 class="text-light mb-4">Popular Links</h4>
-          <a class="btn btn-link" href="">About Us</a>
-          <a class="btn btn-link" href="">Contact Us</a>
-          <a class="btn btn-link" href="">Our Services</a>
-          <a class="btn btn-link" href="">Terms & Condition</a>
-          <a class="btn btn-link" href="">Support</a>
+          <h4 class="text-light mb-4">  Liens rapides</h4>
+          <a class="btn btn-link" href="http://localhost:8000/permit">Apropos De nous</a>
+          <a class="btn btn-link" href="">Contactez-nous</a>
+          <a class="btn btn-link" href="http://localhost:8000/contact">Soumettre demande</a>
         </div>
         <div class="col-lg-3 col-md-6">
-          <h4 class="text-light mb-4">Newsletter</h4>
+          <h4 class="text-light mb-4">Email</h4>
           <form action="">
             <div class="input-group">
-              <input type="text" class="form-control p-3 border-0" placeholder="Your Email Address">
-              <button class="btn btn-primary">Sign Up</button>
+              <input type="text" class="form-control p-3 border-0" placeholder="Votre adresse mail">
+              <button class="btn btn-primary">Email</button>
             </div>
           </form>
           <h6 class="text-white mt-4 mb-3">Suivez-nous</h6>
@@ -394,8 +392,8 @@
           &copy; <a href="#">http://localhost:8000/permit</a>, Tous droits réservés.
         </div>
         <div class="col-md-6 text-center text-md-end">
-          Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-          <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+         <a href="https://htmlcodex.com"></a>
+          <br> <a href="https://themewagon.com" target="_blank"></a>
         </div>
       </div>
     </div>

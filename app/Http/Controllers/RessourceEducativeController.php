@@ -136,6 +136,7 @@ class RessourceEducativeController extends Controller
 
  public function store(Request $request)
  {
+  
      try {
          $validatedData = $request->validate([
              'titreR' => 'required|string',
