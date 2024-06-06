@@ -27,7 +27,7 @@
                       </div>
                     </div>
                     <br />
-                    <div class="table-responsive">
+                    <div class="table-responsive scrollable-content">
                       <table class="table table-borded">
                         <thead>
                           <tr>
@@ -374,3 +374,10 @@ export default {
   }
 };
 </script>
+<style scoped>
+.scrollable-content {
+  max-height: 600px; 
+  overflow-y: auto; 
+}
+
+</style>

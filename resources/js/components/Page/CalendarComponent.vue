@@ -73,7 +73,7 @@
                         </option>
                       </select>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" v-if="newEvent.subject != 'code'">
                       <h6><strong>Immatricule du véhicule</strong></h6>
                       <select v-model="newEvent.vehicule_immatriculation" class="form-control">
                         <option v-for="vehicule in vehicules" :key="vehicule.id" :value="vehicule.immatricule">

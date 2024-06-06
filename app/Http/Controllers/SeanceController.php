@@ -166,18 +166,24 @@ class SeanceController extends Controller
                 'heureD' => 'required|date_format:H:i',
                 'heureF' => 'required|date_format:H:i|after:heureD',
                 'dateS' => 'required|date',
-                'moniteur_nom' => 'required|exists:users,user_name,role,moniteur,auto_ecole_id,'.$adminAutoEcoleId,
-                'candidat_nom' => 'required|exists:users,user_name,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
-                'vehicule_immatriculation' => 'required|exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
+                'moniteur_nom' => 'required|exists:users,user_name,role,moniteur,auto_ecole_id,' . $adminAutoEcoleId,
+                'candidat_nom' => 'required|exists:users,user_name,role,candidat,auto_ecole_id,' . $adminAutoEcoleId,
+                'vehicule_immatriculation' => 'required_if:type,circuit,parc|nullable|exists:vehicules,immatricule,auto_ecole_id,' . $adminAutoEcoleId,
             ]);
     
             $moniteurId = User::where('user_name', $validatedData['moniteur_nom'])->pluck('id')->first();
             $candidatId = User::where('user_name', $validatedData['candidat_nom'])->pluck('id')->first();
-            $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+            $vehiculeId = null;
+    
+            if ($validatedData['type'] !== 'code') {
+                $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+            }
     
             $existingSeance = Seance::where('moniteur_id', $moniteurId)
                 ->where('candidat_id', $candidatId)
-                ->where('vehicule_id', $vehiculeId)
+                ->when($vehiculeId, function ($query, $vehiculeId) {
+                    return $query->where('vehicule_id', $vehiculeId);
+                })
                 ->where('dateS', $validatedData['dateS'])
                 ->where(function ($query) use ($validatedData) {
                     $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
@@ -189,19 +195,24 @@ class SeanceController extends Controller
                 return response()->json(["error" => "Il existe déjà une séance planifiée pour ce moniteur, candidat et véhicule à ce moment."], 400);
             }
     
-            $seance = Seance::create([
+            $seanceData = [
                 'type' => $validatedData['type'],
                 'heureD' => $validatedData['heureD'],
                 'heureF' => $validatedData['heureF'],
                 'dateS' => $validatedData['dateS'],
-                'status'=>'en attente',
-                'candidat_status'=>'en attente',
-                'moniteur_status'=>'en attente',
+                'status' => 'en attente',
+                'candidat_status' => 'en attente',
+                'moniteur_status' => 'en attente',
                 'moniteur_id' => $moniteurId,
                 'candidat_id' => $candidatId,
-                'vehicule_id' => $vehiculeId,
                 'auto_ecole_id' => $adminAutoEcoleId,
-            ]);
+            ];
+    
+            if ($vehiculeId) {
+                $seanceData['vehicule_id'] = $vehiculeId;
+            }
+    
+            $seance = Seance::create($seanceData);
     
             return response()->json($seance, 200);
         } catch (\Exception $e) {
@@ -209,6 +220,7 @@ class SeanceController extends Controller
             return response()->json(["error" => $error], 500);
         }
     }
+    
     
     
   /**

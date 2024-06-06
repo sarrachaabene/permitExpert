@@ -323,6 +323,7 @@ export default {
         const response = await axios.post('/demandeInscript/store', this.form);
         if (response.status === 201) {
           this.showMessage('success', 'Demande d\'inscription créée avec succès!');
+          window.location.reload();
         } else {
           this.showMessage('error', 'Échec de la création de la demande d\'inscription.');
         }

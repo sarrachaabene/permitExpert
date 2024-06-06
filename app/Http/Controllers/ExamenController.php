@@ -120,12 +120,15 @@ public function index()
              'heureF' => 'required|date_format:H:i|after:heureD',
              'dateE' => 'required|date',
              'candidat_nom' => 'required|exists:users,user_name,role,candidat,auto_ecole_id,'.$adminAutoEcoleId,
-             'vehicule_immatriculation' => 'required|exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
+             'vehicule_immatriculation' => 'required_if:type,circuit,parc|nullable|exists:vehicules,immatricule,auto_ecole_id,'.$adminAutoEcoleId,
          ]);
  
          // Trouver les IDs des candidats et des véhicules
          $candidatId = User::where('user_name', $validatedData['candidat_nom'])->pluck('id')->first();
-         $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+         $vehiculeId = null;
+         if (in_array($validatedData['type'], ['circuit', 'parc'])) {
+             $vehiculeId = Vehicule::where('immatricule', $validatedData['vehicule_immatriculation'])->pluck('id')->first();
+         }
  
          $existingExamen = Examen::where('user_id', $candidatId)
              ->where('dateE', $validatedData['dateE'])
@@ -139,16 +142,18 @@ public function index()
              return response()->json(["error" => "L'utilisateur a déjà un examen planifié pour cette période."], 400);
          }
  
-         $existingExamenVehicule = Examen::where('vehicule_id', $vehiculeId)
-             ->where('dateE', $validatedData['dateE'])
-             ->where(function ($query) use ($validatedData) {
-                 $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
-                       ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
-             })
-             ->exists();
+         if ($vehiculeId) {
+             $existingExamenVehicule = Examen::where('vehicule_id', $vehiculeId)
+                 ->where('dateE', $validatedData['dateE'])
+                 ->where(function ($query) use ($validatedData) {
+                     $query->whereBetween('heureD', [$validatedData['heureD'], $validatedData['heureF']])
+                           ->orWhereBetween('heureF', [$validatedData['heureD'], $validatedData['heureF']]);
+                 })
+                 ->exists();
  
-         if ($existingExamenVehicule) {
-             return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
+             if ($existingExamenVehicule) {
+                 return response()->json(["error" => "Le véhicule a déjà un examen planifié pour cette période."], 400);
+             }
          }
  
          $examen = Examen::create([

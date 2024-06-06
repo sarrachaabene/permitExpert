@@ -150,6 +150,7 @@ export default {
       this.successMessage = "";
     }, 2000); 
     $('#demandeModal').modal('hide');
+    this.fetchData(); 
   } catch (error) {
     console.error("Erreur lors de l'acceptation de la demande:", error);
     this.errorMessage = "Erreur lors de l'acceptation de la demande.";
@@ -168,9 +169,11 @@ async refuserDemande() {
           this.successMessage = "";
         }, 2000); 
         $('#demandeModal').modal('hide'); 
+        this.fetchData(); 
       } catch (error) {
         console.error("Erreur lors du refus de la demande:", error);
         this.errorMessage = "Erreur lors du refus de la demande.";
+
         setTimeout(() => {
           this.errorMessage = "";
         }, 2000); 
