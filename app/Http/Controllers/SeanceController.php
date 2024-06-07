@@ -764,18 +764,14 @@ public function RefuserSeance($id)
     try {
         if ($user->role === 'candidat') {
             $seance->candidat_status = "refusee";
-            if ($seance->moniteur_status === "refusee" || $seance->moniteur_status === "confirmee") {
+          
                 $seance->status = "refusee";
-            } else {
-                $seance->status = "en attente";
-            }
+
         } elseif ($user->role === 'moniteur') {
             $seance->moniteur_status = "refusee";
-            if ($seance->candidat_status === "refusee" || $seance->candidat_status === "confirmee") {
+          
                 $seance->status = "refusee";
-            } else {
-                $seance->status = "en attente";
-            }
+        
         } else {
             return response()->json(["error" => "L'utilisateur n'est pas autorisé à accéder à cette ressource."], 403);
         }

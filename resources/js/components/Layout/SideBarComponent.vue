@@ -109,7 +109,7 @@
               <span>
                 <i class="fa fa-envelope"></i>
               </span>
-              <span class="hide-menu">Contact</span>
+              <span class="hide-menu">messagerie</span>
             </router-link>
           </li>
 

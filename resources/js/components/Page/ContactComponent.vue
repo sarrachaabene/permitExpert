@@ -50,11 +50,11 @@
           <small>(+216) 73 449 596</small>
         </div>
         <div class="h-100 d-inline-flex align-items-center mx-n2">
-          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href=""><i
+          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="https://www.facebook.com/elyosdigital"><i
               class="fab fa-facebook-f"></i></a>
           <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href=""><i
               class="fab fa-twitter"></i></a>
-          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href=""><i
+          <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="https://www.linkedin.com/company/elyosdigital/mycompany/"><i
               class="fab fa-linkedin-in"></i></a>
           <a class="btn btn-square btn-link rounded-0" href=""><i class="fab fa-instagram"></i></a>
         </div>
@@ -176,7 +176,7 @@
           </div>
         </div>
         <div class="col-12">
-          <button class="btn btn-primary py-3 px-5" type="submit">Envoyer</button>
+          <button class="btn btn-primary py-3 px-5" type="submit">soumettre demande</button>
         </div>
         <div v-if="successMessage" class="alert alert-success" role="alert">
         {{ successMessage }}

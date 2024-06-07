@@ -65,7 +65,7 @@
         <div class="shadow p-3 mb-5 bg-body rounded h-100">
           <div id="chart" class="mb-4">
             <apexchart type="area" height="350" :options="chartOptions" :series="series"></apexchart>
-            <h4 style="text-align: center ; color: #1C406B;">Flux entrant et sortant</h4>
+            <h4 style="text-align: center ; color: #1C406B;">Flux entrant et sortant &nbsp; (En Dinars) </h4>
           </div>
         </div>
       </div>
